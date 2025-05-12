@@ -1,4 +1,4 @@
-package com.testlbsmobilereactnative
+package id.lbs.app
 
 import android.app.Application
 import com.facebook.react.PackageList

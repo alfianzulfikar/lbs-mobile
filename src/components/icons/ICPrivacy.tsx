@@ -1,0 +1,28 @@
+import React from 'react';
+import Svg, {G, Mask, Path, Rect} from 'react-native-svg';
+import {SvgIconType} from '../../constants/Types';
+
+const ICPrivacy = ({color}: SvgIconType) => {
+  return (
+    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <Mask
+        id="mask0_1488_2908"
+        // style="mask-type:alpha"
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="24"
+        height="24">
+        <Rect width="24" height="24" fill="#D9D9D9" />
+      </Mask>
+      <G mask="url(#mask0_1488_2908)">
+        <Path
+          d="M12 16C12.2833 16 12.5208 15.9042 12.7125 15.7125C12.9042 15.5208 13 15.2833 13 15C13 14.7167 12.9042 14.4792 12.7125 14.2875C12.5208 14.0958 12.2833 14 12 14C11.7167 14 11.4792 14.0958 11.2875 14.2875C11.0958 14.4792 11 14.7167 11 15C11 15.2833 11.0958 15.5208 11.2875 15.7125C11.4792 15.9042 11.7167 16 12 16ZM11 12H13V7H11V12ZM12 22C9.68333 21.4167 7.77083 20.0875 6.2625 18.0125C4.75417 15.9375 4 13.6333 4 11.1V5L12 2L20 5V11.1C20 13.6333 19.2458 15.9375 17.7375 18.0125C16.2292 20.0875 14.3167 21.4167 12 22ZM12 19.9C13.7333 19.35 15.1667 18.25 16.3 16.6C17.4333 14.95 18 13.1167 18 11.1V6.375L12 4.125L6 6.375V11.1C6 13.1167 6.56667 14.95 7.7 16.6C8.83333 18.25 10.2667 19.35 12 19.9Z"
+          fill={color || '#404040'}
+        />
+      </G>
+    </Svg>
+  );
+};
+
+export default ICPrivacy;

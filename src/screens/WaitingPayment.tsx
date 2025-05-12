@@ -1,0 +1,451 @@
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import Text from '../components/Text';
+import ScreenWrapper from '../components/ScreenWrapper';
+import Button from '../components/Button';
+import Gap from '../components/Gap';
+import Header from '../components/Header';
+import BlurOverlay from '../components/BlurOverlay';
+import {useThemeColor} from '../hooks/useThemeColor';
+import {RGBAColors} from '../constants/Colors';
+import CopyText from '../components/CopyText';
+import Accordion from '../components/Accordion';
+import {PAYMENT_METHODS} from '../constants/PaymentMethods';
+import {StackActions, useNavigation} from '@react-navigation/native';
+import {useAPI} from '../services/api';
+import {BankMethodType} from '../constants/Types';
+import {Countdown} from '../components/Countdown';
+import dateTimeFormat from '../utils/dateTimeFormat';
+import {useBank} from '../api/bank';
+import numberFormat from '../utils/numberFormat';
+import capitalize from '../utils/capitalize';
+import {useColorScheme} from '../hooks/useColorScheme';
+
+type InfoType = {
+  label: string;
+  value: string;
+};
+
+type Props = {
+  route: {
+    params: {
+      code: string;
+    };
+  };
+};
+
+const WaitingPayment = ({route}: Props) => {
+  let colorScheme = useColorScheme();
+  const tint = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
+  const textColor2 = useThemeColor({}, 'text2');
+  const textColor3 = useThemeColor({}, 'text3');
+  const iconColor = useThemeColor({}, 'icon');
+  const textColorDanger = useThemeColor({}, 'textDanger');
+  const navigation = useNavigation();
+  const {apiRequest} = useAPI();
+  const {code} = route.params;
+  const {paymentBankList, getPaymentBankList} = useBank();
+
+  const [informationContent, setInformationContent] = useState<InfoType[]>([]);
+  const [shares, setShares] = useState<number>(0);
+  const [isRead, setIsRead] = useState<boolean>(false);
+  const [total, setTotal] = useState(100000 * shares);
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [form, setForm] = useState({
+    type_bisnis: '',
+    kode_saham: '',
+    kode: '',
+    merk_dagang: '',
+    billing_expired: '',
+    time_billing_expired: '',
+    bank_name: '',
+    nominal: 0,
+    total_nominal: 0,
+    biaya_platform: 0,
+    account_va: '',
+    discount: 0,
+    status: '',
+  });
+  const [countdownTime, setCountdownTime] = useState(0);
+  const [countdownExpired, setCountdownExpired] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState<BankMethodType[]>([]);
+  const [loadingCancel, setLoadingCancel] = useState(false);
+
+  const cautionList = [
+    'Mohon untuk segera melakukan transfer atas pemesanan efek',
+    'Pembayaran harus menggunakan Akun Virtual pemilik akun LBS',
+    'Pemesanan akan dibatalkan jika waktu habis atau melewati batas pembayaran atau pendanaan telah terpenuhi',
+  ];
+
+  const getPaymentDetail = async () => {
+    setLoadingPage(true);
+    try {
+      const res = await apiRequest({
+        endpoint: `/waiting-payment/${code}`,
+        authorization: true,
+      });
+      if (res.status_transaksi?.name === 'Pending') {
+        setForm({
+          type_bisnis: res.bisnis_transaksi[0]?.type_bisnis || '',
+          kode: code || '',
+          merk_dagang: res.bisnis_transaksi[0]?.merk_dagang || '',
+          kode_saham: res.bisnis_transaksi[0]?.kode_saham || '',
+          billing_expired: res.billing_expired || form.billing_expired,
+          time_billing_expired:
+            res.billing_expired.split('T')[1].split('.')[0] ||
+            form.billing_expired,
+          bank_name: res.bank_name || '',
+          nominal: res.nominal || 0,
+          total_nominal: res.total_nominal || 0,
+          biaya_platform: res.fee || 0,
+          account_va: res.account_va || '',
+          discount: res.discount || 0,
+          status: res.status_transaksi?.name || '',
+        });
+        setCountdownTime(new Date(res.billing_expired).getTime());
+        const tempPaymentMethods = PAYMENT_METHODS.filter(
+          item => item.bank_name == res.bank_name,
+        );
+        if (tempPaymentMethods.length > 0) {
+          setPaymentMethods(tempPaymentMethods[0]?.list || []);
+        }
+      } else {
+        setCountdownExpired(true);
+      }
+
+      const tipeBisnis = capitalize(res.bisnis_transaksi[0]?.type_bisnis || '');
+
+      setInformationContent([
+        {
+          label: tipeBisnis + ' Terkait',
+          value: res.bisnis_transaksi[0]?.merk_dagang,
+        },
+        {
+          label: 'Kode ' + tipeBisnis,
+          value: res.bisnis_transaksi[0]?.kode_saham || '',
+        },
+        {
+          label: 'Kode Transaksi',
+          value: code,
+        },
+        {
+          label: 'Nominal',
+          value: 'Rp' + numberFormat(res.nominal || 0),
+        },
+        {
+          label: 'Biaya Platform',
+          value: res.fee || '0',
+        },
+        {
+          label: 'Bank Kustodian',
+          value: 'Danamon Syariah',
+        },
+      ]);
+    } catch (error) {
+    } finally {
+      setLoadingPage(false);
+    }
+  };
+
+  const cancelPayment = async () => {
+    setLoadingCancel(true);
+    try {
+      const res = await apiRequest({
+        endpoint: `/cancel-payment/${code}`,
+        authorization: true,
+      });
+      if (res) {
+        Alert.alert('Berhasil', 'Transaksi berhasil dibatalkan.', [
+          {
+            text: 'Tutup',
+            onPress: () => {
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              } else {
+                navigation.dispatch(StackActions.replace('MainTab'));
+              }
+            },
+            style: 'cancel',
+          },
+        ]);
+      }
+    } catch (error) {
+      Alert.alert('Terjadi Kesalahan');
+    } finally {
+      setLoadingCancel(false);
+    }
+  };
+
+  useEffect(() => {
+    const asyncFunc = async () => {
+      await getPaymentBankList();
+      getPaymentDetail();
+    };
+    asyncFunc();
+  }, []);
+
+  return (
+    <ScreenWrapper
+      background
+      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}>
+        <View style={[styles.container, {paddingTop: 24}]}>
+          <View style={{paddingHorizontal: 24}}>
+            <View
+              style={[
+                styles.informationCard,
+                {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+              ]}>
+              <BlurOverlay />
+              <View style={styles.informationContentWrapper}>
+                <Header title="Pembayaran" paddingHorizontal={0} />
+                {loadingPage ? (
+                  <ActivityIndicator color={tint} style={{marginTop: 46}} />
+                ) : (
+                  !countdownExpired && (
+                    <>
+                      <Gap height={24} />
+                      <Text style={styles.paymentTimerInstruction}>
+                        Segera selesaikan pembayaranmu, sebelum{' '}
+                        {dateTimeFormat(countdownTime)}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.timer,
+                          {
+                            color: countdownExpired
+                              ? textColorDanger
+                              : RGBAColors(0.7)[colorScheme].text,
+                          },
+                        ]}>
+                        <Countdown
+                          value={countdownTime}
+                          setCountdownExpired={() => setCountdownExpired(true)}
+                        />
+                      </Text>
+                    </>
+                  )
+                )}
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={[
+              styles.section2,
+              {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+            ]}>
+            <BlurOverlay />
+            {loadingPage ? (
+              <ActivityIndicator color={tint} style={{marginTop: 46}} />
+            ) : (
+              <View style={{zIndex: 2, padding: 24}}>
+                {!countdownExpired && (
+                  <>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <View style={styles.bankLogoContainer}>
+                        {paymentBankList.length > 0 && form.bank_name ? (
+                          <Image
+                            source={{
+                              uri: paymentBankList.find(
+                                item => item.name === form.bank_name,
+                              )?.image,
+                            }}
+                            style={{width: 30, height: 30}}
+                            resizeMode="contain"
+                          />
+                        ) : null}
+                      </View>
+                      <View>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            lineHeight: 16,
+                            color: textColor3,
+                          }}>
+                          Metode Pembayaran
+                        </Text>
+                        <Text style={[styles.bank, {color: textColor}]}>
+                          {form.bank_name}
+                        </Text>
+                      </View>
+                    </View>
+                    <Gap height={24} />
+                    <View>
+                      <Text style={[styles.copyLabel, {color: textColor2}]}>
+                        Jumlah yang Harus Dibayarkan
+                      </Text>
+                      <Gap height={8} />
+                      <CopyText
+                        text={'Rp' + numberFormat(form.total_nominal)}
+                        value={form.total_nominal}
+                      />
+                    </View>
+                    <Gap height={16} />
+                    <View>
+                      <Text style={[styles.copyLabel, {color: textColor2}]}>
+                        Nomor Akun Virtual
+                      </Text>
+                      <Gap height={8} />
+                      <CopyText
+                        text={form.account_va}
+                        value={form.account_va}
+                      />
+                    </View>
+                    <Gap height={24} />
+                    <Button
+                      title="Batalkan Pembayaran"
+                      type="danger"
+                      loading={loadingCancel}
+                      onPress={cancelPayment}
+                    />
+                    <Gap height={40} />
+                    <Text
+                      style={[
+                        styles.paymentInstructionTitle,
+                        {color: textColor},
+                      ]}>
+                      Petunjuk Pembayaran
+                    </Text>
+                    <Gap height={16} />
+                    <Accordion list={paymentMethods} />
+                    <Gap height={40} />
+                    <Text
+                      style={[
+                        styles.paymentInstructionTitle,
+                        {color: textColor},
+                      ]}>
+                      PERHATIAN!
+                    </Text>
+                    <Gap height={16} />
+                    {cautionList.map((cautionItem, cautionId) => (
+                      <View key={cautionId} style={{flexDirection: 'row'}}>
+                        <Text
+                          style={[
+                            styles.cautionText,
+                            {color: textColor2, width: 20},
+                          ]}>
+                          {cautionId + 1}.
+                        </Text>
+                        <Text
+                          style={[
+                            styles.cautionText,
+                            {color: textColor2, flex: 1},
+                          ]}>
+                          {cautionItem}
+                        </Text>
+                      </View>
+                    ))}
+                    <Gap height={40} />
+                  </>
+                )}
+                <View style={{paddingHorizontal: 24, paddingVertical: 18}}>
+                  {informationContent.map((infoItem, infoId) => (
+                    <View key={infoId}>
+                      <Text style={[styles.infoLabel, {color: textColor2}]}>
+                        {infoItem.label}
+                      </Text>
+                      <Text style={[styles.infoValue, {color: textColor}]}>
+                        {infoItem.value}
+                      </Text>
+                      {infoId !== informationContent.length - 1 && (
+                        <Gap height={16} />
+                      )}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </ScreenWrapper>
+  );
+};
+
+export default WaitingPayment;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  informationCard: {
+    borderRadius: 24,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  paymentTimerInstruction: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    maxWidth: 300,
+    alignSelf: 'center',
+  },
+  informationContentWrapper: {
+    padding: 16,
+    zIndex: 2,
+  },
+  section2: {
+    overflow: 'hidden',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    marginTop: 40,
+    flexGrow: 1,
+  },
+  timer: {
+    textAlign: 'center',
+    fontSize: 40,
+    fontWeight: '600',
+    lineHeight: 40,
+    marginTop: 24,
+  },
+  bank: {
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 24,
+  },
+  bankLogoContainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#FFFFFF',
+    marginRight: 16,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  copyLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 24,
+  },
+  paymentInstructionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 24,
+  },
+  cautionText: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  infoLabel: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 20,
+    marginTop: 4,
+  },
+});
