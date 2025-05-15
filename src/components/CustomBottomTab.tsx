@@ -57,7 +57,7 @@ const CustomBottomTab = (props: any) => {
               : route === 'Transaction'
               ? 'Transaksi'
               : 'Akun';
-          const iconColor = isFocused ? colors.tint : colors.tabIconDefault;
+          const iconColor = isFocused ? colors.tint2 : colors.tabIconDefault;
           const iconNameWeight = isFocused ? '700' : '400';
 
           const Icon = (props: {color: string; type: 'outline' | 'fill'}) => {

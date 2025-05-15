@@ -1,4 +1,10 @@
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {DisclosureType} from '../constants/Types';
 import {useThemeColor} from '../hooks/useThemeColor';
@@ -7,8 +13,15 @@ import ICArrowLeft from './icons/ICArrowLeft';
 import {useNavigation} from '@react-navigation/native';
 import Gap from './Gap';
 import DisclosureCard from './DisclosureCard';
+import DisclosureCardSkeleton from './DisclosureCardSkeleton';
 
-const DisclosureCarousel = ({disclosures}: {disclosures: DisclosureType[]}) => {
+const DisclosureCarousel = ({
+  disclosures,
+  loading,
+}: {
+  disclosures: DisclosureType[];
+  loading: boolean;
+}) => {
   let textColor = useThemeColor({}, 'text');
   const navigation = useNavigation();
   return (
@@ -29,21 +42,31 @@ const DisclosureCarousel = ({disclosures}: {disclosures: DisclosureType[]}) => {
         </TouchableOpacity>
       </View>
       <Gap height={24} />
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={disclosures}
-        renderItem={({item, index}) => {
-          return (
-            <View style={{flexDirection: 'row'}}>
-              {index === 0 && <Gap width={16} />}
-              <DisclosureCard name={item.name} file={item.file} />
-              <Gap width={16} />
-            </View>
-          );
-        }}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {loading ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Gap width={24} />
+          <DisclosureCardSkeleton />
+          <Gap width={16} />
+          <DisclosureCardSkeleton />
+          <Gap width={24} />
+        </ScrollView>
+      ) : (
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={disclosures}
+          renderItem={({item, index}) => {
+            return (
+              <View style={{flexDirection: 'row'}}>
+                {index === 0 && <Gap width={24} />}
+                <DisclosureCard name={item.name} file={item.file} />
+                <Gap width={24} />
+              </View>
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };

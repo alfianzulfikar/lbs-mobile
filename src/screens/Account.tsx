@@ -75,7 +75,7 @@ const MenuItem = ({
   toggleState?: boolean;
   onPress?: () => void;
 }) => {
-  const tint = useThemeColor({}, 'tint');
+  const tint = useThemeColor({}, 'tint3');
   const textColor2 = useThemeColor({}, 'text2');
   const backgroundColor = useThemeColor({}, 'background');
   const borderColor = useThemeColor({}, 'border');
@@ -354,6 +354,11 @@ const Account = () => {
           <MenuItem
             title="Tentang LBS Urun Dana"
             icon={<ICBuilding color={textColor2} />}
+            onPress={() =>
+              navigation.navigate('AccountStack', {
+                screen: 'AboutUs',
+              })
+            }
           />
           <Gap height={48} />
           <MenuItem

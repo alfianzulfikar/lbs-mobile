@@ -2,8 +2,10 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StackActions, useNavigation} from '@react-navigation/native';
+import {envMode} from '../constants/Env';
 
-const API_BASE_URL = 'https://dev-api.lbs.id';
+const API_BASE_URL =
+  envMode === 'prod' ? 'https://uda-api.lbs.id' : 'https://dev-api.lbs.id';
 
 export const useAPI = () => {
   const navigation = useNavigation();
@@ -51,7 +53,7 @@ export const useAPI = () => {
         data = await response.json();
       }
 
-      console.log('status', response?.status, response.url);
+      console.log('status', response?.status, method || 'get', response.url);
 
       if (!response.ok) {
         if (response.status === 401) {

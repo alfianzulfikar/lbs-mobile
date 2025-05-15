@@ -62,7 +62,7 @@ const Badge = ({
         <LinearGradient
           colors={
             (mode || colorScheme) === 'dark'
-              ? ['rgba(26,26,26,0.1)', 'rgba(26,26,26,0.5)']
+              ? ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
               : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,1)']
           }
           start={{x: 0, y: 0}}

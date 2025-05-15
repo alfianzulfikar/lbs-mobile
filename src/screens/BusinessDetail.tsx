@@ -41,6 +41,7 @@ import {useUser} from '../api/user';
 import LoadingModal from '../components/LoadingModal';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {notchHeight} from '../utils/getNotchHeight';
+import ICLikeFill from '../components/icons/ICLikeFill';
 
 type Props = StaticScreenProps<{
   slug: string;
@@ -54,8 +55,16 @@ const BusinessDetail = ({route}: Props) => {
   const navigation = useNavigation();
   const {apiRequest} = useAPI();
   const {slug} = route.params;
-  const {business, businessStatus, getBusinessDetail, getBusinessStatus} =
-    useBusiness();
+  const {
+    business,
+    businessStatus,
+    getBusinessDetail,
+    getBusinessStatus,
+    isLiked,
+    getBusinessLike,
+    likeLoading,
+    handleLike,
+  } = useBusiness();
   const {user, getUser} = useUser();
 
   const [loadingOrder, setLoadingOrder] = useState(false);
@@ -107,12 +116,16 @@ const BusinessDetail = ({route}: Props) => {
     const asyncFunc = async () => {
       setLoadingPage(true);
       await getUser();
-      await getBusinessStatus();
       await getBusinessDetail(slug);
+      await getBusinessStatus();
       setLoadingPage(false);
     };
     asyncFunc();
   }, []);
+
+  useEffect(() => {
+    getBusinessLike();
+  }, [business]);
 
   return (
     <ScreenWrapper
@@ -149,39 +162,56 @@ const BusinessDetail = ({route}: Props) => {
 
               <View style={styles.optionContainer}>
                 <IconWrapper
-                  onPress={() => {
-                    Alert.alert('Gagal', 'Maaf, fitur belum tersedia');
-                  }}>
-                  <ICLike color={iconColor} size={24} />
+                  onPress={() => handleLike(slug, isLiked ? 'delete' : 'like')}
+                  loading={likeLoading}>
+                  {isLiked ? (
+                    <ICLikeFill color={iconColor} size={24} />
+                  ) : (
+                    <ICLike color={iconColor} size={24} />
+                  )}
                 </IconWrapper>
                 <Gap width={16} />
                 <IconWrapper
-                  onPress={() => {
-                    Alert.alert('Gagal', 'Maaf, fitur belum tersedia');
-                  }}>
+                  onPress={() =>
+                    navigation.navigate('OrderStack', {
+                      screen: 'BusinessDiscussion',
+                      params: {
+                        slug: business.slug,
+                        businessStatus: business.status,
+                      },
+                    })
+                  }>
                   <ICChat color={iconColor} size={24} />
                 </IconWrapper>
-                <Gap width={16} />
-                <IconWrapper
-                  onPress={() => {
-                    if (['PRE-LISTING', 'LISTING'].includes(business.status)) {
-                      setShowCalculator(true);
-                    } else {
-                      Alert.alert(
-                        'Tidak Tersedia',
-                        'Maaf, kalkulator investasi tidak tersedia untuk bisnis ini.',
-                      );
-                    }
-                  }}
-                  width={204}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <ICCalculator color={iconColor} size={24} />
-                    <Gap width={4} />
-                    <Text style={[styles.calculatorText, {color: textColor}]}>
-                      Kalkulator Investasi
-                    </Text>
-                  </View>
-                </IconWrapper>
+                {['PRE-LISTING', 'LISTING'].includes(business.status) && (
+                  <>
+                    <Gap width={16} />
+                    <IconWrapper
+                      onPress={() => {
+                        if (
+                          ['PRE-LISTING', 'LISTING'].includes(business.status)
+                        ) {
+                          setShowCalculator(true);
+                        } else {
+                          Alert.alert(
+                            'Tidak Tersedia',
+                            'Maaf, kalkulator investasi tidak tersedia untuk bisnis ini.',
+                          );
+                        }
+                      }}
+                      width={204}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <ICCalculator color={iconColor} size={24} />
+                        <Gap width={4} />
+                        <Text
+                          style={[styles.calculatorText, {color: textColor}]}>
+                          Kalkulator Investasi
+                        </Text>
+                      </View>
+                    </IconWrapper>
+                  </>
+                )}
               </View>
 
               <Gap height={16} />

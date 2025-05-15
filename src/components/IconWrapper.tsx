@@ -24,6 +24,8 @@ const IconWrapper = ({
   children,
   onPress,
   transparent,
+  mode,
+  loading,
 }: {
   width?: number;
   height?: number;
@@ -33,14 +35,19 @@ const IconWrapper = ({
   children?: ReactNode;
   onPress?: Callback;
   transparent?: boolean;
+  mode?: 'light' | 'dark';
+  loading?: boolean;
 }) => {
   let colorScheme = useColorScheme();
   let shadowColor = useThemeColor({}, 'tint');
   return (
     <Pressable
-      style={[styles.outer, {shadowColor: shadowColor}]}
+      style={[
+        styles.outer,
+        {shadowColor: shadowColor, opacity: loading ? 0.4 : 1},
+      ]}
       onPress={onPress}
-      disabled={onPress ? false : true}>
+      disabled={onPress ? (loading ? true : false) : true}>
       <View
         style={[
           styles.container,
@@ -61,8 +68,8 @@ const IconWrapper = ({
         ]}>
         <LinearGradient
           colors={
-            colorScheme === 'dark'
-              ? ['rgba(26,26,26,0.4)', 'rgba(26,26,26,0.5)']
+            (mode || colorScheme) === 'dark'
+              ? ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
               : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,1)']
           }
           start={{x: 0, y: 0}}

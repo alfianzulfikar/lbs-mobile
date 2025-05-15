@@ -54,13 +54,23 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
             {
               backgroundColor:
                 Platform.OS === 'android'
-                  ? RGBAColors(0.6)['dark'].background
+                  ? RGBAColors(0.8)['dark'].background
                   : RGBAColors(0.2)['light'].background,
             },
           ]}>
           <BlurOverlay />
           <View style={styles.information}>
-            <Badge text={capitalize(data.category)} transparent mode="dark" />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Badge text={capitalize(data.category)} transparent mode="dark" />
+              <Gap width={16} />
+              <View style={styles.authorImageContainer}>
+                <Image
+                  source={require('../assets/images/profile-picture-light.png')}
+                  style={{width: '100%', height: '100%'}}
+                  resizeMode="cover"
+                />
+              </View>
+            </View>
             <Gap height={8} />
             <Text
               style={[styles.merkDagang, {color: Colors.dark.text}]}
@@ -108,5 +118,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     lineHeight: 20,
+  },
+  authorImageContainer: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
 });

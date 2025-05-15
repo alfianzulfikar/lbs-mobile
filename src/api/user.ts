@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState} from 'react';
 import {useAPI} from '../services/api';
-import {KYCBackScreen, KYCProgressType} from '../constants/Types';
+import {KYCBackScreen} from '../constants/Types';
 
 export const useUser = () => {
   const {apiRequest} = useAPI();
@@ -31,14 +31,6 @@ export const useUser = () => {
     sisaLimit: 0,
     totalLimit: 0,
   });
-  const [kycProgress, setKycProgress] = useState<KYCProgressType>({
-    address: false,
-    bank: false,
-    family: false,
-    personal: false,
-    tax: false,
-    occupation: false,
-  });
   const [kycScreen, setKycScreen] = useState<KYCBackScreen>('KYCPersonal');
   const [kycProgressLoading, setKycProgressLoading] = useState(false);
 
@@ -49,7 +41,6 @@ export const useUser = () => {
         endpoint: '/auth/me',
         authorization: true,
       });
-      console.log('getUser', res);
       setProfile1({
         firstname: res.user.firstname,
         lastname: res.user.lastname,
@@ -64,7 +55,6 @@ export const useUser = () => {
   };
 
   const getProfile = async () => {
-    const accessToken = await AsyncStorage.getItem('access_token');
     try {
       const res = await apiRequest({
         endpoint: '/user/profile',

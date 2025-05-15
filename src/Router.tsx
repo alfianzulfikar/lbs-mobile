@@ -49,6 +49,8 @@ import KYCRisk from './screens/KYCRisk';
 import KYCTerms from './screens/KYCTerms';
 import ForgotPassword from './screens/ForgotPassword';
 import Prospectus from './screens/Prospectus';
+import BusinessDiscussion from './screens/BusinessDiscussion';
+import AboutUs from './screens/AboutUs';
 
 // const Tab = createBottomTabNavigator();
 // const Stack = createNativeStackNavigator();
@@ -107,6 +109,7 @@ const OrderStack = createNativeStackNavigator({
     WaitingPayment,
     PaymentSuccess,
     Prospectus,
+    BusinessDiscussion,
   },
 });
 
@@ -121,6 +124,7 @@ const AccountStack = createNativeStackNavigator({
     PrivacyPolicy,
     TermsAndConditions,
     ComplaintProcedure,
+    AboutUs,
   },
 });
 

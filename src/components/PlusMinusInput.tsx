@@ -22,7 +22,7 @@ const PlusMinusInput = ({
       style={[
         styles.container,
         {
-          backgroundColor: RGBAColors(1)[colorScheme].background,
+          backgroundColor: RGBAColors(0.5)[colorScheme].background,
           borderColor: RGBAColors(colorScheme === 'dark' ? 0.2 : 0.1)[
             colorScheme
           ].text,
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: '600',
     zIndex: 2,
+    transform: [{translateY: -2}],
   },
   input: {
     flex: 1,

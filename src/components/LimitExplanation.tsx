@@ -157,16 +157,18 @@ const LimitExplanation = ({
                 <Text style={[styles.text, {width: 20, color: textColor2}]}>
                   1.
                 </Text>
-                <Text style={[styles.text, {color: textColor2}]}>
-                  5% dari penghasilan per-tahun untuk pemodal dengan penghasilan
-                  per-tahun maksimal Rp 500.000.000
-                </Text>
+                <View style={{flex: 1}}>
+                  <Text style={[styles.text, {color: textColor2}]}>
+                    5% dari penghasilan per-tahun untuk pemodal dengan
+                    penghasilan per-tahun maksimal Rp 500.000.000
+                  </Text>
+                </View>
               </View>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.text, {width: 20, color: textColor2}]}>
                   2.
                 </Text>
-                <Text style={[styles.text, {color: textColor2}]}>
+                <Text style={[styles.text, {color: textColor2, flex: 1}]}>
                   10% dari penghasilan per-tahun untuk pemodal dengan
                   penghasilan per-tahun diatas Rp 500.000.000
                 </Text>
@@ -179,7 +181,7 @@ const LimitExplanation = ({
                 <Text style={[styles.text, {width: 20, color: textColor2}]}>
                   1.
                 </Text>
-                <Text style={[styles.text, {color: textColor2}]}>
+                <Text style={[styles.text, {color: textColor2, flex: 1}]}>
                   Memiliki rekening efek selama 2 tahun atau lebih (dibuktikan
                   dengan memiliki Single Investor Identification/SID)
                 </Text>
@@ -188,7 +190,7 @@ const LimitExplanation = ({
                 <Text style={[styles.text, {width: 20, color: textColor2}]}>
                   2.
                 </Text>
-                <Text style={[styles.text, {color: textColor2}]}>
+                <Text style={[styles.text, {color: textColor2, flex: 1}]}>
                   Atau merupakan wakil/karyawan badan hukum
                 </Text>
               </View>

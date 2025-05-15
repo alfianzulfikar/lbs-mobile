@@ -1,5 +1,5 @@
 import {Dimensions, StatusBar, StyleSheet, View} from 'react-native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {HomeMenuScreenType} from '../constants/Types';
 import {useBusiness} from '../api/business';
@@ -18,6 +18,8 @@ import {useArticle} from '../api/article';
 import {useDisclosure} from '../api/disclosure';
 import DisclosureCarousel from '../components/DisclosureCarousel';
 import {useColorScheme} from '../hooks/useColorScheme';
+import BannerCarousel from '../components/BannerCarousel';
+import {useBannerCarousel} from '../api/bannerCarousel';
 
 const Home = () => {
   const colorScheme = useColorScheme();
@@ -25,14 +27,19 @@ const Home = () => {
   const {
     listingBusinesses,
     preListingBusinesses,
-    error: businessError,
     getBusinesses,
     setIsLastPage,
+    businessesLoading,
+    prelistingLoading,
   } = useBusiness();
   const {user, getUser} = useUser();
-  const {articles, getArticles} = useArticle();
-  const {disclosureList, getDisclosureList} = useDisclosure();
+  const {articles, getArticles, articlesLoading} = useArticle();
+  const {disclosureList, getDisclosureList, disclosureListLoading} =
+    useDisclosure();
+  const {banners, bannersLoading, getBanners} = useBannerCarousel();
   const {width} = Dimensions.get('window');
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const menu: {id: number; label: string; to: HomeMenuScreenType}[] = [
     {id: 1, label: 'Portofolio', to: 'PortfolioStack'},
@@ -40,6 +47,18 @@ const Home = () => {
     {id: 3, label: 'FAQ', to: 'FAQ'},
     {id: 4, label: 'Panduan', to: undefined},
   ];
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setIsLastPage(false);
+    getUser();
+    getBusinesses(1, 5, false);
+    getBusinesses(1, 5, true);
+    getArticles();
+    getDisclosureList();
+    getBanners();
+    setRefreshing(false);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -49,6 +68,7 @@ const Home = () => {
       getBusinesses(1, 5, true);
       getArticles();
       getDisclosureList();
+      getBanners();
 
       return () => {};
     }, []),
@@ -63,7 +83,7 @@ const Home = () => {
         translucent
         backgroundColor="transparent"
       />
-      <ScreenWrapper scrollView>
+      <ScreenWrapper scrollView onRefresh={onRefresh} refreshing={refreshing}>
         <VideoBackground />
         <View
           style={[
@@ -90,11 +110,16 @@ const Home = () => {
               <ICBell color={Colors[colorScheme].text} />
             </IconWrapper>
           </View>
-          <Gap height={24} />
+          <Gap height={32} />
+          <BannerCarousel banners={banners} loading={bannersLoading} />
+          <Gap height={40} />
           <View style={styles.menuContainer}>
-            {menu.map(menuItem => (
+            {menu.map((menuItem, index) => (
               <View
-                style={{flex: 1, alignItems: 'center', paddingHorizontal: 16}}
+                style={{
+                  width: '25%',
+                  alignItems: 'center',
+                }}
                 key={menuItem.id}>
                 <HomeMenu
                   id={menuItem.id}
@@ -111,6 +136,7 @@ const Home = () => {
             onShowAll={() =>
               navigation.navigate('MainTab', {screen: 'Business'})
             }
+            loading={businessesLoading}
           />
           {preListingBusinesses.length > 0 && (
             <>
@@ -118,6 +144,7 @@ const Home = () => {
               <BusinessCarousel
                 title="Bisnis yang Akan Datang"
                 businesses={preListingBusinesses}
+                loading={prelistingLoading}
               />
             </>
           )}
@@ -127,9 +154,13 @@ const Home = () => {
             articles={articles}
             type="article"
             onShowAll={() => navigation.navigate('ArticleStack')}
+            loading={articlesLoading}
           />
           <Gap height={40} />
-          <DisclosureCarousel disclosures={disclosureList} />
+          <DisclosureCarousel
+            disclosures={disclosureList}
+            loading={disclosureListLoading}
+          />
           <Gap height={136} />
         </View>
       </ScreenWrapper>
@@ -154,7 +185,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   topContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -167,6 +198,6 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingHorizontal: 24,
   },
 });

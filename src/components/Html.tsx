@@ -24,6 +24,7 @@ const Html = ({source}: {source: string}) => {
     },
     strong: {
       fontWeight: '700',
+      color: textColor2,
     },
     table: {
       borderTopWidth: 1,

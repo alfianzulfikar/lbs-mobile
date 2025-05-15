@@ -26,7 +26,7 @@ const InputWrapper = ({
             : RGBAColors(0.4)[colorScheme].background,
           borderColor:
             borderColor ||
-            RGBAColors(colorScheme === 'dark' ? 0.2 : 0.1)[colorScheme].text,
+            RGBAColors(colorScheme === 'dark' ? 0.3 : 0.1)[colorScheme].text,
         },
       ]}>
       <BlurOverlay />

@@ -39,11 +39,16 @@ const Splash = () => {
         resizeMode="cover"
         onEnd={async () => {
           await initTheme();
+          const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
           const accessToken = await AsyncStorage.getItem('access_token');
           if (accessToken) {
             navigation.dispatch(StackActions.replace('MainTab'));
           } else {
-            navigation.dispatch(StackActions.replace('AuthStack'));
+            // if (hasVisitedOnboarding) {
+            //   navigation.dispatch(StackActions.replace('AuthStack'));
+            // } else {
+            // }
+            navigation.dispatch(StackActions.replace('OnBoarding'));
           }
         }}
       />

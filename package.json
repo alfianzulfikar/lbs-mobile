@@ -33,6 +33,7 @@
     "react-native-svg": "^15.11.2",
     "react-native-video": "^6.10.2",
     "react-native-webview": "^13.13.5",
+    "react-native-youtube-iframe": "^2.3.0",
     "react-redux": "^9.2.0",
     "rn-fetch-blob": "^0.12.0"
   },

@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -16,6 +17,7 @@ import Gap from '../components/Gap';
 import SearchBar from '../components/SearchBar';
 import DropdownInput from '../components/DropdownInput';
 import {BusinessType} from '../constants/Types';
+import BusinessCardSkeleton2 from '../components/BusinessCardSkeleton2';
 
 const Business = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -132,6 +134,12 @@ const Business = () => {
   useFocusEffect(
     useCallback(() => {
       const asyncFunc = async () => {
+        if (businessFlatlistRef?.current) {
+          businessFlatlistRef.current.scrollToOffset({
+            offset: 0,
+            animated: true,
+          });
+        }
         await getBusinesses(1, 10, null);
         setFlatlistScrollEnabled(true);
       };
@@ -172,31 +180,41 @@ const Business = () => {
         </View> */}
       </View>
       <Gap height={40} />
-      <View style={{flexDirection: 'row'}}>
-        <FlatList
-          ref={businessFlatlistRef}
-          horizontal
-          data={businesses}
-          renderItem={({item, index}) => (
-            <View
-              style={{
-                marginRight: index === businesses.length - 1 ? 24 : 16,
-                marginLeft: index === 0 ? 24 : 0,
-                height: businessesLoading ? 0 : 'auto',
-                overflow: 'hidden',
-              }}>
-              <BusinessCard2 business={item} />
-            </View>
-          )}
-          ListHeaderComponent={renderHeader()}
-          ListFooterComponent={renderFooter()}
-          keyExtractor={(item, id) => id.toString()}
-          showsHorizontalScrollIndicator={false}
-          onEndReachedThreshold={0.1}
-          onEndReached={() => handlePagination(page + 1)}
-          scrollEnabled={flatlistScrollEnabled}
-        />
-      </View>
+      {businessesLoading ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Gap width={24} />
+          <BusinessCardSkeleton2 />
+          <Gap width={16} />
+          <BusinessCardSkeleton2 />
+          <Gap width={24} />
+        </ScrollView>
+      ) : (
+        <View style={{flexDirection: 'row'}}>
+          <FlatList
+            ref={businessFlatlistRef}
+            horizontal
+            data={businesses}
+            renderItem={({item, index}) => (
+              <View
+                style={{
+                  marginRight: index === businesses.length - 1 ? 24 : 16,
+                  marginLeft: index === 0 ? 24 : 0,
+                  height: businessesLoading ? 0 : 'auto',
+                  overflow: 'hidden',
+                }}>
+                <BusinessCard2 business={item} />
+              </View>
+            )}
+            ListHeaderComponent={renderHeader()}
+            ListFooterComponent={renderFooter()}
+            keyExtractor={(item, id) => id.toString()}
+            showsHorizontalScrollIndicator={false}
+            onEndReachedThreshold={0.1}
+            onEndReached={() => handlePagination(page + 1)}
+            scrollEnabled={flatlistScrollEnabled}
+          />
+        </View>
+      )}
       <Gap height={120} />
     </ScreenWrapper>
   );

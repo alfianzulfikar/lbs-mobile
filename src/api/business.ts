@@ -1,4 +1,4 @@
-import {BusinessType} from '../constants/Types';
+import {BusinessType, CommentType} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {useRef, useState} from 'react';
 
@@ -27,13 +27,15 @@ export const useBusiness = () => {
     minimalPemesanan: 0,
     file: '',
     businessContent: [],
+    id: null,
   });
+  const [prelistingLoading, setPrelistingLoading] = useState(false);
   const [businessesLoading, setBusinessesLoading] = useState(false);
   const [businessesMoreLoading, setBusinessesMoreLoading] = useState(false);
   const [businessStatus, setBusinessStatus] = useState<any[]>([]);
   const [isLastPage, setIsLastPage] = useState(false);
-  // const businessesLoading = useRef(false);
-  // const businessesMoreLoading = useRef(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
 
   const getBusinesses = async (
     page?: number,
@@ -47,10 +49,12 @@ export const useBusiness = () => {
   ) => {
     if (page && page > 1) {
       setBusinessesMoreLoading(true);
-      // businessesMoreLoading.current = true;
     } else {
-      setBusinessesLoading(true);
-      // businessesLoading.current = true;
+      if (prelisting) {
+        setPrelistingLoading(true);
+      } else {
+        setBusinessesLoading(true);
+      }
     }
     try {
       const response = await apiRequest({
@@ -97,6 +101,7 @@ export const useBusiness = () => {
             : {};
 
           newArray.push({
+            id: item.id,
             slug: item.slug_merk_dagang,
             merkDagang: item.merk_dagang,
             tipeBisnis: item.type_bisnis,
@@ -143,10 +148,12 @@ export const useBusiness = () => {
     } finally {
       if (page && page > 1) {
         setBusinessesMoreLoading(false);
-        // businessesMoreLoading.current = false;
       } else {
-        setBusinessesLoading(false);
-        // businessesLoading.current = false;
+        if (prelisting) {
+          setPrelistingLoading(false);
+        } else {
+          setBusinessesLoading(false);
+        }
       }
     }
   };
@@ -159,7 +166,7 @@ export const useBusiness = () => {
         (item: any) => item?.name?.target_dana,
       );
 
-      // console.log('business detail res', response.bisnis_content);
+      console.log('business detail res', response);
 
       let target = 0;
       let image = '';
@@ -190,6 +197,7 @@ export const useBusiness = () => {
         : {};
 
       const data = {
+        id: response.id,
         slug: response.slug_merk_dagang,
         merkDagang: response.merk_dagang,
         tipeBisnis: response.type_bisnis,
@@ -223,6 +231,48 @@ export const useBusiness = () => {
     } catch {}
   };
 
+  const getBusinessLike = async () => {
+    setLikeLoading(true);
+    try {
+      const res = await apiRequest({
+        endpoint: '/bookmarks',
+      });
+      let tempBusinessLikesId: any = [];
+      res.forEach((businessLikesItem: any) => {
+        tempBusinessLikesId.push(businessLikesItem.id);
+      });
+      console.log(
+        'get like',
+        tempBusinessLikesId,
+        business.id,
+        tempBusinessLikesId.includes(business.id),
+      );
+      if (tempBusinessLikesId.includes(business.id)) {
+        setIsLiked(true);
+      }
+    } catch {
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
+  const handleLike = async (slug: string, type: 'like' | 'delete') => {
+    setLikeLoading(true);
+    try {
+      const res = await apiRequest({
+        method: type === 'delete' ? 'delete' : 'post',
+        endpoint: `/bisnis/detail/${slug}/bookmark`,
+        authorization: true,
+        body: {},
+      });
+      setIsLiked(type === 'delete' ? false : true);
+    } catch (error) {
+      console.log('like business error', error);
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
   return {
     businesses,
     preListingBusinesses,
@@ -240,5 +290,10 @@ export const useBusiness = () => {
     isLastPage,
     setIsLastPage,
     businessesMoreLoading,
+    handleLike,
+    isLiked,
+    getBusinessLike,
+    likeLoading,
+    prelistingLoading,
   };
 };

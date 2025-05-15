@@ -1,5 +1,6 @@
 import {
   ImageBackground,
+  RefreshControl,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -24,6 +25,8 @@ const ScreenWrapper = ({
   overlay,
   notch,
   statusBarBackground,
+  refreshing,
+  onRefresh,
 }: {
   children: ReactNode;
   background?: boolean;
@@ -34,6 +37,8 @@ const ScreenWrapper = ({
   overlay?: boolean;
   notch?: boolean;
   statusBarBackground?: string;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }) => {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
@@ -85,7 +90,15 @@ const ScreenWrapper = ({
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}
           style={{zIndex: 3}}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+          refreshControl={
+            onRefresh ? (
+              <RefreshControl
+                refreshing={refreshing || false}
+                onRefresh={onRefresh}
+              />
+            ) : undefined
+          }>
           {notch !== false && <Gap height={notchHeight} />}
           {children}
         </ScrollView>

@@ -20,7 +20,7 @@ import Gap from '../components/Gap';
 import Html from '../components/Html';
 import IconWrapper from '../components/IconWrapper';
 import ICShare from '../components/icons/ICShare';
-import {Colors} from '../constants/Colors';
+import {Colors, RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 
 type Props = StaticScreenProps<{
@@ -121,21 +121,43 @@ const ArticleDetail = ({route}: Props) => {
             </View>
           </View>
           <View style={{padding: 24}}>
-            <IconWrapper onPress={handleShare} width={107}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <ICShare color={textColor2} size={20} />
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: '600',
-                    lineHeight: 20,
-                    color: textColor2,
-                    marginLeft: 8,
-                  }}>
-                  Bagikan
-                </Text>
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={[
+                  styles.authorContainer,
+                  {
+                    backgroundColor:
+                      RGBAColors(1)[colorScheme === 'dark' ? 'light' : 'dark']
+                        .background,
+                  },
+                ]}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={styles.authorImageContainer}>
+                    <Image
+                      source={require('../assets/images/profile-picture-light.png')}
+                      style={{width: '100%', height: '100%'}}
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.authorName,
+                      {
+                        color:
+                          RGBAColors(1)[
+                            colorScheme === 'dark' ? 'light' : 'dark'
+                          ].text,
+                      },
+                    ]}>
+                    LBS Urun Dana
+                  </Text>
+                </View>
               </View>
-            </IconWrapper>
+              <Gap width={8} />
+              <IconWrapper onPress={handleShare}>
+                <ICShare color={textColor2} size={20} />
+              </IconWrapper>
+            </View>
             <Gap height={24} />
             <Html source={article.body} />
           </View>
@@ -147,4 +169,23 @@ const ArticleDetail = ({route}: Props) => {
 
 export default ArticleDetail;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  authorImageContainer: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginRight: 8,
+  },
+  authorName: {
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 20,
+  },
+  authorContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 99,
+  },
+});

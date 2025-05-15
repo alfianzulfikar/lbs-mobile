@@ -1,4 +1,10 @@
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {ArticleType, BusinessType} from '../constants/Types';
 import {Colors} from '../constants/Colors';
@@ -8,6 +14,8 @@ import Text from './Text';
 import BusinessCard from './BusinessCard';
 import ArticleCard from './ArticleCard';
 import ICArrowLeft from './icons/ICArrowLeft';
+import BusinessCardSkeleton from './BusinessCardSkeleton';
+import ArticleCardSkeleton from './ArticleCardSkeleton';
 
 const BusinessCarousel = ({
   title,
@@ -15,12 +23,14 @@ const BusinessCarousel = ({
   articles,
   type,
   onShowAll,
+  loading,
 }: {
   title: string;
   businesses?: BusinessType[];
   articles?: ArticleType[];
   type?: string;
   onShowAll?: () => void;
+  loading?: boolean;
 }) => {
   let textColor = useThemeColor({}, 'text');
   return (
@@ -39,7 +49,25 @@ const BusinessCarousel = ({
         )}
       </View>
       <Gap height={24} />
-      {type === 'article' ? (
+      {loading ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Gap width={24} />
+          {type === 'article' ? (
+            <>
+              <ArticleCardSkeleton />
+              <Gap width={16} />
+              <ArticleCardSkeleton />
+            </>
+          ) : (
+            <>
+              <BusinessCardSkeleton />
+              <Gap width={16} />
+              <BusinessCardSkeleton />
+            </>
+          )}
+          <Gap width={24} />
+        </ScrollView>
+      ) : type === 'article' ? (
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -47,10 +75,10 @@ const BusinessCarousel = ({
           renderItem={({item, index}) => {
             return (
               <View style={{flexDirection: 'row'}}>
-                {index === 0 && <Gap width={16} />}
+                {index === 0 && <Gap width={24} />}
                 <ArticleCard data={item} />
                 {/* <Text>{item.title}</Text> */}
-                <Gap width={16} />
+                <Gap width={24} />
               </View>
             );
           }}
@@ -63,9 +91,9 @@ const BusinessCarousel = ({
           renderItem={({item, index}) => {
             return (
               <View style={{flexDirection: 'row'}}>
-                {index === 0 && <Gap width={16} />}
+                {index === 0 && <Gap width={24} />}
                 <BusinessCard data={item} />
-                <Gap width={16} />
+                <Gap width={24} />
               </View>
             );
           }}
@@ -81,7 +109,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
   },
   title: {
     fontSize: 16,

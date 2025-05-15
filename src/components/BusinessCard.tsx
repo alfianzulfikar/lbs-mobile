@@ -41,7 +41,14 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
         })
       }>
       <View style={[styles.container, {width: (width * 84) / 100}]}>
-        <View style={[styles.imageContainer, {width: (width * 84) / 100}]}>
+        <View
+          style={[
+            styles.imageContainer,
+            {
+              width: (width * 84) / 100,
+              backgroundColor: RGBAColors(0.2).light.background,
+            },
+          ]}>
           <Image
             source={{uri: data.image}}
             style={{resizeMode: 'cover', width: '100%', height: '100%'}}
@@ -82,7 +89,7 @@ export default BusinessCard;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 24,
+    borderRadius: 40,
     maxWidth: 340,
     overflow: 'hidden',
   },

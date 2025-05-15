@@ -30,6 +30,7 @@ export interface BusinessType {
   tenor?: number;
   file?: string;
   businessContent?: any;
+  id: number | null;
 }
 
 export type RootStackParamList = {
@@ -358,4 +359,25 @@ export type KYCProgressType = {
   personal: boolean;
   tax: boolean;
   occupation: boolean;
+};
+
+export type ReplyType = {
+  username: string;
+  id: string;
+  date: string;
+  message: string;
+  image: string;
+  numberOfLikes: number;
+  isOfficial: boolean;
+  canDelete: boolean;
+};
+
+export type CommentType = ReplyType & {
+  replies?: CommentType[];
+};
+
+export type BannerType = {
+  image: string;
+  link: string;
+  isPublished: boolean;
 };

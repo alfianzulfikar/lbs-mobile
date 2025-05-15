@@ -32,7 +32,7 @@ const DisclosureCard = ({name, file}: {name: string; file: string}) => {
       ]}>
       <BlurOverlay />
       <View style={styles.contentWrapper}>
-        <Text style={styles.name} numberOfLines={2}>
+        <Text style={styles.name} numberOfLines={3}>
           {name}
         </Text>
         <Gap flex={1} />
