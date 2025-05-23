@@ -30,7 +30,7 @@ const AccountVerification = () => {
   ];
 
   const submit = async () => {
-    navigation.navigate('AuthStack', {screen: 'OTP'});
+    // navigation.navigate('PaymentSuccess');
   };
   return (
     <ScreenWrapper background backgroundType="gradient" scrollView>

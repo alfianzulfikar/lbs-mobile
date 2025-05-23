@@ -41,7 +41,7 @@ const DropdownInput = ({
       </Pressable>
 
       {showOption && (
-        <BottomSheet setShow={setShowOption}>
+        <BottomSheet setShow={setShowOption} snapPoints={['50%']}>
           {option.map((item, id) => (
             <Pressable
               key={id}

@@ -27,6 +27,7 @@ import {useBank} from '../api/bank';
 import numberFormat from '../utils/numberFormat';
 import capitalize from '../utils/capitalize';
 import {useColorScheme} from '../hooks/useColorScheme';
+import LottieView from 'lottie-react-native';
 
 type InfoType = {
   label: string;
@@ -37,6 +38,9 @@ type Props = {
   route: {
     params: {
       code: string;
+      type?: 'ask' | 'bid';
+      feeBuy?: number;
+      feeSell?: number;
     };
   };
 };
@@ -51,7 +55,7 @@ const WaitingPayment = ({route}: Props) => {
   const textColorDanger = useThemeColor({}, 'textDanger');
   const navigation = useNavigation();
   const {apiRequest} = useAPI();
-  const {code} = route.params;
+  const {code, type, feeBuy, feeSell} = route.params;
   const {paymentBankList, getPaymentBankList} = useBank();
 
   const [informationContent, setInformationContent] = useState<InfoType[]>([]);
@@ -92,7 +96,27 @@ const WaitingPayment = ({route}: Props) => {
         endpoint: `/waiting-payment/${code}`,
         authorization: true,
       });
-      if (res.status_transaksi?.name === 'Pending') {
+      const isMarket = res.status_transaksi.id == 8;
+
+      let percentage = res.percentage;
+      let price = 0;
+      let volume = 0;
+      let biayaPlatform = 0;
+      if (isMarket) {
+        price =
+          res.nominal && res.jumlah_lembar
+            ? Math.round(Number(res.nominal / res.jumlah_lembar))
+            : 0;
+        volume = res.jumlah_lembar || 0;
+        biayaPlatform = isMarket
+          ? Math.round((res.nominal * percentage) / 100)
+          : res.fee || '0';
+      }
+
+      if (
+        res.status_transaksi?.name === 'Pending' ||
+        res.status_transaksi?.name === 'Hold'
+      ) {
         setForm({
           type_bisnis: res.bisnis_transaksi[0]?.type_bisnis || '',
           kode: code || '',
@@ -142,8 +166,18 @@ const WaitingPayment = ({route}: Props) => {
         },
         {
           label: 'Biaya Platform',
-          value: res.fee || '0',
+          value: 'Rp' + numberFormat(isMarket ? biayaPlatform : res.fee || 0),
         },
+        ...(isMarket
+          ? [
+              {
+                label: 'Biaya Admin Bank',
+                value:
+                  'Rp' +
+                  numberFormat(res.total_nominal - res.nominal - biayaPlatform),
+              },
+            ]
+          : []),
         {
           label: 'Bank Kustodian',
           value: 'Danamon Syariah',
@@ -234,6 +268,19 @@ const WaitingPayment = ({route}: Props) => {
                           setCountdownExpired={() => setCountdownExpired(true)}
                         />
                       </Text>
+                      <View style={styles.animationContainer}>
+                        <LottieView
+                          autoPlay
+                          style={{
+                            width: 280,
+                            height: 280,
+                            backgroundColor: 'transparent',
+                            alignSelf: 'center',
+                          }}
+                          source={require('../assets/animations/calculator.json')}
+                          loop={true}
+                        />
+                      </View>
                     </>
                   )
                 )}
@@ -447,5 +494,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 20,
     marginTop: 4,
+  },
+  animationContainer: {
+    height: 160,
+    overflow: 'hidden',
+    justifyContent: 'center',
   },
 });

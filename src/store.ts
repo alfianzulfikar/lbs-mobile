@@ -1,9 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 import colorSchemeReducer from './slices/colorScheme';
+import userReducer from './slices/user';
 
 export const store = configureStore({
   reducer: {
     colorScheme: colorSchemeReducer,
+    user: userReducer,
   },
 });
 

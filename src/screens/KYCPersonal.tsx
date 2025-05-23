@@ -75,6 +75,7 @@ const KYCPersonal = () => {
       label: 'Tanggal Kadaluwarsa KTP',
       type: 'dropdown',
       option: ktpPeriodOption,
+      placeholder: 'Sementara'
     },
     {
       name: 'tglKadaluwarsaKTP',

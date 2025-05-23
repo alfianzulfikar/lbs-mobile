@@ -179,7 +179,8 @@ const TransactionDetail = ({
           background
           backgroundType="gradient"
           statusBar={false}
-          scrollView notch={false}>
+          scrollView
+          notch={false}>
           {/* <BlurOverlay blurAmount={40} /> */}
           <View
             style={{
@@ -262,7 +263,8 @@ const TransactionDetail = ({
                     </View>
                   ))}
                 </View>
-                {data.statusTransaksi === 'Pending' && (
+                {(data.statusTransaksi === 'Pending' ||
+                  data.statusTransaksi === 'Hold') && (
                   <>
                     <Gap flex={1} />
                     <Gap height={24} />
@@ -281,6 +283,15 @@ const TransactionDetail = ({
                     <Gap height={24} />
                   </>
                 )}
+                {/* <Button
+                  title="Test Payment Success"
+                  onPress={() =>
+                    navigation.navigate('PaymentSuccess', {
+                      paymentCode: data.kodePembayaran,
+                      type: data.jenisTransaksi,
+                    })
+                  }
+                /> */}
               </View>
             )}
           </View>

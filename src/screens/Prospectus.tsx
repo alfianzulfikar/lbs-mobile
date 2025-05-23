@@ -99,12 +99,10 @@ const Prospectus = ({route}: Props) => {
     let currentContent = businessContent.find(
       item => String(item.bisnis_side_menu.id) === value,
     );
-    console.log('currentContent', currentContent);
     setHtmlBody(currentContent?.name?.deskripsi || '');
   };
 
   useEffect(() => {
-    console.log('businessContent', businessContent);
     if (businessContent) {
       // set category
       let newCategory: InputDropdownOption[] = [];
@@ -123,7 +121,6 @@ const Prospectus = ({route}: Props) => {
       const businessHighlight = businessContent.find(
         item => item.bisnis_side_menu.id === 1,
       );
-      console.log('currentContent', businessHighlight);
       setHtmlBody(businessHighlight?.name?.deskripsi || '');
 
       // set business highlight info

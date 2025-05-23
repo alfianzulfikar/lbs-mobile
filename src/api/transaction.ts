@@ -18,6 +18,7 @@ export const useTransaction = () => {
     statusTransaksi: '',
     periodePembayaran: '',
     tanggalPembayaran: '',
+    isIPO: false,
   });
   const [transactionDetailLoading, setTransactionDetailLoading] =
     useState(false);
@@ -44,6 +45,7 @@ export const useTransaction = () => {
         biayaPlatform: 0,
         jenisTransaksi: '',
         statusTransaksi: '',
+        isIPO: false,
       };
     });
     setTransactionDetailLoading(true);
@@ -52,20 +54,27 @@ export const useTransaction = () => {
         endpoint: `/waiting-payment/${paymentCode}`,
         authorization: true,
       });
-      const jenisTransaksi = type;
-      const fee = res.total_nominal - res.nominal;
-      let feeObject = {};
-      if (
-        (jenisTransaksi == 'Penjualan' || jenisTransaksi == 'Pembelian') &&
-        fee &&
-        res.percentage >= 0
-      ) {
-        feeObject = {
-          biayaPlatform: Math.round((res.nominal * res.percentage) / 100),
-          biayaAdminBank:
-            fee - Math.round((res.nominal * res.percentage) / 100),
-        };
-      }
+      const jenisTransaksi = type || 'Pembelian';
+      const biayaPlatform = Math.round((res.nominal * res.percentage) / 100);
+      const biayaAdminBank =
+        jenisTransaksi == 'Penjualan'
+          ? 2900
+          : jenisTransaksi == 'Pembelian'
+          ? 5900
+          : 0;
+      const fee = biayaPlatform + biayaAdminBank;
+      const isIPO = res.total_nominal - res.nominal !== 0 ? false : true;
+      // let feeObject = {};
+      // if (
+      //   (jenisTransaksi == 'Penjualan' || jenisTransaksi == 'Pembelian') &&
+      //   fee &&
+      //   res.percentage >= 0
+      // ) {
+      //   feeObject = {
+      //     biayaPlatform: Math.round((res.nominal * res.percentage) / 100),
+      //     biayaAdminBank: jenisTransaksi === 'Penjualan' ? 2900 : 5900,
+      //   };
+      // }
       setTransactionDetail(prev => {
         return {
           ...prev,
@@ -78,10 +87,16 @@ export const useTransaction = () => {
             res.bisnis_transaksi.length > 0
               ? res.bisnis_transaksi[0].merk_dagang
               : '',
-          totalTransaksi:
-            jenisTransaksi === 'Penjualan'
-              ? res.nominal - fee
-              : res.total_nominal,
+          totalTransaksi: isIPO
+            ? res.nominal
+            : jenisTransaksi == 'Penjualan'
+            ? res.nominal - fee
+            : jenisTransaksi == 'Pembelian'
+            ? res.nominal + fee
+            : res.nominal,
+          // jenisTransaksi === 'Penjualan'
+          //   ? res.nominal - fee
+          //   : res.total_nominal,
           jenisBisnis:
             res.bisnis_transaksi.length > 0
               ? res.bisnis_transaksi[0].type_bisnis
@@ -91,9 +106,11 @@ export const useTransaction = () => {
           ),
           jumlahLembar: res.jumlah_lembar || 0,
           nominal: res.nominal || 0,
-          ...feeObject,
+          biayaAdminBank: !isIPO ? biayaAdminBank : 0,
+          biayaPlatform: !isIPO ? biayaPlatform : 0,
           jenisTransaksi: jenisTransaksi,
           statusTransaksi: res.status_transaksi.name || '',
+          isIPO,
         };
       });
     } catch {

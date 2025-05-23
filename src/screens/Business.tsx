@@ -105,7 +105,6 @@ const Business = () => {
       !isLastPage &&
       flatlistScrollEnabled
     ) {
-      console.log('handle pagination', nextPage);
       await getBusinesses(nextPage, 10, null, keyword);
       setPage(nextPage);
     }

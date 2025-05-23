@@ -19,6 +19,7 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {bottomHeight, notchHeight} from '../utils/getNotchHeight';
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -122,7 +123,11 @@ const OnBoarding = () => {
             },
           ]}>
           <BlurOverlay />
-          <View style={styles.descContentContainer}>
+          <View
+            style={[
+              styles.descContentContainer,
+              {paddingTop: 24, paddingBottom: 24},
+            ]}>
             {/* <Gap flex={1} /> */}
             <FlatList
               data={slides}
@@ -268,7 +273,7 @@ const styles = StyleSheet.create({
   },
   descContentContainer: {
     // flex: 1,
-    paddingVertical: 24,
+    // paddingVertical: 24,
     zIndex: 2,
   },
   title: {

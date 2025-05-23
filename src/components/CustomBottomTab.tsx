@@ -38,6 +38,7 @@ const CustomBottomTab = (props: any) => {
       style={[
         tabStyles.container,
         {
+          // marginBottom: 48,
           backgroundColor:
             Platform.OS === 'ios'
               ? RGBAColors(0.6)[colorScheme].background

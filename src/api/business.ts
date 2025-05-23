@@ -36,6 +36,7 @@ export const useBusiness = () => {
   const [isLastPage, setIsLastPage] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
+  const [businessLoading, setBusinessLoading] = useState(false);
 
   const getBusinesses = async (
     page?: number,
@@ -159,14 +160,13 @@ export const useBusiness = () => {
   };
 
   const getBusinessDetail = async (slug: string) => {
+    setBusinessLoading(true);
     try {
       const response = await apiRequest({endpoint: `/bisnis/detail/${slug}`});
       let businessContent = response.bisnis_content;
       let businessHighlight = response.bisnis_content.find(
         (item: any) => item?.name?.target_dana,
       );
-
-      console.log('business detail res', response);
 
       let target = 0;
       let image = '';
@@ -221,7 +221,10 @@ export const useBusiness = () => {
         businessContent,
       };
       setBusiness(data);
-    } catch {}
+    } catch {
+    } finally {
+      setBusinessLoading(false);
+    }
   };
 
   const getBusinessStatus = async () => {
@@ -241,12 +244,6 @@ export const useBusiness = () => {
       res.forEach((businessLikesItem: any) => {
         tempBusinessLikesId.push(businessLikesItem.id);
       });
-      console.log(
-        'get like',
-        tempBusinessLikesId,
-        business.id,
-        tempBusinessLikesId.includes(business.id),
-      );
       if (tempBusinessLikesId.includes(business.id)) {
         setIsLiked(true);
       }
@@ -295,5 +292,6 @@ export const useBusiness = () => {
     getBusinessLike,
     likeLoading,
     prelistingLoading,
+    businessLoading,
   };
 };

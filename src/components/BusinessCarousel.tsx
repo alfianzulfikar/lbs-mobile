@@ -77,8 +77,7 @@ const BusinessCarousel = ({
               <View style={{flexDirection: 'row'}}>
                 {index === 0 && <Gap width={24} />}
                 <ArticleCard data={item} />
-                {/* <Text>{item.title}</Text> */}
-                <Gap width={24} />
+                <Gap width={index !== (articles || []).length - 1 ? 16 : 24} />
               </View>
             );
           }}
@@ -93,7 +92,9 @@ const BusinessCarousel = ({
               <View style={{flexDirection: 'row'}}>
                 {index === 0 && <Gap width={24} />}
                 <BusinessCard data={item} />
-                <Gap width={24} />
+                <Gap
+                  width={index !== (businesses || []).length - 1 ? 16 : 24}
+                />
               </View>
             );
           }}

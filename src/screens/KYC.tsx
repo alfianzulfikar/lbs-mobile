@@ -39,9 +39,6 @@ const KYC = () => {
           <ICKTP color={textColor} />
           <View style={{marginLeft: 8, flex: 1}}>
             <Text style={styles.listTitle}>Kartu Tanda Penduduk</Text>
-            <Text style={[styles.listDesc, {color: textColor3}]}>
-              Lorem ipsum dolor sit amet, consecte adipiscing elit
-            </Text>
           </View>
         </View>
         <Gap height={24} />
@@ -50,9 +47,6 @@ const KYC = () => {
           <View style={{marginLeft: 8, flex: 1}}>
             <Text style={styles.listTitle}>
               Single Investor Identification (Jika Ada)
-            </Text>
-            <Text style={[styles.listDesc, {color: textColor3}]}>
-              Lorem ipsum dolor sit amet, consecte adipiscing elit
             </Text>
           </View>
         </View>
@@ -93,7 +87,7 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
     lineHeight: 24,
   },
   listDesc: {

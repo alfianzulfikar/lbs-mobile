@@ -1,7 +1,11 @@
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  StackActions,
+  useNavigation,
+} from '@react-navigation/native';
 import {envMode} from '../constants/Env';
 
 const API_BASE_URL =
@@ -46,42 +50,56 @@ export const useAPI = () => {
 
     try {
       const response = await fetch(composedUrl, options);
-      let data;
-      if (responseType === 'blob') {
-        data = await response.blob();
-      } else {
-        data = await response.json();
-      }
-
-      console.log('status', response?.status, method || 'get', response.url);
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          return await refreshToken(async (newToken: string) => {
-            const params = {
-              method,
-              baseUrl,
-              endpoint,
-              headers: {
-                ...headers,
-                Authorization: `Bearer ${newToken}`,
-              },
-              body,
-              responseType,
-              url,
-            };
-            console.log('callback is executed', params);
-            return await apiRequest(params);
-          });
+      const contentType = response.headers.get('content-type');
+      if (
+        contentType &&
+        (contentType.includes('application/json') ||
+          contentType.includes('application/blob'))
+      ) {
+        let data;
+        if (responseType === 'blob') {
+          data = await response.blob();
         } else {
-          throw data
-            ? {data, status: response.status}
-            : new Error(
-                data.message || `HTTP error! Status: ${response.status}`,
-              );
+          data = await response.json();
         }
+
+        console.log('status', response?.status, method || 'get', response.url);
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            return await refreshToken(async (newToken: string) => {
+              const params = {
+                method,
+                baseUrl,
+                endpoint,
+                headers: {
+                  ...headers,
+                  Authorization: `Bearer ${newToken}`,
+                },
+                body,
+                responseType,
+                url,
+              };
+              console.log('callback is executed', params);
+              return await apiRequest(params);
+            });
+          } else {
+            throw data
+              ? {data, status: response.status}
+              : new Error(
+                  data.message || `HTTP error! Status: ${response.status}`,
+                );
+          }
+        }
+        return data;
+      } else {
+        console.log('status', response?.status, method || 'get', response.url);
+        throw {
+          method: method || 'get',
+          url: composedUrl,
+          message: 'Http response is invalid',
+        };
       }
-      return data;
     } catch (error: any) {
       console.log('fetch error', error);
       throw error;
@@ -107,7 +125,12 @@ export const useAPI = () => {
         if (res.status === 401) {
           await AsyncStorage.removeItem('access_token');
           await AsyncStorage.removeItem('refresh_token');
-          navigation.dispatch(StackActions.replace('AuthStack'));
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'AuthStack'}],
+            }),
+          );
           throw data;
         } else {
           throw data;

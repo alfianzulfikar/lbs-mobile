@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -9,13 +9,29 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import Gap from '../components/Gap';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {useTransaction} from '../api/transaction';
+import numberFormat from '../utils/numberFormat';
+import LottieView from 'lottie-react-native';
+import Skeleton from '../components/Skeleton';
+import capitalize from '../utils/capitalize';
 
 type InfoType = {
   label: string;
-  value: string;
+  value: string | number;
 };
 
-const PaymentSuccess = () => {
+type Props = {
+  route: {
+    params: {
+      paymentCode: string;
+      type: string;
+    };
+  };
+};
+const PaymentSuccess = ({route}: Props) => {
+  const {paymentCode, type} = route.params;
+  const {getTransactionDetail, transactionDetail, transactionDetailLoading} =
+    useTransaction();
   const [informationContent, setInformationContent] = useState<InfoType[]>([]);
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
@@ -23,56 +39,141 @@ const PaymentSuccess = () => {
 
   const navigation = useNavigation();
 
-  const getDetail = async () => {
-    setInformationContent([
-      {
-        label: 'Sukuk Terkait',
-        value: '',
-      },
-      {
-        label: 'Kode Sukuk',
-        value: '',
-      },
-      {
-        label: 'Kode Transaksi',
-        value: '',
-      },
-      {
-        label: 'Nominal',
-        value: '',
-      },
-      {
-        label: 'Biaya Platform',
-        value: '',
-      },
-      {
-        label: 'Bank Kustodian',
-        value: '',
-      },
-    ]);
-  };
+  useEffect(() => {
+    getTransactionDetail({paymentCode, type});
+  }, []);
 
   useEffect(() => {
-    getDetail();
-  }, []);
+    const jenisBisnis = capitalize(transactionDetail.jenisBisnis);
+    setInformationContent(
+      transactionDetail.isIPO
+        ? [
+            {
+              label: `${jenisBisnis} Terkait`,
+              value: transactionDetail.merkDagang,
+            },
+            {
+              label: `Kode ${jenisBisnis}`,
+              value: transactionDetail.kodeEfek,
+            },
+            {
+              label: `Nominal Pembelian`,
+              value: transactionDetail.nominal
+                ? 'Rp' + numberFormat(transactionDetail.nominal)
+                : '',
+            },
+            {
+              label: 'Harga Per Lembar',
+              value: transactionDetail.hargaPerLembar
+                ? 'Rp' + numberFormat(transactionDetail.hargaPerLembar)
+                : '',
+            },
+            {
+              label: 'Jumlah Lembar',
+              value: transactionDetail.jumlahLembar
+                ? numberFormat(transactionDetail.jumlahLembar)
+                : '',
+            },
+            {
+              label: 'Status Transaksi',
+              value: transactionDetail.statusTransaksi,
+            },
+          ]
+        : [
+            {
+              label: 'Kode Saham',
+              value: transactionDetail.kodeEfek,
+            },
+            {
+              label: 'Nama Bisnis',
+              value: transactionDetail.merkDagang,
+            },
+            {
+              label: 'Harga Per Lembar',
+              value: transactionDetail.hargaPerLembar
+                ? 'Rp' + numberFormat(transactionDetail.hargaPerLembar)
+                : '',
+            },
+            {
+              label: 'Jumlah Lembar',
+              value: transactionDetail.jumlahLembar
+                ? numberFormat(transactionDetail.jumlahLembar)
+                : '',
+            },
+            {
+              label: `Nominal ${type}`,
+              value: transactionDetail.nominal
+                ? 'Rp' + numberFormat(transactionDetail.nominal)
+                : '',
+            },
+            {
+              label: 'Biaya Admin Bank',
+              value: transactionDetail.biayaAdminBank
+                ? 'Rp' + numberFormat(transactionDetail.biayaAdminBank)
+                : '',
+            },
+            {
+              label: 'Biaya Platform',
+              value: transactionDetail.biayaPlatform
+                ? 'Rp' + numberFormat(transactionDetail.biayaPlatform)
+                : '',
+            },
+            {
+              label: `Total ${
+                type === 'Pembelian' ? 'Pembayaran' : 'Penerimaan'
+              }`,
+              value: transactionDetail.totalTransaksi
+                ? 'Rp' + numberFormat(transactionDetail.totalTransaksi)
+                : '',
+            },
+            {
+              label: 'Status Transaksi',
+              value: transactionDetail.statusTransaksi,
+            },
+          ],
+    );
+  }, [transactionDetail]);
+
   return (
     <ScreenWrapper
       background
-      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={{flexGrow: 1}}
-        showsVerticalScrollIndicator={false}>
-        <View style={[styles.container, {paddingTop: 24}]}>
-          <Text style={styles.heading}>Pembayaran Berhasil</Text>
-          <Text style={styles.desc}>
-            Description of the text can be write here that contain maximum 2
-            lines.
+      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
+      scrollView>
+      {transactionDetailLoading ? (
+        <View style={{padding: 24}}>
+          <Skeleton aspectRatio={4 / 5} />
+        </View>
+      ) : (
+        <View style={[styles.container, {paddingTop: 40}]}>
+          <Text style={styles.heading}>
+            {type && type === 'Penjualan'
+              ? 'Order Jual Diproses'
+              : 'Pembayaran Berhasil'}
           </Text>
+          <Text style={styles.desc}>
+            {type
+              ? `Cek status order secara berkala untuk mengetahui progress ${type.toLowerCase()} saham.`
+              : 'Selamat! Ikhtiar Anda meraih finansial yang berkah sudah dimulai.'}
+          </Text>
+          <LottieView
+            autoPlay
+            style={{
+              width: 280,
+              height: 280,
+              backgroundColor: 'transparent',
+              alignSelf: 'center',
+            }}
+            source={require('../assets/animations/alhamdulillah.json')}
+            loop={true}
+          />
           <View
             style={[
               styles.card,
-              {backgroundColor: RGBAColors(0.4).light.background},
+              {
+                backgroundColor: RGBAColors(colorScheme === 'dark' ? 0.6 : 0.7)[
+                  colorScheme
+                ].background,
+              },
             ]}>
             <BlurOverlay />
             <View style={styles.cardContent}>
@@ -96,8 +197,9 @@ const PaymentSuccess = () => {
             title="Kembali ke Beranda"
             onPress={() => navigation.goBack()}
           />
+          <Gap height={40} />
         </View>
-      </ScrollView>
+      )}
     </ScreenWrapper>
   );
 };
@@ -112,7 +214,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     lineHeight: 36,
-    marginTop: 46,
+    // marginTop: 46,
     textAlign: 'center',
   },
   desc: {

@@ -132,7 +132,7 @@ const RoundedProgressIndicator = ({
             // transform: [{translateY: -2}],
           },
         ]}>
-        {progress.toFixed(progress < 1 ? 2 : 0)}%
+        {progress.toFixed(progress < 1 && progress !== 0 ? 2 : 0)}%
       </Text>
     </View>
   );

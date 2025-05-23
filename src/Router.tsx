@@ -51,6 +51,12 @@ import ForgotPassword from './screens/ForgotPassword';
 import Prospectus from './screens/Prospectus';
 import BusinessDiscussion from './screens/BusinessDiscussion';
 import AboutUs from './screens/AboutUs';
+import Market from './screens/Market';
+import MarketDetail from './screens/MarketDetail';
+import MarketOrder from './screens/MarketOrder';
+import MarketGuide from './screens/MarketGuide';
+import KYCWaiting from './screens/KYCWaiting';
+import Guide from './screens/Guide';
 
 // const Tab = createBottomTabNavigator();
 // const Stack = createNativeStackNavigator();
@@ -107,7 +113,7 @@ const OrderStack = createNativeStackNavigator({
     BusinessDetail,
     OrderBusiness,
     WaitingPayment,
-    PaymentSuccess,
+    // PaymentSuccess,
     Prospectus,
     BusinessDiscussion,
   },
@@ -137,7 +143,7 @@ const AuthStack = createNativeStackNavigator({
     Register,
     SendEmail,
     AccountVerification,
-    OTP,
+    // OTP,
     ForgotPassword,
   },
 });
@@ -176,6 +182,19 @@ const KYCStack = createNativeStackNavigator({
     KYCBank,
     KYCRisk,
     KYCTerms,
+    KYCWaiting,
+  },
+});
+
+const MarketStack = createNativeStackNavigator({
+  screenOptions: {
+    headerShown: false,
+  },
+  screens: {
+    Market,
+    MarketDetail,
+    MarketOrder,
+    MarketGuide,
   },
 });
 
@@ -211,6 +230,10 @@ const RootStack = createNativeStackNavigator({
     Disclosure,
     ImagePreview,
     KYCStack,
+    MarketStack,
+    OTP,
+    PaymentSuccess,
+    Guide,
   },
 });
 

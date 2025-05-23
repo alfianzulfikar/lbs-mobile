@@ -1,6 +1,6 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
-import {
+import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetScrollView,
@@ -8,9 +8,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Gap from './Gap';
-import {bottomHeight} from '../utils/getNotchHeight';
 
-const BottomSheet = ({
+const CustomBottomSheet = ({
   setShow,
   children,
   snapPoints,
@@ -25,7 +24,9 @@ const BottomSheet = ({
   const handleSheetChanges = useCallback((index: number) => {
     // console.log('handleSheetChanges', index);
   }, []);
+  const {height} = useWindowDimensions();
 
+  // const snapPointsMemo = useMemo(() => ['75%'], []);
   const snapPointsMemo = useMemo(() => snapPoints || ['25%', '50%', '75%'], []);
 
   const renderBackdrop = useCallback(
@@ -33,7 +34,7 @@ const BottomSheet = ({
       <BottomSheetBackdrop
         {...props}
         disappearsOnIndex={-1}
-        appearsOnIndex={1}
+        appearsOnIndex={0}
         onPress={() => {
           bottomSheetModalRef.current?.dismiss();
         }}
@@ -44,38 +45,63 @@ const BottomSheet = ({
 
   useEffect(() => {
     bottomSheetModalRef.current?.present();
+    // setTimeout(() => {
+    //   bottomSheetModalRef.current?.expand();
+    // }, 200);
   }, []);
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
       onChange={handleSheetChanges}
-      index={1}
+      index={snapPointsMemo.length - 1}
       onDismiss={() => setShow(false)}
       backdropComponent={renderBackdrop}
       snapPoints={snapPointsMemo}
       backgroundStyle={{backgroundColor}}
-      handleIndicatorStyle={{backgroundColor: textColor2}}>
-      {/* <BottomSheetView style={styles.bottomSheetContainer}>
-        <Gap height={8} />
-        {children}
-      </BottomSheetView> */}
+      handleIndicatorStyle={{backgroundColor: textColor2}}
+      maxDynamicContentSize={
+        (height *
+          Number(snapPointsMemo[snapPointsMemo.length - 1].replace('%', ''))) /
+        100
+      }>
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
-        style={styles.bottomSheetContainer}>
+        style={styles.bottomSheetContainer}
+        keyboardShouldPersistTaps="handled">
         <Gap height={8} />
         {children}
         <Gap height={40} />
       </BottomSheetScrollView>
     </BottomSheetModal>
+    // <BottomSheet
+    //   ref={bottomSheetRef}
+    //   index={0}
+    //   snapPoints={snapPointsMemo}
+    //   backdropComponent={renderBackdrop}
+    //   enableDynamicSizing={false}
+    //   onChange={handleSheetChanges}
+    //   onClose={() => setShow(false)}
+    //   enablePanDownToClose={true}>
+    //   {/* <BottomSheetView>
+    //     <Text>Awesome 🎉</Text>
+    //   </BottomSheetView> */}
+    //   <BottomSheetScrollView
+    //     showsVerticalScrollIndicator={false}
+    //     style={styles.bottomSheetContainer}>
+    //     <Gap height={8} />
+    //     {children}
+    //     <Gap height={40} />
+    //   </BottomSheetScrollView>
+    // </BottomSheet>
   );
 };
 
-export default BottomSheet;
+export default CustomBottomSheet;
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
     flex: 1,
     padding: 24,
-    paddingTop: 16,
+    paddingTop: 0,
   },
 });

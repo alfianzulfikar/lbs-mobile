@@ -42,13 +42,14 @@ const Splash = () => {
           const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
           const accessToken = await AsyncStorage.getItem('access_token');
           if (accessToken) {
+            // navigation.dispatch(StackActions.replace('KYCStack'));
             navigation.dispatch(StackActions.replace('MainTab'));
           } else {
-            // if (hasVisitedOnboarding) {
-            //   navigation.dispatch(StackActions.replace('AuthStack'));
-            // } else {
-            // }
-            navigation.dispatch(StackActions.replace('OnBoarding'));
+            if (hasVisitedOnboarding) {
+              navigation.dispatch(StackActions.replace('AuthStack'));
+            } else {
+              navigation.dispatch(StackActions.replace('OnBoarding'));
+            }
           }
         }}
       />

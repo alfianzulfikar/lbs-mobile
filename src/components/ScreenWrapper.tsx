@@ -1,6 +1,7 @@
 import {
   ImageBackground,
   RefreshControl,
+  // SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -8,12 +9,13 @@ import {
 } from 'react-native';
 import React, {ReactNode} from 'react';
 import Gap from './Gap';
-import {notchHeight} from '../utils/getNotchHeight';
+import {notchHeight, bottomHeight} from '../utils/getNotchHeight';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const ScreenWrapper = ({
   children,
@@ -55,7 +57,7 @@ const ScreenWrapper = ({
               ? 'light-content'
               : 'dark-content'
           }
-          translucent
+          // translucent={false}
           backgroundColor={statusBarBackground || 'transparent'}
         />
       )}
@@ -86,26 +88,30 @@ const ScreenWrapper = ({
           ]}></View>
       )}
       {scrollView ? (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}
-          style={{zIndex: 3}}
-          keyboardShouldPersistTaps="handled"
-          refreshControl={
-            onRefresh ? (
-              <RefreshControl
-                refreshing={refreshing || false}
-                onRefresh={onRefresh}
-              />
-            ) : undefined
-          }>
-          {notch !== false && <Gap height={notchHeight} />}
-          {children}
-        </ScrollView>
+        <View style={{flex: 1}}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{flexGrow: 1}}
+            style={{zIndex: 3}}
+            keyboardShouldPersistTaps="handled"
+            refreshControl={
+              onRefresh ? (
+                <RefreshControl
+                  refreshing={refreshing || false}
+                  onRefresh={onRefresh}
+                />
+              ) : undefined
+            }>
+            {notch !== false && <Gap height={notchHeight} />}
+            {children}
+            {/* {notch !== false && <Gap height={bottomHeight} />} */}
+          </ScrollView>
+        </View>
       ) : (
         <View style={{flex: 1, zIndex: 3}}>
           {notch !== false && <Gap height={notchHeight} />}
           {children}
+          {/* {notch !== false && <Gap height={bottomHeight} />} */}
         </View>
       )}
     </View>

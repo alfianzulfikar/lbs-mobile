@@ -1,11 +1,12 @@
 import {
   ActivityIndicator,
+  FlatList,
   ImageBackground,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Gap from '../components/Gap';
@@ -24,6 +25,7 @@ import PortfolioOverviewCard from '../components/PortfolioOverviewCard';
 import LimitExplanation from '../components/LimitExplanation';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {PortfolioType} from '../constants/Types';
 
 const Portfolio = () => {
   let colorScheme = useColorScheme();
@@ -32,7 +34,14 @@ const Portfolio = () => {
   const textColor3 = useThemeColor({}, 'text3');
   const navigation = useNavigation();
 
-  const {portfolioList, getPortfolioList} = usePortfolio();
+  const {
+    portfolioList,
+    getPortfolioList,
+    portfolioLoading,
+    morePortfolioLoading,
+    isLastPage,
+    isFetchingPortfolio,
+  } = usePortfolio();
   const {user, getProfile} = useUser();
 
   const [filter, setFilter] = useState({
@@ -41,9 +50,12 @@ const Portfolio = () => {
     order: '',
   });
   const [page, setPage] = useState(1);
-  const [listLoading, setListLoading] = useState(false);
   const [overviewLoading, setOverviewLoading] = useState(false);
   const [showLimit, setShowLimit] = useState(false);
+  const [scrollEnabled, setScrollEnabled] = useState(false);
+
+  const onEndReachedCalledDuringMomentum = useRef(false);
+  const isFiltering = useRef(false);
 
   const typeOption = [
     {name: 'Jenis', id: ''},
@@ -64,12 +76,6 @@ const Portfolio = () => {
     {name: 'Investasi Terkecil', id: 'Investasi Terkecil'},
   ];
 
-  const getList = async () => {
-    setListLoading(true);
-    await getPortfolioList({page: 1, filter});
-    setListLoading(false);
-  };
-
   const getOverview = async () => {
     setOverviewLoading(true);
     await getProfile();
@@ -77,20 +83,26 @@ const Portfolio = () => {
   };
 
   const handleFilter = async (value: string, filterType: string) => {
-    setListLoading(true);
+    isFiltering.current = true;
     setFilter({...filter, [filterType]: value});
     setPage(1);
+    isLastPage.current = false;
     await getPortfolioList({page: 1, filter: {...filter, [filterType]: value}});
-    setListLoading(false);
   };
 
-  useEffect(() => {
-    getList();
-    getOverview();
-  }, []);
+  const handlePagination = async (nextPage: number) => {
+    if (
+      !isFetchingPortfolio.current &&
+      !isLastPage.current &&
+      !isFiltering.current
+    ) {
+      await getPortfolioList({page: nextPage, filter});
+      setPage(nextPage);
+    }
+  };
 
-  return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
+  const renderHeader = () => (
+    <>
       <Gap height={24} />
       <Header
         rightIcon={
@@ -155,31 +167,76 @@ const Portfolio = () => {
         </ScrollView>
       </View>
       <Gap height={24} />
-      <View style={{paddingHorizontal: 24}}>
-        {listLoading ? (
-          <ActivityIndicator color={tint} />
-        ) : (
-          portfolioList.map((item, id) => (
-            <View
-              style={{marginBottom: id !== portfolioList.length - 1 ? 24 : 0}}
-              key={id}>
-              <PortfolioCard
-                data={item}
-                onPress={() =>
-                  navigation.navigate('PortfolioStack', {
-                    screen: 'PortfolioDetail',
-                    params: {
-                      slug: item.slug,
-                      id: item.id,
-                    },
-                  })
-                }
-              />
-            </View>
-          ))
-        )}
-      </View>
+      {portfolioLoading && <ActivityIndicator color={tint} />}
+    </>
+  );
+
+  const renderItem = ({item, index}: {item: PortfolioType; index: number}) => (
+    <View
+      style={{
+        paddingHorizontal: 24,
+        marginBottom: index !== portfolioList.length - 1 ? 24 : 0,
+      }}>
+      <PortfolioCard
+        data={item}
+        onPress={() =>
+          navigation.navigate('PortfolioStack', {
+            screen: 'PortfolioDetail',
+            params: {
+              slug: item.slug,
+              id: item.id,
+            },
+          })
+        }
+      />
+    </View>
+  );
+
+  const renderFooter = () => (
+    <>
+      {morePortfolioLoading && <ActivityIndicator color={tint} />}
       <Gap height={24} />
+    </>
+  );
+
+  useEffect(() => {
+    const handleAsync = async () => {
+      await getPortfolioList({page: 1, filter});
+      await getOverview();
+      setScrollEnabled(true);
+    };
+    handleAsync();
+  }, []);
+
+  useEffect(() => {
+    if (isFiltering.current === true) {
+      isFiltering.current = false;
+    }
+  }, [portfolioList]);
+
+  return (
+    <ScreenWrapper background backgroundType="gradient">
+      <FlatList
+        data={portfolioList}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        ListHeaderComponent={renderHeader()}
+        ListFooterComponent={renderFooter()}
+        onEndReached={() => {
+          if (!onEndReachedCalledDuringMomentum.current) {
+            handlePagination(page + 1);
+          }
+          onEndReachedCalledDuringMomentum.current = true;
+        }}
+        onEndReachedThreshold={0.1}
+        onMomentumScrollBegin={() => {
+          onEndReachedCalledDuringMomentum.current = false;
+        }}
+        // onScrollBeginDrag={() => {
+        //   onEndReachedCalledDuringMomentum.current = false;
+        // }}
+        scrollEnabled={scrollEnabled}
+      />
 
       {showLimit && (
         <LimitExplanation

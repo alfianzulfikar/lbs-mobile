@@ -12,7 +12,6 @@ export const useBannerCarousel = () => {
     setBannersLoading(true);
     try {
       const res = await apiRequest({endpoint: '/cms/carousel'});
-      console.log('get banners', res);
       const newBanners: BannerType[] = [];
       res.map((item: any) => {
         newBanners.push({
@@ -20,7 +19,7 @@ export const useBannerCarousel = () => {
           link:
             envMode === 'prod'
               ? 'https://www.lbs.id/publication/investasi/cuan-atau-boncos-ini-prospek-investasi-pasar-modal-syariah-di-indonesia'
-              : 'https://dev.lbs.id/publication/investasi/pemberitahuan-keterlembatan-pembayaran-pokok',
+              : 'https://dev.lbs.id/publication/investasi/why-do-we-use-it',
           isPublished: item.publish,
         });
       });

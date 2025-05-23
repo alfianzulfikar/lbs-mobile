@@ -251,10 +251,16 @@ const BusinessDetail = ({route}: Props) => {
                   <View style={styles.mainSection1}>
                     <Badge text={capitalize(business.tipeBisnis)} />
                     <Gap width={16} />
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                        transform: [{translateY: 6}],
+                      }}>
                       <ICLocation color={iconColor} />
                       <Gap width={4} />
-                      <Text style={[styles.location, {color: textColor}]}>
+                      <Text
+                        style={[styles.location, {color: textColor, flex: 1}]}>
                         {business.kota}, {business.provinsi}
                       </Text>
                     </View>
@@ -432,7 +438,7 @@ const styles = StyleSheet.create({
   },
   mainSection1: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingHorizontal: 24,
   },
   location: {

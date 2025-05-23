@@ -2,9 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState} from 'react';
 import {useAPI} from '../services/api';
 import {KYCBackScreen} from '../constants/Types';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../slices/user';
 
 export const useUser = () => {
   const {apiRequest} = useAPI();
+  const dispatch = useDispatch();
+
   const [profile1, setProfile1] = useState<{
     firstname: string;
     lastname: string;
@@ -41,14 +45,16 @@ export const useUser = () => {
         endpoint: '/auth/me',
         authorization: true,
       });
-      setProfile1({
+      const newProfile1 = {
         firstname: res.user.firstname,
         lastname: res.user.lastname,
         email: res.user.email,
         phone: res.user.phone,
         kycStatus: res.user.is_kyc,
         image: res.user.image_file,
-      });
+      };
+      setProfile1(newProfile1);
+      dispatch(setUser(newProfile1));
     } catch (error) {
       console.log('getUser error', error);
     }

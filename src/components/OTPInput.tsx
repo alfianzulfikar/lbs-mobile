@@ -73,6 +73,8 @@ const Input = ({
             }
           }
         }}
+        keyboardType="decimal-pad"
+        selectTextOnFocus
       />
     </View>
   );
@@ -81,10 +83,13 @@ const Input = ({
 const OTPInput = ({
   value,
   setValue,
+  error,
 }: {
   value: OtpType;
   setValue: Dispatch<SetStateAction<OtpType>>;
+  error?: string[];
 }) => {
+  const textColorDanger = useThemeColor({}, 'textDanger');
   const otp1ref = useRef(null);
   const otp2ref = useRef(null);
   const otp3ref = useRef(null);
@@ -92,59 +97,74 @@ const OTPInput = ({
   const otp5ref = useRef(null);
   const otp6ref = useRef(null);
   return (
-    <View style={styles.container}>
-      <Input
-        targetRef={otp1ref}
-        stateName="otp1"
-        value={value.otp1}
-        setValue={setValue}
-        otp={value}
-        nextInput={otp2ref}
-      />
-      <Input
-        targetRef={otp2ref}
-        stateName="otp2"
-        value={value.otp2}
-        setValue={setValue}
-        otp={value}
-        nextInput={otp3ref}
-        prevInput={otp1ref}
-      />
-      <Input
-        targetRef={otp3ref}
-        stateName="otp3"
-        value={value.otp3}
-        setValue={setValue}
-        otp={value}
-        nextInput={otp4ref}
-        prevInput={otp2ref}
-      />
-      <Input
-        targetRef={otp4ref}
-        stateName="otp4"
-        value={value.otp4}
-        setValue={setValue}
-        otp={value}
-        nextInput={otp5ref}
-        prevInput={otp3ref}
-      />
-      <Input
-        targetRef={otp5ref}
-        stateName="otp5"
-        value={value.otp5}
-        setValue={setValue}
-        otp={value}
-        nextInput={otp6ref}
-        prevInput={otp4ref}
-      />
-      <Input
-        targetRef={otp6ref}
-        stateName="otp6"
-        value={value.otp6}
-        setValue={setValue}
-        otp={value}
-        prevInput={otp5ref}
-      />
+    <View>
+      <View style={styles.container}>
+        <Input
+          targetRef={otp1ref}
+          stateName="otp1"
+          value={value.otp1}
+          setValue={setValue}
+          otp={value}
+          nextInput={otp2ref}
+        />
+        <Input
+          targetRef={otp2ref}
+          stateName="otp2"
+          value={value.otp2}
+          setValue={setValue}
+          otp={value}
+          nextInput={otp3ref}
+          prevInput={otp1ref}
+        />
+        <Input
+          targetRef={otp3ref}
+          stateName="otp3"
+          value={value.otp3}
+          setValue={setValue}
+          otp={value}
+          nextInput={otp4ref}
+          prevInput={otp2ref}
+        />
+        <Input
+          targetRef={otp4ref}
+          stateName="otp4"
+          value={value.otp4}
+          setValue={setValue}
+          otp={value}
+          nextInput={otp5ref}
+          prevInput={otp3ref}
+        />
+        <Input
+          targetRef={otp5ref}
+          stateName="otp5"
+          value={value.otp5}
+          setValue={setValue}
+          otp={value}
+          nextInput={otp6ref}
+          prevInput={otp4ref}
+        />
+        <Input
+          targetRef={otp6ref}
+          stateName="otp6"
+          value={value.otp6}
+          setValue={setValue}
+          otp={value}
+          prevInput={otp5ref}
+        />
+      </View>
+      {error && error.length > 0 ? (
+        <Text
+          style={{
+            fontSize: 12,
+            lineHeight: 16,
+            marginTop: 4,
+            color: textColorDanger,
+          }}>
+          {error.map(
+            (item, index) => `${item}${index !== error.length - 1 ? ' ' : ''}`,
+          )}
+        </Text>
+      ) : null}
     </View>
   );
 };

@@ -7,28 +7,35 @@ import {RGBAColors} from '../constants/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {checkNonNumeric} from '../utils/checkNonNumeric';
 import {useColorScheme} from '../hooks/useColorScheme';
+import numberFormat from '../utils/numberFormat';
 
 const PlusMinusInput = ({
   value,
   onChange,
+  usingRP,
+  error = [],
 }: {
   value: number;
   onChange: React.Dispatch<React.SetStateAction<number>>;
+  usingRP?: boolean;
+  error?: string[];
 }) => {
   const colorScheme = useColorScheme();
   const textColor = useThemeColor({}, 'text');
+  const textColorDanger = useThemeColor({}, 'textDanger');
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: RGBAColors(0.5)[colorScheme].background,
-          borderColor: RGBAColors(colorScheme === 'dark' ? 0.2 : 0.1)[
-            colorScheme
-          ].text,
-        },
-      ]}>
-      {/* <LinearGradient
+    <>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: RGBAColors(0.5)[colorScheme].background,
+            borderColor: RGBAColors(colorScheme === 'dark' ? 0.2 : 0.1)[
+              colorScheme
+            ].text,
+          },
+        ]}>
+        {/* <LinearGradient
         colors={
           colorScheme === 'dark'
             ? ['#404040', '#1A1A1A']
@@ -36,42 +43,51 @@ const PlusMinusInput = ({
         }
         style={{position: 'absolute', width: '100%', height: '100%'}}
       /> */}
-      {Platform.OS === 'ios' && <BlurOverlay />}
-      <View style={styles.contentContainer}>
-        <Pressable
-          style={[
-            styles.textContainer,
-            {backgroundColor: RGBAColors(0.4)[colorScheme].background},
-          ]}
-          onPress={() => {
-            if (Number(value) > 0) {
-              onChange(value - 1);
-            }
-          }}>
-          {Platform.OS === 'ios' && <BlurOverlay />}
-          <Text style={[styles.text, {color: textColor}]}>-</Text>
-        </Pressable>
-        <TextInput
-          keyboardType="decimal-pad"
-          style={[styles.input, {color: textColor}]}
-          value={String(value || 0)}
-          onChangeText={value => {
-            if (!checkNonNumeric(value)) {
-              onChange(Number(value));
-            }
-          }}
-        />
-        <Pressable
-          style={[
-            styles.textContainer,
-            {backgroundColor: RGBAColors(0.4)[colorScheme].background},
-          ]}
-          onPress={() => onChange(value + 1)}>
-          {Platform.OS === 'ios' && <BlurOverlay />}
-          <Text style={[styles.text, {color: textColor}]}>+</Text>
-        </Pressable>
+        {Platform.OS === 'ios' && <BlurOverlay />}
+        <View style={styles.contentContainer}>
+          <Pressable
+            style={[
+              styles.textContainer,
+              {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+            ]}
+            onPress={() => {
+              if (Number(value) > 0) {
+                onChange(value - 1);
+              }
+            }}>
+            {Platform.OS === 'ios' && <BlurOverlay />}
+            <Text style={[styles.text, {color: textColor}]}>-</Text>
+          </Pressable>
+          <TextInput
+            keyboardType="decimal-pad"
+            style={[styles.input, {color: textColor}]}
+            value={(usingRP ? 'Rp' : '') + String(numberFormat(value || 0))}
+            onChangeText={value => {
+              const newValue = value.replaceAll('.', '').replaceAll('Rp', '');
+              if (!checkNonNumeric(newValue)) {
+                onChange(Number(newValue));
+              }
+            }}
+          />
+          <Pressable
+            style={[
+              styles.textContainer,
+              {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+            ]}
+            onPress={() => onChange(value + 1)}>
+            {Platform.OS === 'ios' && <BlurOverlay />}
+            <Text style={[styles.text, {color: textColor}]}>+</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+      {error.length > 0 && (
+        <Text style={[styles.error, {color: textColorDanger}]}>
+          {error.map((item, index) =>
+            index !== error.length - 1 ? item + ' ' : item,
+          )}
+        </Text>
+      )}
+    </>
   );
 };
 
@@ -118,4 +134,5 @@ const styles = StyleSheet.create({
     // height: 36,
     // horizon
   },
+  error: {fontSize: 12, marginTop: 4},
 });

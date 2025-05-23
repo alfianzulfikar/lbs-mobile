@@ -12,7 +12,7 @@ const FormBuilder = ({
   fields: KYCFormFieldType[];
   state: KYCStateType;
   onChange: React.Dispatch<React.SetStateAction<KYCStateType>>;
-  error: KYCErrorType;
+  error?: KYCErrorType;
 }) => {
   return (
     <View>
@@ -35,7 +35,7 @@ const FormBuilder = ({
             disable={item.disable}
             option={item.option}
             required={item.required}
-            error={error[item.name]}
+            error={error ? error[item.name] : []}
             loading={item.loading}
             subLabel={item.subLabel}
             subLabelIcon={item.subLabelIcon}

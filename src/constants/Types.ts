@@ -77,6 +77,7 @@ export type DisclosureType = {
   name: string;
   date: string;
   file: string;
+  merkDagang: string;
 };
 
 export type PortfolioType = {
@@ -101,7 +102,12 @@ export type PortfolioType = {
   disclosures?: DisclosureType[];
 };
 
-export type HomeMenuScreenType = 'PortfolioStack' | 'FAQ' | undefined;
+export type HomeMenuScreenType =
+  | 'PortfolioStack'
+  | 'FAQ'
+  | 'MarketStack'
+  | 'Guide'
+  | undefined;
 
 export type FAQType = {
   question: string;
@@ -380,4 +386,67 @@ export type BannerType = {
   image: string;
   link: string;
   isPublished: boolean;
+};
+
+export type StockOverviewType = {
+  currentPrice: number | null;
+  openPrice: number | null;
+  closePrice: number | null;
+  lowestPrice: number | null;
+  highestPrice: number | null;
+  fairValue: number | null;
+  feeBuy?: number | null;
+  feeSell?: number | null;
+  buyShares: number | null;
+  sellShares: number | null;
+};
+
+export type StockType = StockOverviewType & {
+  id: number;
+  slug: string;
+  code: string;
+  merkDagang: string;
+};
+
+export type BidOrderbookType = {
+  B_Lembar: number | null;
+  Bid_Rp: number | null;
+};
+
+export type AskOrderbookType = {
+  Ask_Rp: number | null;
+  A_Lembar: number | null;
+};
+
+export type TradebookType = {
+  price: number | null;
+  frequency: number | null;
+  volume: number | null;
+  value: number | null;
+};
+
+export type DailyType = {
+  date: string;
+  open: number;
+  close: number;
+  change: number;
+  volume: number;
+};
+
+export type PaymentType = {
+  type: string;
+  paymentCode: string;
+  merkDagang: string;
+  businessCode: string;
+  billingExpired: string;
+  bank: string;
+  nominal: number | null;
+  price: number | null;
+  volume: number | null;
+  total: number | null;
+  platformFee: number | null;
+  bankFee: number | null;
+  va: string;
+  discount: number | null;
+  status: string;
 };

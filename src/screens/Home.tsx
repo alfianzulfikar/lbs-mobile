@@ -8,7 +8,7 @@ import Gap from '../components/Gap';
 import HomeMenu from '../components/HomeMenu';
 import VideoBackground from '../components/VideoBackground';
 import HelpButton from '../components/HelpButton';
-import {Colors} from '../constants/Colors';
+import {Colors, RGBAColors} from '../constants/Colors';
 import Badge from '../components/Badge';
 import ICBell from '../components/icons/ICBell';
 import IconWrapper from '../components/IconWrapper';
@@ -20,6 +20,8 @@ import DisclosureCarousel from '../components/DisclosureCarousel';
 import {useColorScheme} from '../hooks/useColorScheme';
 import BannerCarousel from '../components/BannerCarousel';
 import {useBannerCarousel} from '../api/bannerCarousel';
+import BlurOverlay from '../components/BlurOverlay';
+import HomeKycStatus from '../components/HomeKycStatus';
 
 const Home = () => {
   const colorScheme = useColorScheme();
@@ -32,7 +34,7 @@ const Home = () => {
     businessesLoading,
     prelistingLoading,
   } = useBusiness();
-  const {user, getUser} = useUser();
+  const {user, getUser, getKycProgress} = useUser();
   const {articles, getArticles, articlesLoading} = useArticle();
   const {disclosureList, getDisclosureList, disclosureListLoading} =
     useDisclosure();
@@ -43,19 +45,20 @@ const Home = () => {
 
   const menu: {id: number; label: string; to: HomeMenuScreenType}[] = [
     {id: 1, label: 'Portofolio', to: 'PortfolioStack'},
-    {id: 2, label: 'Pasar Sekunder', to: undefined},
+    {id: 2, label: 'Pasar Sekunder', to: 'MarketStack'},
     {id: 3, label: 'FAQ', to: 'FAQ'},
-    {id: 4, label: 'Panduan', to: undefined},
+    {id: 4, label: 'Panduan', to: 'Guide'},
   ];
 
   const onRefresh = () => {
     setRefreshing(true);
     setIsLastPage(false);
     getUser();
+    getKycProgress();
     getBusinesses(1, 5, false);
     getBusinesses(1, 5, true);
     getArticles();
-    getDisclosureList();
+    getDisclosureList(5);
     getBanners();
     setRefreshing(false);
   };
@@ -64,6 +67,7 @@ const Home = () => {
     useCallback(() => {
       setIsLastPage(false);
       getUser();
+      getKycProgress();
       getBusinesses(1, 5, false);
       getBusinesses(1, 5, true);
       getArticles();
@@ -73,8 +77,6 @@ const Home = () => {
       return () => {};
     }, []),
   );
-
-  useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
@@ -110,7 +112,12 @@ const Home = () => {
               <ICBell color={Colors[colorScheme].text} />
             </IconWrapper>
           </View>
-          <Gap height={32} />
+          {user.kycStatus === null && (
+            <View style={{paddingHorizontal: 24, marginTop: 24}}>
+              <HomeKycStatus status={user.kycStatus} screen={user.kycScreen} />
+            </View>
+          )}
+          {(bannersLoading || banners.length > 0) && <Gap height={40} />}
           <BannerCarousel banners={banners} loading={bannersLoading} />
           <Gap height={40} />
           <View style={styles.menuContainer}>

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {useAPI} from '../services/api';
 import {PortfolioType} from '../constants/Types';
 
@@ -19,6 +19,13 @@ export const usePortfolio = () => {
     return: 0,
     transactions: [],
   });
+
+  // loading
+  const [portfolioLoading, setPortfolioLoading] = useState(false);
+  const [morePortfolioLoading, setMorePortfolioLoading] = useState(false);
+
+  const isLastPage = useRef(false);
+  const isFetchingPortfolio = useRef(false);
 
   const composeData = (res: any) => {
     let total = res.total;
@@ -82,6 +89,12 @@ export const usePortfolio = () => {
     page: number;
     filter: {type: string; status: string; order: string};
   }) => {
+    isFetchingPortfolio.current = true;
+    if (page && page > 1) {
+      setMorePortfolioLoading(true);
+    } else {
+      setPortfolioLoading(true);
+    }
     try {
       const res = await apiRequest({
         endpoint: `/user/investasi?page=${page ? page : 1}&per_page=10${
@@ -99,8 +112,18 @@ export const usePortfolio = () => {
         newArray.push(composeData(item));
       });
       setPortfolioList(newArray);
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.status === 404) {
+        isLastPage.current = true;
+      }
       console.log('getPortfolioList error', error);
+    } finally {
+      isFetchingPortfolio.current = false;
+      if (page && page > 1) {
+        setMorePortfolioLoading(false);
+      } else {
+        setPortfolioLoading(false);
+      }
     }
   };
 
@@ -114,5 +137,14 @@ export const usePortfolio = () => {
     } catch (error) {}
   };
 
-  return {portfolioList, portfolio, getPortfolioList, getPortfolio};
+  return {
+    portfolioList,
+    portfolio,
+    getPortfolioList,
+    getPortfolio,
+    morePortfolioLoading,
+    portfolioLoading,
+    isLastPage,
+    isFetchingPortfolio,
+  };
 };

@@ -60,7 +60,9 @@ const DisclosureCarousel = ({
               <View style={{flexDirection: 'row'}}>
                 {index === 0 && <Gap width={24} />}
                 <DisclosureCard name={item.name} file={item.file} />
-                <Gap width={24} />
+                <Gap
+                  width={index !== (disclosures || []).length - 1 ? 16 : 24}
+                />
               </View>
             );
           }}
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
   },
   title: {
     fontSize: 16,

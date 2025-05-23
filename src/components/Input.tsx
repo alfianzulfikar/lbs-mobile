@@ -104,6 +104,8 @@ const Input = ({
       const options: CameraOptions = {
         mediaType: 'photo',
         includeBase64: true,
+        maxHeight: 1000,
+        maxWidth: 1000,
       };
       if (type === 'galery') {
         await launchImageLibrary(options, res => handleImageRes(res));
@@ -137,14 +139,15 @@ const Input = ({
       )}
       {type === 'otp-method' ? (
         <Pressable onPress={onPress}>
-          <InputWrapper borderColor={isActive ? tint : undefined}>
+          <InputWrapper borderColor={isActive ? textColor : undefined}>
             <View style={styles.contentContainer}>
               <Text
                 style={[
                   styles.input,
                   {
-                    color: isActive ? tint : textColor3,
+                    color: isActive ? textColor : textColor3,
                     fontWeight: isActive ? '700' : '400',
+                    textAlignVertical: 'center',
                   },
                 ]}>
                 {value}
@@ -154,11 +157,17 @@ const Input = ({
                   styles.radioActive,
                   {
                     borderWidth: isActive ? 2 : 1,
-                    borderColor: isActive ? tint : textColor3,
+                    borderColor: isActive
+                      ? textColor
+                      : RGBAColors(colorScheme === 'dark' ? 0.3 : 0.5)[
+                          colorScheme
+                        ].text,
                   },
                 ]}>
                 {isActive && (
-                  <View style={[styles.innerCircle, {backgroundColor: tint}]} />
+                  <View
+                    style={[styles.innerCircle, {backgroundColor: textColor}]}
+                  />
                 )}
               </View>
             </View>
@@ -374,7 +383,13 @@ const Input = ({
                   onChange(item.id);
                   setShowOption(false);
                 }}>
-                <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 20,
+                    borderBottomWidth: 1,
+                    borderColor: RGBAColors(0.05)[colorScheme].text,
+                  }}>
                   {item?.image && (
                     <Image
                       source={{uri: item.image}}
@@ -486,7 +501,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    transform: [{translateY: 2}]
+    transform: [{translateY: 2}],
   },
   radioInnerCircle: {
     width: 10,

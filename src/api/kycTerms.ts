@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useAPI} from '../services/api';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
 export const useKYCTerms = () => {
   const {apiRequest} = useAPI();
@@ -20,8 +20,9 @@ export const useKYCTerms = () => {
           check: hasRead || null,
         },
       });
-      navigation.goBack();
-      // navigation.dispatch(StackActions.replace('Account'));
+      navigation.dispatch(
+        StackActions.replace('KYCStack', {screen: 'KYCWaiting'}),
+      );
     } catch (error: any) {
       console.log('submitTerms error', error);
       if (error.status === 422) {

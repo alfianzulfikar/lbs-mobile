@@ -47,7 +47,7 @@ const KYCRisk = () => {
             <FormBuilder
               fields={riskForm}
               state={risk}
-              error={[]}
+              // error={[]}
               onChange={setRisk}
             />
             {idError.length > 0 && (
