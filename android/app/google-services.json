@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "69570896725",
+    "project_id": "lbs-urundana-f4bfc",
+    "storage_bucket": "lbs-urundana-f4bfc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69570896725:android:8d1ed765c3ebf7f37205dc",
+        "android_client_info": {
+          "package_name": "id.lbs.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpyhFXlVUdD-2gXodvM8uC3kzJhn8EhQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
