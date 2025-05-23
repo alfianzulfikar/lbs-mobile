@@ -1,5 +1,7 @@
 import {
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   RefreshControl,
   // SafeAreaView,
   ScrollView,
@@ -45,76 +47,80 @@ const ScreenWrapper = ({
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: background ? backgroundColor : 'transparent',
-      }}>
-      {statusBar !== false && (
-        <StatusBar
-          barStyle={
-            statusBarStyle || colorScheme === 'dark'
-              ? 'light-content'
-              : 'dark-content'
-          }
-          // translucent={false}
-          backgroundColor={statusBarBackground || 'transparent'}
-        />
-      )}
-      {background &&
-        (backgroundType === 'gradient' || backgroundType === 'pattern') && (
-          <ImageBackground
-            source={
-              colorScheme === 'dark'
-                ? backgroundType === 'gradient'
-                  ? require('../assets/images/bg-dark-2.jpg')
-                  : require('../assets/images/bg-dark.jpg')
-                : backgroundType === 'gradient'
-                ? require('../assets/images/bg-light-2.jpg')
-                : require('../assets/images/bg-light.jpg')
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: background ? backgroundColor : 'transparent',
+        }}>
+        {statusBar !== false && (
+          <StatusBar
+            barStyle={
+              statusBarStyle || colorScheme === 'dark'
+                ? 'light-content'
+                : 'dark-content'
             }
-            resizeMode="cover"
-            style={[styles.imageBackground, {zIndex: 1}]}
+            // translucent={false}
+            backgroundColor={statusBarBackground || 'transparent'}
           />
         )}
-      {overlay && (
-        <View
-          style={[
-            styles.imageBackground,
-            {
-              backgroundColor: RGBAColors(0.6)[colorScheme].background,
-              zIndex: 2,
-            },
-          ]}></View>
-      )}
-      {scrollView ? (
-        <View style={{flex: 1}}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{flexGrow: 1}}
-            style={{zIndex: 3}}
-            keyboardShouldPersistTaps="handled"
-            refreshControl={
-              onRefresh ? (
-                <RefreshControl
-                  refreshing={refreshing || false}
-                  onRefresh={onRefresh}
-                />
-              ) : undefined
-            }>
+        {background &&
+          (backgroundType === 'gradient' || backgroundType === 'pattern') && (
+            <ImageBackground
+              source={
+                colorScheme === 'dark'
+                  ? backgroundType === 'gradient'
+                    ? require('../assets/images/bg-dark-2.jpg')
+                    : require('../assets/images/bg-dark.jpg')
+                  : backgroundType === 'gradient'
+                  ? require('../assets/images/bg-light-2.jpg')
+                  : require('../assets/images/bg-light.jpg')
+              }
+              resizeMode="cover"
+              style={[styles.imageBackground, {zIndex: 1}]}
+            />
+          )}
+        {overlay && (
+          <View
+            style={[
+              styles.imageBackground,
+              {
+                backgroundColor: RGBAColors(0.6)[colorScheme].background,
+                zIndex: 2,
+              },
+            ]}></View>
+        )}
+        {scrollView ? (
+          <View style={{flex: 1}}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{flexGrow: 1}}
+              style={{zIndex: 3}}
+              keyboardShouldPersistTaps="handled"
+              refreshControl={
+                onRefresh ? (
+                  <RefreshControl
+                    refreshing={refreshing || false}
+                    onRefresh={onRefresh}
+                  />
+                ) : undefined
+              }>
+              {notch !== false && <Gap height={notchHeight} />}
+              {children}
+              {/* {notch !== false && <Gap height={bottomHeight} />} */}
+            </ScrollView>
+          </View>
+        ) : (
+          <View style={{flex: 1, zIndex: 3}}>
             {notch !== false && <Gap height={notchHeight} />}
             {children}
             {/* {notch !== false && <Gap height={bottomHeight} />} */}
-          </ScrollView>
-        </View>
-      ) : (
-        <View style={{flex: 1, zIndex: 3}}>
-          {notch !== false && <Gap height={notchHeight} />}
-          {children}
-          {/* {notch !== false && <Gap height={bottomHeight} />} */}
-        </View>
-      )}
-    </View>
+          </View>
+        )}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
