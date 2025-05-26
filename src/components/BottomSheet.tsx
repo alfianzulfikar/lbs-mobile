@@ -13,10 +13,12 @@ const CustomBottomSheet = ({
   setShow,
   children,
   snapPoints,
+  onDismiss,
 }: {
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setShow?: React.Dispatch<React.SetStateAction<boolean>>;
   children: ReactNode;
   snapPoints?: string[];
+  onDismiss?: () => void;
 }) => {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor2 = useThemeColor({}, 'text2');
@@ -54,7 +56,13 @@ const CustomBottomSheet = ({
       ref={bottomSheetModalRef}
       onChange={handleSheetChanges}
       index={snapPointsMemo.length - 1}
-      onDismiss={() => setShow(false)}
+      onDismiss={() => {
+        if (onDismiss) {
+          onDismiss();
+        } else if (setShow) {
+          setShow(false);
+        }
+      }}
       backdropComponent={renderBackdrop}
       snapPoints={snapPointsMemo}
       backgroundStyle={{backgroundColor}}

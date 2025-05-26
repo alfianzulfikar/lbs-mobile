@@ -5,6 +5,7 @@ import {StackActions, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
+import {useDeepLinks} from '../utils/handleDeepLinks';
 
 const Splash = () => {
   const navigation = useNavigation();
@@ -12,6 +13,7 @@ const Splash = () => {
   const videoRef = useRef<VideoRef>(null);
   const background = require('../assets/videos/splash.mp4');
   const dispatch = useDispatch();
+  const {handleDeepLinks} = useDeepLinks();
 
   const initTheme = async () => {
     const theme = await AsyncStorage.getItem('theme');
@@ -39,18 +41,7 @@ const Splash = () => {
         resizeMode="cover"
         onEnd={async () => {
           await initTheme();
-          const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
-          const accessToken = await AsyncStorage.getItem('access_token');
-          if (accessToken) {
-            // navigation.dispatch(StackActions.replace('KYCStack'));
-            navigation.dispatch(StackActions.replace('MainTab'));
-          } else {
-            if (hasVisitedOnboarding) {
-              navigation.dispatch(StackActions.replace('AuthStack'));
-            } else {
-              navigation.dispatch(StackActions.replace('OnBoarding'));
-            }
-          }
+          await handleDeepLinks();
         }}
       />
     </View>

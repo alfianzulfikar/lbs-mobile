@@ -57,6 +57,10 @@ import MarketOrder from './screens/MarketOrder';
 import MarketGuide from './screens/MarketGuide';
 import KYCWaiting from './screens/KYCWaiting';
 import Guide from './screens/Guide';
+import ResetPassword from './screens/ResetPassword';
+import DigitalSignature from './screens/DigitalSignature';
+import DigitalSignatureResend from './screens/DigitalSignatureResend';
+import DigitalSignatureSuccess from './screens/DigitalSignatureSuccess';
 
 // const Tab = createBottomTabNavigator();
 // const Stack = createNativeStackNavigator();
@@ -116,6 +120,9 @@ const OrderStack = createNativeStackNavigator({
     // PaymentSuccess,
     Prospectus,
     BusinessDiscussion,
+    DigitalSignature,
+    DigitalSignatureResend,
+    DigitalSignatureSuccess,
   },
 });
 
@@ -145,6 +152,7 @@ const AuthStack = createNativeStackNavigator({
     AccountVerification,
     // OTP,
     ForgotPassword,
+    ResetPassword,
   },
 });
 

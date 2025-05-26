@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {Keyboard, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -23,6 +23,7 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
 
   const submit = async () => {
+    Keyboard.dismiss();
     setLoading(true);
     try {
       const res = await apiRequest({
@@ -32,6 +33,7 @@ const ForgotPassword = () => {
           email,
         },
       });
+      setEmail('');
       navigation.navigate('AuthStack', {
         screen: 'SendEmail',
         params: {message: res?.success?.msg || ''},
@@ -62,6 +64,7 @@ const ForgotPassword = () => {
           error={error}
         />
         <Gap flex={1} />
+        <Gap height={24} />
         <Button title="Kirim" onPress={submit} loading={loading} />
       </View>
     </ScreenWrapper>

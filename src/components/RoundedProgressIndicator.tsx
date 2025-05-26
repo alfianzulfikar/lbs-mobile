@@ -22,7 +22,7 @@ const RoundedProgressIndicator = ({
   shadow?: boolean;
 }) => {
   let colorScheme = useColorScheme();
-  const progress = (current * 100) / target;
+  const progress = current && target ? (current * 100) / target : 0;
   const progressColor = color || useThemeColor({}, 'tint');
   const size = type === 'large' ? 160 : type === 'medium' ? 80 : 48;
   const strokeWidth = type === 'large' ? 18 : type === 'medium' ? 10 : 5;

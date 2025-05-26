@@ -73,7 +73,7 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
             </View>
             <Gap height={8} />
             <Text
-              style={[styles.merkDagang, {color: Colors.dark.text}]}
+              style={[styles.title, {color: Colors.dark.text}]}
               numberOfLines={2}>
               {data.title}
             </Text>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   informationContainer: {
     borderRadius: 24,
     overflow: 'hidden',
-    width: 340,
+    maxWidth: 340,
     position: 'absolute',
     left: 0,
     bottom: 0,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     padding: 16,
     zIndex: 2,
   },
-  merkDagang: {
+  title: {
     fontSize: 14,
     fontWeight: '700',
     lineHeight: 20,

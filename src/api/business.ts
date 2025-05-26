@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import {BusinessType, CommentType} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {useRef, useState} from 'react';
@@ -37,6 +38,7 @@ export const useBusiness = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const [businessLoading, setBusinessLoading] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
 
   const getBusinesses = async (
     page?: number,
@@ -221,7 +223,10 @@ export const useBusiness = () => {
         businessContent,
       };
       setBusiness(data);
-    } catch {
+    } catch (error: any) {
+      if (error?.status === 404) {
+        setIsNotFound(true);
+      }
     } finally {
       setBusinessLoading(false);
     }
@@ -293,5 +298,6 @@ export const useBusiness = () => {
     likeLoading,
     prelistingLoading,
     businessLoading,
+    isNotFound,
   };
 };

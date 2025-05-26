@@ -98,6 +98,68 @@ const OTPInput = ({
   const otp6ref = useRef(null);
   return (
     <View>
+      {/* <View style={styles.container}>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 8,
+            height: 50,
+            borderWidth: 1,
+            maxWidth: 50,
+          }}>
+          <TextInput />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 8,
+            height: 50,
+            borderWidth: 1,
+            maxWidth: 50,
+          }}>
+          <TextInput />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 8,
+            height: 50,
+            borderWidth: 1,
+            maxWidth: 50,
+          }}>
+          <TextInput />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 8,
+            height: 50,
+            borderWidth: 1,
+            maxWidth: 50,
+          }}>
+          <TextInput />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 8,
+            height: 50,
+            borderWidth: 1,
+            maxWidth: 50,
+          }}>
+          <TextInput />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 8,
+            height: 50,
+            borderWidth: 1,
+            maxWidth: 50,
+          }}>
+          <TextInput />
+        </View>
+      </View> */}
       <View style={styles.container}>
         <Input
           targetRef={otp1ref}
@@ -176,12 +238,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor: 'yellow',
+    width: '100%',
   },
   inputContainer: {
-    width: 50,
+    maxWidth: 50,
+    flex: 1,
     height: 50,
     borderRadius: 8,
-    overflow: 'hidden',
+    // overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,

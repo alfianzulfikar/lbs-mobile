@@ -7,6 +7,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import {envMode} from '../constants/Env';
+import {Alert} from 'react-native';
 
 const API_BASE_URL =
   envMode === 'prod' ? 'https://uda-api.lbs.id' : 'https://dev-api.lbs.id';
@@ -84,6 +85,11 @@ export const useAPI = () => {
               return await apiRequest(params);
             });
           } else {
+            if (response.status === 429) {
+              Alert.alert('Terlalu banyak percobaan');
+            } else if (response.status === 500) {
+              Alert.alert('Terjadi kesalan pada server');
+            }
             throw data
               ? {data, status: response.status}
               : new Error(
@@ -102,6 +108,11 @@ export const useAPI = () => {
       }
     } catch (error: any) {
       console.log('fetch error', error);
+      if (error instanceof TypeError) {
+        Alert.alert(
+          'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
+        );
+      }
       throw error;
     }
   };

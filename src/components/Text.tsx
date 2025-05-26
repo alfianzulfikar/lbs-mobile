@@ -1,12 +1,10 @@
 import {StyleSheet, Text, TextProps} from 'react-native';
 import React from 'react';
 import {Colors} from '../constants/Colors';
-import {useSelector} from 'react-redux';
-import {RootState} from '../store';
-import {useColorScheme} from '../hooks/useColorScheme';
+import {useThemeColor} from '../hooks/useThemeColor';
 
 const CustomText = (props: TextProps) => {
-  const colorScheme = useColorScheme();
+  const textColor = useThemeColor({}, 'text');
   // const loading = props?.loading;
   // const loadingStyle = props?.loadingStyle || {};
   let properties: any = {};
@@ -36,7 +34,7 @@ const CustomText = (props: TextProps) => {
     };
   }
 
-  let color = Colors[colorScheme].text;
+  let color = textColor;
   let fontFamily = 'Inter-Regular';
 
   if (properties.style) {

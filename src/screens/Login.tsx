@@ -1,16 +1,33 @@
 import {Alert, Keyboard, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
 import {notchHeight} from '../utils/getNotchHeight';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Input from '../components/Input';
 import Gap from '../components/Gap';
 import Button from '../components/Button';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {
+  StackActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import {useAPI} from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = () => {
+type Props = {
+  route: {
+    params: {
+      targetRoute?: {
+        mainRoute: string;
+        options?: {screen?: string; params: any};
+      };
+    };
+  };
+};
+
+const Login = ({route}: Props) => {
+  const pageProps = route?.params || {};
+  const {targetRoute} = pageProps;
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const textColor3 = useThemeColor({}, 'text3');
@@ -37,9 +54,18 @@ const Login = () => {
       });
       await AsyncStorage.setItem('access_token', res.access_token);
       await AsyncStorage.setItem('refresh_token', res.refresh_token);
-      navigation.dispatch(StackActions.replace('MainTab'));
+      if (targetRoute) {
+        navigation.dispatch(
+          StackActions.replace(targetRoute.mainRoute, {
+            screen: targetRoute.options?.screen,
+            params: targetRoute.options?.params,
+          }),
+        );
+      } else {
+        navigation.dispatch(StackActions.replace('MainTab'));
+      }
     } catch (error: any) {
-      const data = error.data;
+      const data = error?.data;
       let errorString = '';
       let errorKey = '';
       if (data?.errors?.msg) {
@@ -52,14 +78,25 @@ const Login = () => {
           errorString += (index == 0 ? '' : ' ') + item;
         });
       }
-      Alert.alert(errorString || 'Terjadi kesalahan.');
+      if (error?.status === 422) {
+        Alert.alert(errorString || 'Terjadi kesalahan.');
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+      setPassword('');
+      return () => {};
+    }, []),
+  );
+
   return (
     <ScreenWrapper background backgroundType="gradient" scrollView>
-      <View style={[styles.container, {paddingTop: notchHeight + 24}]}>
+      <View style={[styles.container, {paddingTop: 24}]}>
         <Text style={[styles.heading, {color: textColor}]}>Masuk Akun LBS</Text>
         {/* <Text style={[styles.desc, {color: textColor3}]}>
             Gunakan nama sesuai KTP dan pastikan email Anda aktif untuk proses

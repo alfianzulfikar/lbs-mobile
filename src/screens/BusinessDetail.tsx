@@ -16,7 +16,11 @@ import Text from '../components/Text';
 import {useThemeColor} from '../hooks/useThemeColor';
 import ScreenWrapper from '../components/ScreenWrapper';
 import IconWrapper from '../components/IconWrapper';
-import {StaticScreenProps, useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  StaticScreenProps,
+  useNavigation,
+} from '@react-navigation/native';
 import {useBusiness} from '../api/business';
 import ICShare from '../components/icons/ICShare';
 import ICLike from '../components/icons/ICLike';
@@ -42,6 +46,7 @@ import LoadingModal from '../components/LoadingModal';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {notchHeight} from '../utils/getNotchHeight';
 import ICLikeFill from '../components/icons/ICLikeFill';
+import BottomSheet from '../components/BottomSheet';
 
 type Props = StaticScreenProps<{
   slug: string;
@@ -64,6 +69,7 @@ const BusinessDetail = ({route}: Props) => {
     getBusinessLike,
     likeLoading,
     handleLike,
+    isNotFound,
   } = useBusiness();
   const {user, getUser} = useUser();
 
@@ -392,6 +398,28 @@ const BusinessDetail = ({route}: Props) => {
       )}
 
       {loadingPage && <LoadingModal />}
+
+      {isNotFound && (
+        <BottomSheet
+          onDismiss={() =>
+            navigation.dispatch(
+              CommonActions.reset({index: 0, routes: [{name: 'MainTab'}]}),
+            )
+          }
+          snapPoints={['30%']}>
+          <Text style={{color: textColor}}>Bisnis tidak ditemukan</Text>
+          <Gap flex={1} />
+          <Gap height={24} />
+          <Button
+            title="Beranda"
+            onPress={() =>
+              navigation.dispatch(
+                CommonActions.reset({index: 0, routes: [{name: 'MainTab'}]}),
+              )
+            }
+          />
+        </BottomSheet>
+      )}
     </ScreenWrapper>
   );
 };

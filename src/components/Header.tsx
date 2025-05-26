@@ -3,7 +3,7 @@ import React, {ReactNode} from 'react';
 import IconWrapper from './IconWrapper';
 import ICArrowLeft from './icons/ICArrowLeft';
 import {useThemeColor} from '../hooks/useThemeColor';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import Text from './Text';
 
 const Header = ({
@@ -23,7 +23,19 @@ const Header = ({
     <View style={[styles.header, {paddingHorizontal: paddingHorizontal ?? 24}]}>
       <View style={{width: 40}}>
         {(backButton === true || backButton === undefined) && (
-          <IconWrapper onPress={() => navigation.goBack()}>
+          <IconWrapper
+            onPress={() => {
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              } else {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{name: 'MainTab'}],
+                  }),
+                );
+              }
+            }}>
             <ICArrowLeft color={iconColor} size={24} />
           </IconWrapper>
         )}

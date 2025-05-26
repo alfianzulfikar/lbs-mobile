@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store';
 import LoadingModal from '../components/LoadingModal';
 import {useMarket} from '../api/market';
+import {useRegister} from '../api/register';
 
 type Props = {
   route: {
@@ -23,18 +24,49 @@ type Props = {
           otp_methods: 'whatsapp' | 'sms';
         };
       };
+      register?: {
+        body: {
+          firstname: string;
+          lastname: string;
+          email: string;
+          phone: string;
+          password: string;
+          confirmPassword: string;
+          otp_methods: string;
+        };
+        // request_id: string;
+        token: string;
+      };
     };
   };
 };
 
 const OTP = ({route}: Props) => {
-  const {market, phone: phoneParam} = route.params;
+  const {market, phone: phoneParam, register} = route.params;
   const {phone: phoneState} = useSelector((item: RootState) => item.user);
-  const phone =
-    phoneParam || phoneState.split('-').length > 1
+  const phone = market
+    ? phoneState && phoneState.split('-').length > 1
       ? '0' + phoneState.split('-')[1]
-      : '';
-  const {sell, otpLoading, resendOTP, otpError} = useMarket();
+      : ''
+    : phoneParam && phoneParam.split('-').length > 1
+    ? '0' + phoneParam.split('-')[1]
+    : '';
+
+  // market
+  const {
+    sell,
+    otpLoading: marketOtpLoading,
+    resendOTP: resendMarketOTP,
+    otpError: marketOtpError,
+  } = useMarket();
+
+  // register
+  const {
+    otpLoading: registerOtpLoading,
+    submitOTP,
+    resendOTP: resendRegisterOTP,
+    otpError: registerOtpError,
+  } = useRegister();
 
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
@@ -71,13 +103,19 @@ const OTP = ({route}: Props) => {
   };
 
   const handleSubmit = async () => {
-    if (market)
+    if (market) {
       sell(market?.id, {
         price: market.body.price,
         volume: market.body.volume,
         otp_methods: market.body.otp_methods,
         otp: Object.values(otpValue).join(''),
       });
+    } else if (register) {
+      submitOTP(register.token, {
+        ...register.body,
+        otp: Object.values(otpValue).join(''),
+      });
+    }
   };
 
   const handleResend = async () => {
@@ -89,12 +127,14 @@ const OTP = ({route}: Props) => {
       otp5: '',
       otp6: '',
     });
-    if (market) {
-      try {
-        await resendOTP(market?.id, market?.body);
-        startCountdown(20);
-      } catch {}
-    }
+    try {
+      if (market) {
+        await resendMarketOTP(market?.id, market?.body);
+      } else if (register) {
+        await resendRegisterOTP(register?.token, register?.body);
+      }
+      startCountdown(20);
+    } catch {}
   };
 
   useEffect(() => {
@@ -120,11 +160,22 @@ const OTP = ({route}: Props) => {
       <Header title="Input OTP" />
       <View style={styles.container}>
         <Text style={[styles.desc, {color: textColor}]}>
-          Masukkan kode OTP yang telah dikirimkan melalui WhatsApp ke nomor{' '}
-          {phone}
+          Masukkan kode OTP yang telah dikirimkan melalui{' '}
+          {market
+            ? market.body.otp_methods === 'sms'
+              ? 'SMS'
+              : 'WhatsApp'
+            : register?.body.otp_methods === 'sms'
+            ? 'SMS'
+            : 'WhatsApp'}{' '}
+          ke nomor {phone}
         </Text>
         <Gap height={40} />
-        <OTPInput value={otpValue} setValue={setOtpValue} error={otpError} />
+        <OTPInput
+          value={otpValue}
+          setValue={setOtpValue}
+          error={market ? marketOtpError : registerOtpError}
+        />
         <Text style={[styles.link, {color: textColor2}]}>
           Tidak mendapatkan pesan?{' '}
         </Text>
@@ -139,7 +190,7 @@ const OTP = ({route}: Props) => {
           </Text>
         )}
       </View>
-      {otpLoading && <LoadingModal />}
+      {(marketOtpLoading || registerOtpLoading) && <LoadingModal />}
     </ScreenWrapper>
   );
 };

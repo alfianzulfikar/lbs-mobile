@@ -1,11 +1,11 @@
 import {Keyboard, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Input from '../components/Input';
 import Gap from '../components/Gap';
 import Button from '../components/Button';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAPI} from '../services/api';
 
 const Register = () => {
@@ -55,6 +55,17 @@ const Register = () => {
       setLoading(false);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      setForm({
+        firstname: '',
+        lastname: '',
+        email: '',
+      });
+      return () => {};
+    }, []),
+  );
 
   return (
     <ScreenWrapper background backgroundType="gradient" scrollView>

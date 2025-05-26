@@ -37,8 +37,10 @@ export const useUser = () => {
   });
   const [kycScreen, setKycScreen] = useState<KYCBackScreen>('KYCPersonal');
   const [kycProgressLoading, setKycProgressLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
 
   const getUser = async () => {
+    setUserLoading(true);
     const accessToken = await AsyncStorage.getItem('access_token');
     try {
       const res = await apiRequest({
@@ -57,6 +59,8 @@ export const useUser = () => {
       dispatch(setUser(newProfile1));
     } catch (error) {
       console.log('getUser error', error);
+    } finally {
+      setUserLoading(false);
     }
   };
 
@@ -115,5 +119,7 @@ export const useUser = () => {
     getUser,
     getProfile,
     getKycProgress,
+    kycProgressLoading,
+    userLoading,
   };
 };

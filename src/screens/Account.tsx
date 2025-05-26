@@ -128,7 +128,8 @@ const Account = () => {
   const [loading, setLoading] = useState(false);
   const [showChangePhoto, setShowChangePhoto] = useState(false);
 
-  const {user, getUser, getKycProgress} = useUser();
+  const {user, getUser, getKycProgress, kycProgressLoading, userLoading} =
+    useUser();
 
   const logout = async () => {
     setLoading(true);
@@ -263,47 +264,49 @@ const Account = () => {
           <Text style={styles.name}>
             {user.firstname + ' ' + user.lastname}
           </Text>
-          <View style={{flexDirection: 'row', marginTop: 8}}>
-            {user.kycStatus ? (
-              <ICCheckedShield color={tint} />
-            ) : user.kycStatus === null ? (
-              <ICWarning />
-            ) : null}
-            <Text
-              style={[
-                styles.kycStatus,
-                {
-                  color: user.kycStatus ? tint : textWarning,
-                  marginLeft: user.kycStatus === false ? 0 : 4,
-                },
-              ]}
-              // onPress={() => navigation.navigate('KYCStack')}
-              onPress={() =>
-                user.kycStatus === null
-                  ? navigation.navigate('KYCStack', {
-                      screen:
-                        user.kycScreen === 'KYCPersonal'
-                          ? 'KYC'
-                          : user.kycScreen,
-                    })
-                  : null
-              }>
-              {user.kycStatus
-                ? 'Kyc Terverifikasi'
-                : user.kycStatus === null
-                ? 'Lengkapi data KYC Anda '
-                : 'Data KYC Anda sedang diproses.'}
-              {user.kycStatus === null && (
-                <Text
-                  style={[
-                    styles.kycStatus,
-                    {textDecorationLine: 'underline', color: textWarning},
-                  ]}>
-                  di sini.
-                </Text>
-              )}
-            </Text>
-          </View>
+          {!kycProgressLoading && !userLoading ? (
+            <View style={{flexDirection: 'row', marginTop: 8}}>
+              {user.kycStatus ? (
+                <ICCheckedShield color={tint} />
+              ) : user.kycStatus === null ? (
+                <ICWarning />
+              ) : null}
+              <Text
+                style={[
+                  styles.kycStatus,
+                  {
+                    color: user.kycStatus ? tint : textWarning,
+                    marginLeft: user.kycStatus === false ? 0 : 4,
+                  },
+                ]}
+                // onPress={() => navigation.navigate('KYCStack')}
+                onPress={() =>
+                  user.kycStatus === null
+                    ? navigation.navigate('KYCStack', {
+                        screen:
+                          user.kycScreen === 'KYCPersonal'
+                            ? 'KYC'
+                            : user.kycScreen,
+                      })
+                    : null
+                }>
+                {user.kycStatus
+                  ? 'Kyc Terverifikasi'
+                  : user.kycStatus === null
+                  ? 'Lengkapi data KYC Anda '
+                  : 'Data KYC Anda sedang diproses.'}
+                {user.kycStatus === null && (
+                  <Text
+                    style={[
+                      styles.kycStatus,
+                      {textDecorationLine: 'underline', color: textWarning},
+                    ]}>
+                    di sini.
+                  </Text>
+                )}
+              </Text>
+            </View>
+          ) : null}
           <Text style={styles.menuCategory}>Akun</Text>
           <MenuItem
             title="Data Pribadi"
