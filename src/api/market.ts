@@ -250,7 +250,7 @@ export const useMarket = () => {
       );
     } else {
       navigation.dispatch(
-        StackActions.replace('OrderStack', {
+        StackActions.replace('Order', {
           screen: 'WaitingPayment',
           params: {code: paymentCode},
         }),

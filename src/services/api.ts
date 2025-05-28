@@ -139,7 +139,7 @@ export const useAPI = () => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'AuthStack'}],
+              routes: [{name: 'Auth'}],
             }),
           );
           throw data;
@@ -287,8 +287,8 @@ export const useAPI = () => {
 //       if (res.status === 401) {
 //         // await AsyncStorage.removeItem('access_token');
 //         // await AsyncStorage.removeItem('refresh_token');
-//         // navigation.dispatch(StackActions.replace('AuthStack'));
-//         // replace('AuthStack');
+//         // navigation.dispatch(StackActions.replace('Auth'));
+//         // replace('Auth');
 //         return;
 //       } else {
 //         throw data;

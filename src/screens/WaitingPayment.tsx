@@ -20,7 +20,7 @@ import Accordion from '../components/Accordion';
 import {PAYMENT_METHODS} from '../constants/PaymentMethods';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {useAPI} from '../services/api';
-import {BankMethodType} from '../constants/Types';
+import {BankMethodType, OrderStackParamList} from '../constants/Types';
 import {Countdown} from '../components/Countdown';
 import dateTimeFormat from '../utils/dateTimeFormat';
 import {useBank} from '../api/bank';
@@ -28,22 +28,14 @@ import numberFormat from '../utils/numberFormat';
 import capitalize from '../utils/capitalize';
 import {useColorScheme} from '../hooks/useColorScheme';
 import LottieView from 'lottie-react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type InfoType = {
   label: string;
   value: string;
 };
 
-type Props = {
-  route: {
-    params: {
-      code: string;
-      type?: 'ask' | 'bid';
-      feeBuy?: number;
-      feeSell?: number;
-    };
-  };
-};
+type Props = NativeStackScreenProps<OrderStackParamList, 'WaitingPayment'>;
 
 const WaitingPayment = ({route}: Props) => {
   let colorScheme = useColorScheme();

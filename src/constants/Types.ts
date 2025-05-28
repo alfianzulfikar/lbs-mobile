@@ -1,5 +1,168 @@
+import {NavigatorScreenParams} from '@react-navigation/native';
 import {ReactNode} from 'react';
 import {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
+
+export type MainTabParamList = {
+  Home: undefined;
+  Business: undefined;
+  Transaction: undefined;
+  Account: undefined;
+};
+
+export type OrderStackParamList = {
+  BusinessDetail: {slug: string};
+  OrderBusiness: {slug: string; customerCode: string};
+  WaitingPayment: {
+    code: string;
+    type?: 'ask' | 'bid';
+    feeBuy?: number;
+    feeSell?: number;
+  };
+  Prospectus: {
+    file: string;
+    businessContent: any[];
+    tipeBisnis: string;
+    terjual: number;
+    tersisa: number;
+  };
+  BusinessDiscussion: {
+    slug: string;
+    businessStatus?: string;
+  };
+  DigitalSignature: {
+    token: string;
+    kode: string;
+  };
+  DigitalSignatureResend: undefined;
+  DigitalSignatureSuccess: undefined;
+};
+
+export type AuthStackParamList = {
+  Login: {
+    targetRoute?: {
+      mainRoute: string;
+      options?: {screen?: string; params: any};
+    };
+  };
+  Register: undefined;
+  SendEmail: {message: string};
+  AccountVerification: {token: string};
+  ForgotPassword: undefined;
+  ResetPassword: {token: string};
+};
+
+export type AccountStackParamList = {
+  PersonalData: undefined;
+  ChangePassword: undefined;
+  NotificationSetting: undefined;
+  PrivacyPolicy: undefined;
+  TermsAndConditions: undefined;
+  ComplaintProcedure: undefined;
+  AboutUs: undefined;
+};
+
+export type KYCStackParamList = {
+  KYCScreen: undefined;
+  KYCPersonal: undefined;
+  KYCAddress: undefined;
+  KYCFamily: undefined;
+  KYCOccupation: undefined;
+  KYCTax: undefined;
+  KYCBank: undefined;
+  KYCRisk: undefined;
+  KYCTerms: undefined;
+  KYCWaiting: undefined;
+};
+
+export type ArticleStackParamList = {
+  ArticleScreen: undefined;
+  ArticleDetail: {
+    slug: string;
+    category: string;
+  };
+};
+
+export type PortfolioStackParamList = {
+  PortfolioScreen: undefined;
+  PortfolioDetail: {
+    slug: string;
+    id: number;
+  };
+};
+
+export type MarketStackParamList = {
+  MarketScreen: undefined;
+  MarketDetail: {
+    slug: string;
+    id: number;
+    merkDagang: string;
+    code: string;
+  };
+  MarketOrder: {
+    type: 'ask' | 'bid';
+    id: number;
+    merkDagang: string;
+    code: string;
+    feeBuy: number;
+    feeSell: number;
+  };
+  MarketGuide: undefined;
+};
+
+export type RootStackParamList = {
+  Splash: undefined;
+  MainTab: NavigatorScreenParams<MainTabParamList>;
+  OnBoarding: undefined;
+  FAQ: undefined;
+  Disclosure: undefined;
+  Order: NavigatorScreenParams<OrderStackParamList>;
+  Auth: NavigatorScreenParams<AuthStackParamList>;
+  Account: NavigatorScreenParams<AccountStackParamList>;
+  KYC: NavigatorScreenParams<KYCStackParamList>;
+  Article: NavigatorScreenParams<ArticleStackParamList>;
+  Portfolio: NavigatorScreenParams<PortfolioStackParamList>;
+  ImagePreview: {
+    base64: string;
+    path: string;
+  };
+  OTP: {
+    phone?: string;
+    market?: {
+      id: number;
+      body: {
+        price: number;
+        volume: number;
+        otp_methods: 'whatsapp' | 'sms';
+      };
+    };
+    register?: {
+      body: {
+        firstname: string;
+        lastname: string;
+        email: string;
+        phone: string;
+        password: string;
+        confirmPassword: string;
+        otp_methods: string;
+      };
+      // request_id: string;
+      token: string;
+    };
+  };
+  PaymentSuccess: {
+    paymentCode: string;
+    type: string;
+  };
+  Guide: undefined;
+  Market: NavigatorScreenParams<MarketStackParamList>;
+  NotificationHistory: undefined;
+  NotificationDetail: {
+    title: string;
+    description: string;
+    slug?: string;
+    code?: string;
+  };
+};
 
 export interface SvgIconType {
   color?: string;
@@ -32,13 +195,6 @@ export interface BusinessType {
   businessContent?: any;
   id: number | null;
 }
-
-export type RootStackParamList = {
-  Business: undefined; // Sesuaikan dengan parameter yang diperlukan (jika ada)
-  Home: undefined;
-  Account: undefined; // Contoh jika ada parameter
-  Transaction: undefined; // Contoh jika ada parameter
-};
 
 export type Callback = (event: GestureResponderEvent) => void;
 
@@ -103,9 +259,9 @@ export type PortfolioType = {
 };
 
 export type HomeMenuScreenType =
-  | 'PortfolioStack'
+  | 'Portfolio'
   | 'FAQ'
-  | 'MarketStack'
+  | 'Market'
   | 'Guide'
   | undefined;
 
@@ -449,4 +605,22 @@ export type PaymentType = {
   va: string;
   discount: number | null;
   status: string;
+};
+
+export type TopicType = {
+  id: string;
+  name: string;
+  description: string;
+  isSubscribed: boolean;
+  label?: string;
+};
+
+export type NotificationType = {
+  title: string;
+  description: string;
+  icon: string;
+  data: {
+    key?: string;
+    value?: string;
+  };
 };

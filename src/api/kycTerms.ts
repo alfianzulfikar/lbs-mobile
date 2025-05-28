@@ -20,9 +20,7 @@ export const useKYCTerms = () => {
           check: hasRead || null,
         },
       });
-      navigation.dispatch(
-        StackActions.replace('KYCStack', {screen: 'KYCWaiting'}),
-      );
+      navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCWaiting'}));
     } catch (error: any) {
       console.log('submitTerms error', error);
       if (error.status === 422) {

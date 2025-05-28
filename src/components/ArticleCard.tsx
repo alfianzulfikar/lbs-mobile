@@ -35,7 +35,7 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
         // },
       ]}
       onPress={() =>
-        navigation.navigate('ArticleStack', {
+        navigation.navigate('Article', {
           screen: 'ArticleDetail',
           params: {slug: data.slug, category: data.categorySlug},
         })
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     overflow: 'hidden',
     maxWidth: 340,
+    width: '100%',
     position: 'absolute',
     left: 0,
     bottom: 0,

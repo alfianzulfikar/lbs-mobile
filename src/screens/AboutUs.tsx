@@ -168,9 +168,19 @@ const AboutUs = () => {
       position: 'Head of Business Acquisition',
       image: '',
     },
+    {name: 'Yuddy Iskandar', position: 'Head of Operation', image: ''},
+    {
+      name: 'Fandrey Nanda Afindra',
+      position: 'Head of Marketing & Branding',
+      image: '',
+    },
     {name: 'Arief Firmanto', position: 'Head of Research & Analyst', image: ''},
     {name: 'I Made Adi Saputra', position: 'Head of Post Listing', image: ''},
-    {name: 'Andri Agustaman', position: 'Head of Investor Relation', image: ''},
+    {
+      name: 'Andri Agustaman',
+      position: 'Head of Investor Relations',
+      image: '',
+    },
     {name: 'Prasetyo Hendirasmoyo', position: 'Head of IT', image: ''},
   ];
 

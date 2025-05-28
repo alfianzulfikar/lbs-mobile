@@ -11,13 +11,14 @@ import {
 } from 'react-native';
 import React, {ReactNode} from 'react';
 import Gap from './Gap';
-import {notchHeight, bottomHeight} from '../utils/getNotchHeight';
+// import {notchHeight, bottomHeight} from '../utils/getNotchHeight';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useInsets} from '../hooks/useInsets';
 
 const ScreenWrapper = ({
   children,
@@ -44,6 +45,7 @@ const ScreenWrapper = ({
   refreshing?: boolean;
   onRefresh?: () => void;
 }) => {
+  const {notchHeight} = useInsets();
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
   return (
@@ -62,7 +64,7 @@ const ScreenWrapper = ({
                 ? 'light-content'
                 : 'dark-content'
             }
-            // translucent={false}
+            translucent
             backgroundColor={statusBarBackground || 'transparent'}
           />
         )}

@@ -44,8 +44,8 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const menu: {id: number; label: string; to: HomeMenuScreenType}[] = [
-    {id: 1, label: 'Portofolio', to: 'PortfolioStack'},
-    {id: 2, label: 'Pasar Sekunder', to: 'MarketStack'},
+    {id: 1, label: 'Portofolio', to: 'Portfolio'},
+    {id: 2, label: 'Pasar Sekunder', to: 'Market'},
     {id: 3, label: 'FAQ', to: 'FAQ'},
     {id: 4, label: 'Panduan', to: 'Guide'},
   ];
@@ -108,7 +108,9 @@ const Home = () => {
               transparent
               maxWidth={(width * 62) / 100}
             />
-            <IconWrapper transparent>
+            <IconWrapper
+              transparent
+              onPress={() => navigation.navigate('NotificationHistory')}>
               <ICBell color={Colors[colorScheme].text} />
             </IconWrapper>
           </View>
@@ -160,7 +162,9 @@ const Home = () => {
             title="Berita & Artikel"
             articles={articles}
             type="article"
-            onShowAll={() => navigation.navigate('ArticleStack')}
+            onShowAll={() =>
+              navigation.navigate('Article', {screen: 'ArticleScreen'})
+            }
             loading={articlesLoading}
           />
           <Gap height={40} />

@@ -45,7 +45,7 @@ const KYCHeader = ({
             onPress={() => {
               if (backScreen) {
                 navigation.dispatch(
-                  StackActions.replace('KYCStack', {screen: backScreen}),
+                  StackActions.replace('KYC', {screen: backScreen}),
                 );
               } else {
                 navigation.goBack();

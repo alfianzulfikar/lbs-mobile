@@ -132,7 +132,7 @@ const MarketDetail = ({route}: Props) => {
       if (hasTransaction) {
         setShowAttention(true);
       } else {
-        navigation.navigate('MarketStack', {
+        navigation.navigate('Market', {
           screen: 'MarketOrder',
           params: {
             merkDagang,
@@ -450,7 +450,7 @@ const MarketDetail = ({route}: Props) => {
             title="Lanjutkan"
             onPress={() => {
               setShowAttention(false);
-              navigation.navigate('MarketStack', {
+              navigation.navigate('Market', {
                 screen: 'MarketOrder',
                 params: {
                   merkDagang,

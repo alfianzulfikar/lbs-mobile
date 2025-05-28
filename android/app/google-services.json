@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "69570896725",
-    "project_id": "lbs-urundana-f4bfc",
-    "storage_bucket": "lbs-urundana-f4bfc.firebasestorage.app"
+    "project_number": "164305831614",
+    "project_id": "lbs-urun-dana-app",
+    "storage_bucket": "lbs-urun-dana-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69570896725:android:8d1ed765c3ebf7f37205dc",
+        "mobilesdk_app_id": "1:164305831614:android:8328ff2df511136bde00ef",
         "android_client_info": {
           "package_name": "id.lbs.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "164305831614-tji1oid6i7ut5n36mreme4aegfsgqjro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDpyhFXlVUdD-2gXodvM8uC3kzJhn8EhQg"
+          "current_key": "AIzaSyDP5zGzY8YmTE4t2VW3oGF6fPMIW-3TZIQ"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164305831614-tji1oid6i7ut5n36mreme4aegfsgqjro.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

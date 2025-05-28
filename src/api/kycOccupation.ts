@@ -77,7 +77,7 @@ export const useKYCOccupation = () => {
         authorization: true,
         body,
       });
-      navigation.dispatch(StackActions.replace('KYCStack', {screen: 'KYCTax'}));
+      navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCTax'}));
     } catch (error: any) {
       console.log('occupation error', error);
       if (error?.status === 422) {

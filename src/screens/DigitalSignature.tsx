@@ -13,15 +13,10 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import LoadingModal from '../components/LoadingModal';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {OrderStackParamList} from '../constants/Types';
 
-type Props = {
-  route: {
-    params: {
-      token: string;
-      kode: string;
-    };
-  };
-};
+type Props = NativeStackScreenProps<OrderStackParamList, 'DigitalSignature'>;
 
 const DigitalSignature = ({route}: Props) => {
   const {kode, token} = route.params;
@@ -79,7 +74,7 @@ const DigitalSignature = ({route}: Props) => {
         },
       });
       navigation.dispatch(
-        StackActions.replace('OrderStack', {screen: 'DigitalSignatureSuccess'}),
+        StackActions.replace('Order', {screen: 'DigitalSignatureSuccess'}),
       );
     } catch (error: any) {
       if (error?.status === 422) {
@@ -107,7 +102,7 @@ const DigitalSignature = ({route}: Props) => {
         },
       });
       navigation.dispatch(
-        StackActions.replace('OrderStack', {screen: 'DigitalSignatureResend'}),
+        StackActions.replace('Order', {screen: 'DigitalSignatureResend'}),
       );
     } catch (error: any) {
       Alert.alert(`Terjadi kesalahan [Error: ${error?.status || 'system'}]`);

@@ -145,7 +145,7 @@ const PortfolioDetail = ({route}: Props) => {
                   marginTop: 8,
                 }}
                 onPress={() =>
-                  navigation.navigate('OrderStack', {
+                  navigation.navigate('Order', {
                     screen: 'BusinessDetail',
                     params: {slug: portfolio.slug},
                   })

@@ -14,7 +14,7 @@ const HomeKycStatus = ({
 }: {
   status: boolean | null;
   screen:
-    | 'KYC'
+    | 'KYCScreen'
     | 'KYCPersonal'
     | 'KYCAddress'
     | 'KYCFamily'
@@ -51,8 +51,8 @@ const HomeKycStatus = ({
           style={{width: 80, alignItems: 'center'}}
           onPress={() =>
             status === null
-              ? navigation.navigate('KYCStack', {
-                  screen: screen === 'KYCPersonal' ? 'KYC' : screen,
+              ? navigation.navigate('KYC', {
+                  screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
                 })
               : null
           }>

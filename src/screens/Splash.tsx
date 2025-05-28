@@ -1,5 +1,5 @@
 import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Video, {VideoRef} from 'react-native-video';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,6 +27,14 @@ const Splash = () => {
     }
   };
 
+  // useEffect(() => {
+  //   const asyncFunc = async () => {
+  //     await initTheme();
+  //     await handleDeepLinks();
+  //   };
+  //   asyncFunc();
+  // }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -43,6 +51,10 @@ const Splash = () => {
           await initTheme();
           await handleDeepLinks();
         }}
+        muted={true}
+        ignoreSilentSwitch="ignore"
+        playInBackground={false}
+        playWhenInactive={false}
       />
     </View>
   );

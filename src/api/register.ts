@@ -88,7 +88,7 @@ export const useRegister = () => {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
-                  routes: [{name: 'AuthStack'}],
+                  routes: [{name: 'Auth'}],
                 }),
               );
             },

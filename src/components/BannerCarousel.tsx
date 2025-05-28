@@ -42,7 +42,7 @@ const BannerCarousel = ({
           const parts = item.link.split('/').filter(Boolean);
           const category = parts[parts.length - 2];
           const slug = parts[parts.length - 1];
-          navigation.navigate('ArticleStack', {
+          navigation.navigate('Article', {
             screen: 'ArticleDetail',
             params: {slug, category},
           });

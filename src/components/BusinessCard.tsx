@@ -35,7 +35,7 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
         },
       ]}
       onPress={() =>
-        navigation.navigate('OrderStack', {
+        navigation.navigate('Order', {
           screen: 'BusinessDetail',
           params: {slug: data.slug},
         })

@@ -35,6 +35,10 @@ export const Colors = {
     line: '#EDEDED',
     border: '#9E9E9E',
     inputDisable: '#E0E0E0',
+    successSurface: '#ECFDF5',
+    infoSurface: '#F0F9FF',
+    warningSurface: '#FFF6E0',
+    dangerSurface: '#FFF1F2',
   },
   dark: {
     text: '#ECEDEE',
@@ -63,6 +67,10 @@ export const Colors = {
     line: '#404040',
     border: '#E0E0E0',
     inputDisable: '#E0E0E0',
+    successSurface: '#ECFDF5',
+    infoSurface: '#F0F9FF',
+    warningSurface: '#FFF6E0',
+    dangerSurface: '#FFF1F2',
   },
 };
 

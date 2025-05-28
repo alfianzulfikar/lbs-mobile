@@ -75,7 +75,7 @@ const KYCPersonal = () => {
       label: 'Tanggal Kadaluwarsa KTP',
       type: 'dropdown',
       option: ktpPeriodOption,
-      placeholder: 'Sementara'
+      placeholder: 'Sementara',
     },
     {
       name: 'tglKadaluwarsaKTP',
@@ -313,7 +313,7 @@ const KYCPersonal = () => {
         authorization: true,
         body,
       });
-      navigation.navigate('KYCStack', {screen: 'KYCAddress'});
+      navigation.navigate('KYC', {screen: 'KYCAddress'});
     } catch (error: any) {
       console.log('submit error', error, error?.data?.errors);
       if (error?.status === 422) {

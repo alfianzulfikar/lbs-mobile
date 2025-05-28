@@ -18,6 +18,7 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import IconWrapper from '../components/IconWrapper';
 import {
   CommonActions,
+  CompositeScreenProps,
   StaticScreenProps,
   useNavigation,
 } from '@react-navigation/native';
@@ -47,10 +48,19 @@ import {useColorScheme} from '../hooks/useColorScheme';
 import {notchHeight} from '../utils/getNotchHeight';
 import ICLikeFill from '../components/icons/ICLikeFill';
 import BottomSheet from '../components/BottomSheet';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {OrderStackParamList, RootStackParamList} from '../constants/Types';
 
-type Props = StaticScreenProps<{
-  slug: string;
-}>;
+// type Props = StaticScreenProps<{
+//   slug: string;
+// }>;
+
+// type Props = CompositeScreenProps<
+//   NativeStackScreenProps<OrderStackParamList, 'BusinessDetail'>,
+//   NativeStackScreenProps<RootStackParamList>
+// >;
+
+type Props = NativeStackScreenProps<OrderStackParamList, 'BusinessDetail'>;
 
 const BusinessDetail = ({route}: Props) => {
   let colorScheme = useColorScheme();
@@ -85,7 +95,7 @@ const BusinessDetail = ({route}: Props) => {
           endpoint: `/bisnis/detail/${slug}/payment`,
           authorization: true,
         });
-        navigation.navigate('OrderStack', {
+        navigation.navigate('Order', {
           screen: 'OrderBusiness',
           params: {slug, customerCode: res.customer_code},
         });
@@ -179,7 +189,7 @@ const BusinessDetail = ({route}: Props) => {
                 <Gap width={16} />
                 <IconWrapper
                   onPress={() =>
-                    navigation.navigate('OrderStack', {
+                    navigation.navigate('Order', {
                       screen: 'BusinessDiscussion',
                       params: {
                         slug: business.slug,
@@ -371,7 +381,7 @@ const BusinessDetail = ({route}: Props) => {
               type="secondary"
               icon={props => <ICFile {...props} />}
               onPress={() =>
-                navigation.navigate('OrderStack', {
+                navigation.navigate('Order', {
                   screen: 'Prospectus',
                   params: {
                     file: business?.file || '',

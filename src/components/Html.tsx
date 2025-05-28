@@ -46,6 +46,18 @@ const Html = ({source}: {source: string}) => {
       fontSize: 14,
       color: textColor2,
     },
+    ol: {
+      marginBottom: 12,
+      color: textColor2,
+      fontSize: 16,
+      lineHeight: 24,
+    },
+    ul: {
+      marginBottom: 12,
+      color: textColor2,
+      fontSize: 16,
+      lineHeight: 24,
+    },
   };
 
   return (

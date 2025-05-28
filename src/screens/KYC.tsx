@@ -54,9 +54,7 @@ const KYC = () => {
         <Gap height={24} />
         <Button
           title="Mulai isi KYC"
-          onPress={() =>
-            navigation.navigate('KYCStack', {screen: 'KYCPersonal'})
-          }
+          onPress={() => navigation.navigate('KYC', {screen: 'KYCPersonal'})}
         />
         <Gap height={24} />
       </View>

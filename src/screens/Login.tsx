@@ -1,7 +1,6 @@
-import {Alert, Keyboard, StyleSheet, Text, View} from 'react-native';
+import {Alert, Keyboard, Platform, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
-import {notchHeight} from '../utils/getNotchHeight';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Input from '../components/Input';
 import Gap from '../components/Gap';
@@ -13,6 +12,9 @@ import {
 } from '@react-navigation/native';
 import {useAPI} from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNotificationAPI} from '../api/notification';
+import {useNotification} from '../services/notification';
+import {useUser} from '../api/user';
 
 type Props = {
   route: {
@@ -35,6 +37,9 @@ const Login = ({route}: Props) => {
   const {apiRequest} = useAPI();
 
   const navigation = useNavigation();
+  const {registerFCMToken} = useNotificationAPI();
+  const {requestNotificationPermission} = useNotification();
+  const {getUser} = useUser();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,6 +59,26 @@ const Login = ({route}: Props) => {
       });
       await AsyncStorage.setItem('access_token', res.access_token);
       await AsyncStorage.setItem('refresh_token', res.refresh_token);
+
+      const fcmToken = await AsyncStorage.getItem('fcm_token');
+      const granted = await requestNotificationPermission();
+
+      const userRes = await getUser();
+      const user = userRes?.user;
+
+      if (granted) {
+        await registerFCMToken({
+          name: user?.firstname
+            ? user?.lastname
+              ? user.firstname + ' ' + user.lastname
+              : user.firstname
+            : '',
+          email: user?.email,
+          fcmToken: fcmToken || '',
+          platform: Platform.OS,
+        });
+      }
+
       if (targetRoute) {
         navigation.dispatch(
           StackActions.replace(targetRoute.mainRoute, {
@@ -119,7 +144,7 @@ const Login = ({route}: Props) => {
         <Text
           style={[styles.forgot, {color: tint}]}
           onPress={() =>
-            navigation.navigate('AuthStack', {screen: 'ForgotPassword'})
+            navigation.navigate('Auth', {screen: 'ForgotPassword'})
           }>
           Lupa kata sandi?
         </Text>
@@ -129,9 +154,7 @@ const Login = ({route}: Props) => {
           Belum Punya Akun?{' '}
           <Text
             style={{fontWeight: '700', color: tint}}
-            onPress={() =>
-              navigation.navigate('AuthStack', {screen: 'Register'})
-            }>
+            onPress={() => navigation.navigate('Auth', {screen: 'Register'})}>
             Daftar Sekarang
           </Text>
         </Text>

@@ -102,9 +102,7 @@ export const useKYCTax = () => {
         authorization: true,
         body,
       });
-      navigation.dispatch(
-        StackActions.replace('KYCStack', {screen: 'KYCBank'}),
-      );
+      navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCBank'}));
     } catch (error: any) {
       console.log('tax error', error);
       if (error?.status === 422) {

@@ -180,7 +180,7 @@ const Portfolio = () => {
       <PortfolioCard
         data={item}
         onPress={() =>
-          navigation.navigate('PortfolioStack', {
+          navigation.navigate('Portfolio', {
             screen: 'PortfolioDetail',
             params: {
               slug: item.slug,

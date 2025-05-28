@@ -24,16 +24,15 @@ import numberFormat from '../utils/numberFormat';
 import {useBank} from '../api/bank';
 import {useAPI} from '../services/api';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {OrderStackParamList} from '../constants/Types';
 
 type InfoType = {
   label: string;
   value: string;
 };
 
-type Props = StaticScreenProps<{
-  slug: string;
-  customerCode: string;
-}>;
+type Props = NativeStackScreenProps<OrderStackParamList, 'OrderBusiness'>;
 
 const OrderBusiness = ({route}: Props) => {
   let colorScheme = useColorScheme();
@@ -79,7 +78,7 @@ const OrderBusiness = ({route}: Props) => {
           },
         });
         navigation.dispatch(
-          StackActions.replace('OrderStack', {
+          StackActions.replace('Order', {
             screen: 'WaitingPayment',
             params: {
               code: res.kode,
@@ -240,10 +239,7 @@ const OrderBusiness = ({route}: Props) => {
           <View style={{flex: 1}}>
             <Button
               title="Pesan Sukuk"
-              onPress={
-                () => order()
-                // navigation.navigate('OrderStack', {screen: 'WaitingPayment'})
-              }
+              onPress={() => order()}
               loading={loadingSubmit}
               disabled={isRead ? false : true}
             />

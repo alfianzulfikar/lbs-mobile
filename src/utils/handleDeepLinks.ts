@@ -20,7 +20,7 @@ export const useDeepLinks = () => {
       );
     } else {
       navigation.dispatch(
-        StackActions.replace('AuthStack', {
+        StackActions.replace('Auth', {
           screen: 'Login',
           params: {targetRoute},
         }),
@@ -31,18 +31,17 @@ export const useDeepLinks = () => {
   const navigationFromUrl = (url: string, accessToken: string) => {
     const parsedHash = queryString.parseUrl(url);
     const splitUrl = parsedHash.url.split('/');
-    console.log('splitUrl', splitUrl);
     const baseURL = splitUrl[2];
     if (splitUrl[3] == 'verify') {
       navigation.dispatch(
-        StackActions.replace('AuthStack', {
+        StackActions.replace('Auth', {
           screen: 'AccountVerification',
           params: {token: parsedHash.query.token},
         }),
       );
     } else if (splitUrl[3] == 'reset-password') {
       navigation.dispatch(
-        StackActions.replace('AuthStack', {
+        StackActions.replace('Auth', {
           screen: 'ResetPassword',
           params: {token: parsedHash.query.token},
         }),
@@ -50,7 +49,7 @@ export const useDeepLinks = () => {
     } else if (splitUrl[3] == 'detail') {
       handleProtectedRoute(
         {
-          mainRoute: 'OrderStack',
+          mainRoute: 'Order',
           options: {screen: 'BusinessDetail', params: {slug: splitUrl[4]}},
         },
         accessToken,
@@ -61,7 +60,7 @@ export const useDeepLinks = () => {
     ) {
       handleProtectedRoute(
         {
-          mainRoute: 'OrderStack',
+          mainRoute: 'Order',
           options: {
             screen: 'DigitalSignature',
             params: {
@@ -100,11 +99,11 @@ export const useDeepLinks = () => {
           if (accessToken) {
             navigation.dispatch(StackActions.replace('MainTab'));
           } else {
-            if (hasVisitedOnboarding) {
-              navigation.dispatch(StackActions.replace('AuthStack'));
-            } else {
-              navigation.dispatch(StackActions.replace('OnBoarding'));
-            }
+            // if (hasVisitedOnboarding) {
+            //   navigation.dispatch(StackActions.replace('Auth'));
+            // } else {
+            // }
+            navigation.dispatch(StackActions.replace('OnBoarding'));
           }
         }, 2000);
       }

@@ -115,7 +115,7 @@ const Article = () => {
             <ArticleCard2
               data={item}
               onPress={() =>
-                navigation.navigate('ArticleStack', {
+                navigation.navigate('Article', {
                   screen: 'ArticleDetail',
                   params: {slug: item.slug, category: item.category},
                 })

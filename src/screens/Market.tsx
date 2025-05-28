@@ -85,7 +85,7 @@ const Market = () => {
                   paddingHorizontal={14}
                   fontSize={14}
                   onPress={() =>
-                    navigation.navigate('MarketStack', {screen: 'MarketGuide'})
+                    navigation.navigate('Market', {screen: 'MarketGuide'})
                   }
                 />
               </View>
@@ -140,7 +140,7 @@ const Market = () => {
                     }}
                     key={index}
                     onPress={() =>
-                      navigation.navigate('MarketStack', {
+                      navigation.navigate('Market', {
                         screen: 'MarketDetail',
                         params: {
                           slug: item.slug,

@@ -34,7 +34,7 @@ const ForgotPassword = () => {
         },
       });
       setEmail('');
-      navigation.navigate('AuthStack', {
+      navigation.navigate('Auth', {
         screen: 'SendEmail',
         params: {message: res?.success?.msg || ''},
       });

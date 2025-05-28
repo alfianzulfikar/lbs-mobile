@@ -17,7 +17,11 @@ import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import BlurOverlay from '../components/BlurOverlay';
 import IconWrapper from '../components/IconWrapper';
-import {CommentType, InputDropdownOption} from '../constants/Types';
+import {
+  CommentType,
+  InputDropdownOption,
+  OrderStackParamList,
+} from '../constants/Types';
 import BottomSheet from '../components/BottomSheet';
 import ComposedComment from '../components/ComposedComment';
 import {useComment} from '../api/comment';
@@ -25,15 +29,10 @@ import {useAPI} from '../services/api';
 import LoadingModal from '../components/LoadingModal';
 import {useUser} from '../api/user';
 import ICCancel from '../components/icons/ICCancel';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-type Props = {
-  route: {
-    params: {
-      slug: string;
-      businessStatus: string;
-    };
-  };
-};
+type Props = NativeStackScreenProps<OrderStackParamList, 'BusinessDiscussion'>;
+
 const BusinessDiscussion = ({route}: Props) => {
   const {slug, businessStatus} = route.params;
   const {
@@ -151,7 +150,7 @@ const BusinessDiscussion = ({route}: Props) => {
         onMomentumScrollBegin={() => (isFetching.current = false)}
         scrollEnabled={scrollEnabled}
       />
-      {['LISTING', 'PRE-LISTING'].includes(businessStatus) && (
+      {['LISTING', 'PRE-LISTING'].includes(businessStatus || 'null') && (
         <View>
           {parent.username && (
             <View style={[styles.replyTargetContainer, {backgroundColor}]}>

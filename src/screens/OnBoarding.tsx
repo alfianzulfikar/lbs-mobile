@@ -160,7 +160,7 @@ const OnBoarding = () => {
               <Button
                 title="Mulai Investasi"
                 onPress={() =>
-                  navigation.dispatch(StackActions.replace('AuthStack'))
+                  navigation.dispatch(StackActions.replace('Auth'))
                 }
               />
             </View>
@@ -247,7 +247,7 @@ const OnBoarding = () => {
           <Button
             title="Mulai Investasi"
             onPress={() =>
-              navigation.dispatch(StackActions.replace('AuthStack'))
+              navigation.dispatch(StackActions.replace('Auth'))
             }
           />
           <Gap height={24} />

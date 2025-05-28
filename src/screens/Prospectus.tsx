@@ -12,22 +12,13 @@ import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import Badge from '../components/Badge';
 import CategoryFilter from '../components/CategoryFilter';
-import {InputDropdownOption} from '../constants/Types';
+import {InputDropdownOption, OrderStackParamList} from '../constants/Types';
 import Html from '../components/Html';
 import numberFormat from '../utils/numberFormat';
 import WebView from 'react-native-webview';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-type Props = {
-  route: {
-    params: {
-      file: string;
-      businessContent: any[];
-      tipeBisnis: string;
-      terjual: number;
-      tersisa: number;
-    };
-  };
-};
+type Props = NativeStackScreenProps<OrderStackParamList, 'Prospectus'>;
 
 const Prospectus = ({route}: Props) => {
   const {file, businessContent, tipeBisnis, terjual, tersisa} = route.params;

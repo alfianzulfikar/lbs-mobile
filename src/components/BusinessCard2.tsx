@@ -33,7 +33,7 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
     <Pressable
       style={[styles.container, {width: (width * 76) / 100}]}
       onPress={() =>
-        navigation.navigate('OrderStack', {
+        navigation.navigate('Order', {
           screen: 'BusinessDetail',
           params: {slug: business.slug},
         })

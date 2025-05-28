@@ -14,7 +14,7 @@ import React, {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
-import {notchHeight} from '../utils/getNotchHeight';
+// import {notchHeight} from '../utils/getNotchHeight';
 import {RGBAColors} from '../constants/Colors';
 import ICCheckedShield from '../components/icons/ICCheckedShield';
 import Badge from '../components/Badge';
@@ -59,6 +59,7 @@ import ICWarning from '../components/icons/ICWarning';
 import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {useInsets} from '../hooks/useInsets';
 
 const MenuItem = ({
   title,
@@ -112,6 +113,7 @@ const MenuItem = ({
 
 const Account = () => {
   const {apiRequest} = useAPI();
+  const {notchHeight} = useInsets();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
@@ -145,7 +147,7 @@ const Account = () => {
       });
       await AsyncStorage.removeItem('access_token');
       await AsyncStorage.removeItem('refresh_token');
-      navigation.dispatch(StackActions.replace('AuthStack'));
+      navigation.dispatch(StackActions.replace('Auth'));
     } catch {
     } finally {
       setLoading(false);
@@ -177,6 +179,8 @@ const Account = () => {
       const options: CameraOptions = {
         mediaType: 'photo',
         includeBase64: true,
+        maxHeight: 1000,
+        maxWidth: 1000,
       };
       if (type === 'galery') {
         await launchImageLibrary(options, res => handleImageRes(res));
@@ -279,13 +283,12 @@ const Account = () => {
                     marginLeft: user.kycStatus === false ? 0 : 4,
                   },
                 ]}
-                // onPress={() => navigation.navigate('KYCStack')}
                 onPress={() =>
                   user.kycStatus === null
-                    ? navigation.navigate('KYCStack', {
+                    ? navigation.navigate('KYC', {
                         screen:
                           user.kycScreen === 'KYCPersonal'
-                            ? 'KYC'
+                            ? 'KYCScreen'
                             : user.kycScreen,
                       })
                     : null
@@ -312,27 +315,27 @@ const Account = () => {
             title="Data Pribadi"
             icon={<ICRoundedUser color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'PersonalData',
               })
             }
           />
           <Text style={styles.menuCategory}>Pengaturan</Text>
-          {/* <MenuItem
+          <MenuItem
             title="Notifikasi"
             icon={<ICBell2 color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'NotificationSetting',
               })
             }
           />
-          <Gap height={48} /> */}
+          <Gap height={48} />
           <MenuItem
             title="Ubah Kata Sandi"
             icon={<ICLock color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'ChangePassword',
               })
             }
@@ -358,7 +361,7 @@ const Account = () => {
             title="Tentang LBS Urun Dana"
             icon={<ICBuilding color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'AboutUs',
               })
             }
@@ -368,7 +371,7 @@ const Account = () => {
             title="Kebijakan Privasi"
             icon={<ICPrivacy color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'PrivacyPolicy',
               })
             }
@@ -378,7 +381,7 @@ const Account = () => {
             title="Syarat & Ketentuan"
             icon={<ICFile2 color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'TermsAndConditions',
               })
             }
@@ -388,7 +391,7 @@ const Account = () => {
             title="Prosedur Pengaduan"
             icon={<ICFile3 color={textColor2} />}
             onPress={() =>
-              navigation.navigate('AccountStack', {
+              navigation.navigate('Account', {
                 screen: 'ComplaintProcedure',
               })
             }

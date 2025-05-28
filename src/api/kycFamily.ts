@@ -71,7 +71,7 @@ export const useKYCFamily = () => {
         body,
       });
       navigation.dispatch(
-        StackActions.replace('KYCStack', {screen: 'KYCOccupation'}),
+        StackActions.replace('KYC', {screen: 'KYCOccupation'}),
       );
     } catch (error: any) {
       if (error?.status === 422) {

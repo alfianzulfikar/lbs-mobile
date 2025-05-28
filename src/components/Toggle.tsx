@@ -9,7 +9,7 @@ const Toggle = ({
   toggleState?: boolean;
   onPress?: () => void;
 }) => {
-  const tint = useThemeColor({}, 'tint');
+  const tint = useThemeColor({}, 'tint3');
   const backgroundColor = useThemeColor({}, 'background');
   const borderColor = useThemeColor({}, 'border');
   return (

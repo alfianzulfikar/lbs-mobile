@@ -107,9 +107,7 @@ export const useKYCAddress = () => {
           authorization: true,
           body,
         });
-        navigation.dispatch(
-          StackActions.replace('KYCStack', {screen: 'KYCFamily'}),
-        );
+        navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCFamily'}));
       }
     } catch (error: any) {
       console.log(error);

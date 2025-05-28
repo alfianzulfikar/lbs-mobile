@@ -52,9 +52,7 @@ export const useKYCBank = () => {
         authorization: true,
         body,
       });
-      navigation.dispatch(
-        StackActions.replace('KYCStack', {screen: 'KYCRisk'}),
-      );
+      navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCRisk'}));
     } catch (error: any) {
       console.log('bank error', error);
       if (error?.status === 422) {

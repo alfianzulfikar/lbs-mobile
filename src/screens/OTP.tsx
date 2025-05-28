@@ -113,7 +113,8 @@ const OTP = ({route}: Props) => {
     } else if (register) {
       submitOTP(register.token, {
         ...register.body,
-        otp: Object.values(otpValue).join(''),
+        code: Object.values(otpValue).join(''),
+        request_id: 'a', // hardcode request_id
       });
     }
   };

@@ -82,9 +82,7 @@ export const useKYCRisk = () => {
           id: idArray,
         },
       });
-      navigation.dispatch(
-        StackActions.replace('KYCStack', {screen: 'KYCTerms'}),
-      );
+      navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCTerms'}));
     } catch (error: any) {
       console.log('risk error', error);
       if (error?.status === 422) {

@@ -38,7 +38,7 @@ const Register = () => {
         endpoint: '/auth/request-register',
         body: form,
       });
-      navigation.navigate('AuthStack', {
+      navigation.navigate('Auth', {
         screen: 'SendEmail',
         params: {message: ''},
       });
@@ -104,7 +104,9 @@ const Register = () => {
           Sudah Punya Akun?{' '}
           <Text
             style={{fontWeight: '700', color: tint}}
-            onPress={() => navigation.navigate('AuthStack', {screen: 'Login'})}>
+            onPress={() =>
+              navigation.navigate('Auth', {screen: 'Login', params: {}})
+            }>
             Masuk Sekarang
           </Text>
         </Text>

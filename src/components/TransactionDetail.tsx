@@ -272,7 +272,7 @@ const TransactionDetail = ({
                       title="Selesaikan Pembayaran"
                       onPress={() => {
                         setShow(false);
-                        navigation.navigate('OrderStack', {
+                        navigation.navigate('Order', {
                           screen: 'WaitingPayment',
                           params: {
                             code: data.kodePembayaran,
