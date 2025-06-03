@@ -109,26 +109,35 @@ export const useKYCAddress = () => {
         });
         navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCFamily'}));
       }
-    } catch (error: any) {
-      console.log(error);
-      if (error?.status === 422) {
-        setAddressKTPError(prev => ({
-          ...prev,
-          provinsiKTP: error?.data?.errors?.provinsi_id_ktp || [],
-          kotaKTP: error?.data?.errors?.kota_id_ktp || [],
-          kecamatanKTP: error?.data?.errors?.kecamatan_id_ktp || [],
-          alamatKTP: error?.data?.errors?.alamat_ktp || [],
-          kodePosKTP: error?.data?.errors?.kodepos_ktp || [],
-          isAddressSame: error?.data?.errors?.is_address_same || [],
-        }));
-        setAddressError(prev => ({
-          ...prev,
-          provinsi: error?.data?.errors?.provinsi_id || [],
-          kota: error?.data?.errors?.kota_id || [],
-          kecamatan: error?.data?.errors?.kecamatan_id || [],
-          alamat: error?.data?.errors?.alamat_sekarang || [],
-          kodePos: error?.data?.errors?.kodepos || [],
-        }));
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+
+        if (error.status === 422) {
+          console.log(error);
+          if (error?.status === 422) {
+            setAddressKTPError(prev => ({
+              ...prev,
+              provinsiKTP: error?.data?.errors?.provinsi_id_ktp || [],
+              kotaKTP: error?.data?.errors?.kota_id_ktp || [],
+              kecamatanKTP: error?.data?.errors?.kecamatan_id_ktp || [],
+              alamatKTP: error?.data?.errors?.alamat_ktp || [],
+              kodePosKTP: error?.data?.errors?.kodepos_ktp || [],
+              isAddressSame: error?.data?.errors?.is_address_same || [],
+            }));
+            setAddressError(prev => ({
+              ...prev,
+              provinsi: error?.data?.errors?.provinsi_id || [],
+              kota: error?.data?.errors?.kota_id || [],
+              kecamatan: error?.data?.errors?.kecamatan_id || [],
+              alamat: error?.data?.errors?.alamat_sekarang || [],
+              kodePos: error?.data?.errors?.kodepos || [],
+            }));
+          }
+        }
       }
     } finally {
       setAddressSubmitLoading(false);

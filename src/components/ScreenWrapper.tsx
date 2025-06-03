@@ -3,15 +3,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   RefreshControl,
-  // SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {ReactNode} from 'react';
 import Gap from './Gap';
-// import {notchHeight, bottomHeight} from '../utils/getNotchHeight';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
 import {useSelector} from 'react-redux';
@@ -46,6 +45,7 @@ const ScreenWrapper = ({
   onRefresh?: () => void;
 }) => {
   const {notchHeight} = useInsets();
+  const {height} = useWindowDimensions();
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
   return (
@@ -54,18 +54,14 @@ const ScreenWrapper = ({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View
         style={{
-          flex: 1,
+          flexGrow: 1,
           backgroundColor: background ? backgroundColor : 'transparent',
         }}>
         {statusBar !== false && (
           <StatusBar
-            barStyle={
-              statusBarStyle || colorScheme === 'dark'
-                ? 'light-content'
-                : 'dark-content'
-            }
+            barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
             translucent
-            backgroundColor={statusBarBackground || 'transparent'}
+            backgroundColor={RGBAColors(0.8)[colorScheme].background}
           />
         )}
         {background &&
@@ -95,26 +91,26 @@ const ScreenWrapper = ({
             ]}></View>
         )}
         {scrollView ? (
-          <View style={{flex: 1}}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{flexGrow: 1}}
-              style={{zIndex: 3}}
-              keyboardShouldPersistTaps="handled"
-              refreshControl={
-                onRefresh ? (
-                  <RefreshControl
-                    refreshing={refreshing || false}
-                    onRefresh={onRefresh}
-                  />
-                ) : undefined
-              }>
-              {notch !== false && <Gap height={notchHeight} />}
-              {children}
-              {/* {notch !== false && <Gap height={bottomHeight} />} */}
-            </ScrollView>
-          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{flexGrow: 1}}
+            style={{zIndex: 3}}
+            keyboardShouldPersistTaps="handled"
+            refreshControl={
+              onRefresh ? (
+                <RefreshControl
+                  refreshing={refreshing || false}
+                  onRefresh={onRefresh}
+                />
+              ) : undefined
+            }>
+            {notch !== false && <Gap height={notchHeight} />}
+            {children}
+            {/* {notch !== false && <Gap height={bottomHeight} />} */}
+          </ScrollView>
         ) : (
+          // <View style={{flexGrow: 1}}>
+          // </View>
           <View style={{flex: 1, zIndex: 3}}>
             {notch !== false && <Gap height={notchHeight} />}
             {children}

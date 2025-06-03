@@ -1,7 +1,6 @@
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
-import {bottomHeight, notchHeight} from '../utils/getNotchHeight';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Input from '../components/Input';
 import Gap from '../components/Gap';

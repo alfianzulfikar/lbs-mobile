@@ -83,12 +83,18 @@ export const useKYCRisk = () => {
         },
       });
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCTerms'}));
-    } catch (error: any) {
-      console.log('risk error', error);
-      if (error?.status === 422) {
-        setIdError(
-          error?.data?.errors?.id ? ['Harap isi minimal 1 pertanyaan'] : [],
-        );
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+        console.log('risk error', error);
+        if (error?.status === 422) {
+          setIdError(
+            error?.data?.errors?.id ? ['Harap isi minimal 1 pertanyaan'] : [],
+          );
+        }
       }
     } finally {
       setRiskSubmitLoading(false);

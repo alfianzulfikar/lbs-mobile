@@ -49,6 +49,7 @@ export type AuthStackParamList = {
   AccountVerification: {token: string};
   ForgotPassword: undefined;
   ResetPassword: {token: string};
+  AccountVerificationExpired: undefined;
 };
 
 export type AccountStackParamList = {
@@ -340,6 +341,7 @@ export type KYCFamilyType = {
   namaAhliWaris?: string;
   hubunganDenganAhliWaris?: number | null;
   tlpAhliWaris?: string;
+  phoneCode?: string;
 };
 
 export type KYCOccupationType = {
@@ -428,6 +430,7 @@ export type KYCFamilyErrorType = {
   namaAhliWaris?: string[];
   hubunganDenganAhliWaris?: string[];
   tlpAhliWaris?: string[];
+  phoneCode?: string[];
 };
 
 export type KYCOccupationErrorType = {
@@ -503,6 +506,7 @@ export type KYCFormFieldType<
   option?: InputDropdownOption[];
   loading?: boolean;
   onChangeAdditionalValue?: any;
+  customInput?: 'phone';
 };
 
 export type KYCBackScreen =
@@ -623,4 +627,9 @@ export type NotificationType = {
     key?: string;
     value?: string;
   };
+};
+
+export type CallingCodeType = {
+  id: string;
+  label: string;
 };

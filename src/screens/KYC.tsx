@@ -7,7 +7,7 @@ import LottieView from 'lottie-react-native';
 import Button from '../components/Button';
 import ICKTP from '../components/icons/ICKTP';
 import {useThemeColor} from '../hooks/useThemeColor';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
 const KYC = () => {
   const textColor = useThemeColor({}, 'text');
@@ -54,7 +54,11 @@ const KYC = () => {
         <Gap height={24} />
         <Button
           title="Mulai isi KYC"
-          onPress={() => navigation.navigate('KYC', {screen: 'KYCPersonal'})}
+          onPress={() =>
+            navigation.dispatch(
+              StackActions.replace('KYC', {screen: 'KYCPersonal'}),
+            )
+          }
         />
         <Gap height={24} />
       </View>

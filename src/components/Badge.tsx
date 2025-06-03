@@ -6,6 +6,8 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import BlurOverlay from './BlurOverlay';
 import LinearGradient from 'react-native-linear-gradient';
 import {useColorScheme} from '../hooks/useColorScheme';
+import ICPrelisting from './icons/ICPrelisting';
+import Gap from './Gap';
 // import LinearGradient from 'react-native-linear-gradient';
 // import {BlurView} from '@react-native-community/blur';
 
@@ -19,6 +21,7 @@ const Badge = ({
   transparent,
   mode,
   maxWidth,
+  icon,
 }: {
   text: string;
   fontSize?: number;
@@ -29,6 +32,7 @@ const Badge = ({
   transparent?: boolean;
   mode?: 'dark' | 'light';
   maxWidth?: number;
+  icon?: React.ReactNode;
 }) => {
   let colorScheme = useColorScheme();
   let textColor = useThemeColor({}, 'text');
@@ -85,18 +89,32 @@ const Badge = ({
           blurType="light"
           style={styles.blurView}></BlurView> */}
         {/* <BlurOverlay /> */}
-        <Text
+        <View
           style={[
-            styles.text,
+            styles.textContainer,
             {
-              color: RGBAColors(1)[mode || colorScheme].text,
-              fontSize: fontSize || 12,
               paddingVertical: paddingVertical ?? 8,
               paddingHorizontal: paddingHorizontal ?? 12,
             },
           ]}>
-          {text}
-        </Text>
+          {icon && (
+            <>
+              {icon}
+              <Gap width={4} />
+            </>
+          )}
+          <Text
+            style={[
+              styles.text,
+              {
+                color: RGBAColors(1)[mode || colorScheme].text,
+                fontSize: fontSize || 12,
+                // backgroundColor: 'yellow'
+              },
+            ]}>
+            {text}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -120,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 700,
     position: 'relative',
-    zIndex: 2,
+    lineHeight: 16,
   },
   background: {
     width: 70,
@@ -141,5 +159,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: 1,
+  },
+  textContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    zIndex: 2,
   },
 });

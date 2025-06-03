@@ -3,6 +3,7 @@ import {StackActions, useNavigation} from '@react-navigation/native';
 import queryString from 'query-string';
 import {Linking} from 'react-native';
 import {envMode} from '../constants/Env';
+import {jwtDecode} from 'jwt-decode';
 
 export const useDeepLinks = () => {
   const navigation = useNavigation();
@@ -33,12 +34,34 @@ export const useDeepLinks = () => {
     const splitUrl = parsedHash.url.split('/');
     const baseURL = splitUrl[2];
     if (splitUrl[3] == 'verify') {
-      navigation.dispatch(
-        StackActions.replace('Auth', {
-          screen: 'AccountVerification',
-          params: {token: parsedHash.query.token},
-        }),
-      );
+      const token: string =
+        typeof parsedHash?.query?.token === 'string'
+          ? parsedHash?.query?.token || ''
+          : '';
+      if (token) {
+        const decode: {exp?: number} = jwtDecode(token, {header: true});
+        console.log('decode', decode);
+        if ((decode.exp || 0) < Date.now() / 1000) {
+          navigation.dispatch(
+            StackActions.replace('Auth', {
+              screen: 'AccountVerificationExpired',
+            }),
+          );
+        } else {
+          navigation.dispatch(
+            StackActions.replace('Auth', {
+              screen: 'AccountVerification',
+              params: {token: parsedHash.query.token},
+            }),
+          );
+        }
+      } else {
+        navigation.dispatch(
+          StackActions.replace('Auth', {
+            screen: 'AccountVerificationExpired',
+          }),
+        );
+      }
     } else if (splitUrl[3] == 'reset-password') {
       navigation.dispatch(
         StackActions.replace('Auth', {
@@ -94,18 +117,16 @@ export const useDeepLinks = () => {
       if (url) {
         navigationFromUrl(url, accessToken || '');
       } else {
-        setTimeout(async () => {
-          const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
-          if (accessToken) {
-            navigation.dispatch(StackActions.replace('MainTab'));
+        const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
+        if (accessToken) {
+          navigation.dispatch(StackActions.replace('MainTab'));
+        } else {
+          if (hasVisitedOnboarding) {
+            navigation.dispatch(StackActions.replace('Auth'));
           } else {
-            // if (hasVisitedOnboarding) {
-            //   navigation.dispatch(StackActions.replace('Auth'));
-            // } else {
-            // }
             navigation.dispatch(StackActions.replace('OnBoarding'));
           }
-        }, 2000);
+        }
       }
     });
   };

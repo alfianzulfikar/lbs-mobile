@@ -80,11 +80,6 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
-        translucent
-        backgroundColor="transparent"
-      />
       <ScreenWrapper scrollView onRefresh={onRefresh} refreshing={refreshing}>
         <VideoBackground />
         <View

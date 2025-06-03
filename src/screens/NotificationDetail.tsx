@@ -7,11 +7,13 @@ import Header from '../components/Header';
 import {RootStackParamList} from '../constants/Types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Button from '../components/Button';
+import {useThemeColor} from '../hooks/useThemeColor';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NotificationDetail'>;
 
 const NotificationDetail = ({route}: Props) => {
   const {description, title, code, slug} = route.params;
+  const textColor2 = useThemeColor({}, 'text2');
   return (
     <ScreenWrapper background backgroundType="gradient">
       <Gap height={24} />
@@ -25,7 +27,7 @@ const NotificationDetail = ({route}: Props) => {
         }
       />
       <View style={{marginTop: 40, paddingHorizontal: 24}}>
-        <Text>{description}</Text>
+        <Text style={{color: textColor2}}>{description}</Text>
       </View>
       {(code || slug) && (
         <>

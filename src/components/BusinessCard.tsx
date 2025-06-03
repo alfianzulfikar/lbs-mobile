@@ -18,9 +18,16 @@ import {useNavigation} from '@react-navigation/native';
 import BlurOverlay from './BlurOverlay';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useColorScheme} from '../hooks/useColorScheme';
+import ICPrelisting from './icons/ICPrelisting';
+import ICListing from './icons/ICListing';
+import ICTerpenuhi from './icons/ICTerpenuhi';
+import ICBerjalan from './icons/ICBerjalan';
+import ICSelesai from './icons/ICSelesai';
+import ICArrowLeft from './icons/ICArrowLeft';
 
 const BusinessCard = ({data}: {data: BusinessType}) => {
   let colorScheme = useColorScheme();
+  const textColor2 = useThemeColor({}, 'text2');
   const tint = useThemeColor({}, 'tint');
   const background = useThemeColor({}, 'background');
   const navigation = useNavigation();
@@ -68,7 +75,27 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
           <View style={styles.information}>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Badge text={capitalize(data.tipeBisnis)} transparent />
+              <View style={{flexDirection: 'row'}}>
+                <Badge text={capitalize(data.tipeBisnis)} transparent />
+                <Gap width={8} />
+                <Badge
+                  text={capitalize(data.status)}
+                  transparent
+                  icon={
+                    capitalize(data.status) === 'Pre-listing' ? (
+                      <ICPrelisting color={textColor2} size={16} />
+                    ) : capitalize(data.status) === 'Listing' ? (
+                      <ICListing color={textColor2} size={16} />
+                    ) : capitalize(data.status) === 'Terpenuhi' ? (
+                      <ICTerpenuhi color={textColor2} size={16} />
+                    ) : capitalize(data.status) === 'Berjalan' ? (
+                      <ICBerjalan color={textColor2} size={16} />
+                    ) : (
+                      <ICSelesai color={textColor2} size={16} />
+                    )
+                  }
+                />
+              </View>
               <RoundedProgressIndicator
                 target={data.target}
                 current={data.terpenuhi}

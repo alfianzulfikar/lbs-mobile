@@ -119,5 +119,10 @@ export const useTransaction = () => {
     }
   };
 
-  return {transactionDetail, getTransactionDetail, transactionDetailLoading};
+  return {
+    transactionDetail,
+    getTransactionDetail,
+    transactionDetailLoading,
+    setTransactionDetail,
+  };
 };

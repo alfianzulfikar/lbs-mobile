@@ -23,7 +23,6 @@ import numberFormat from '../utils/numberFormat';
 import Button from './Button';
 import capitalize from '../utils/capitalize';
 import {useNavigation} from '@react-navigation/native';
-import {notchHeight} from '../utils/getNotchHeight';
 import {useColorScheme} from '../hooks/useColorScheme';
 import dateTimeFormat from '../utils/dateTimeFormat';
 
@@ -99,7 +98,9 @@ const TransactionDetail = ({
       field: 'Status Transaksi',
       value: data.statusTransaksi,
     },
-    ...(['Dividen', 'Bagi Hasil'].includes(data.jenisTransaksi)
+    ...(['Dividen', 'Bagi Hasil'].includes(data.jenisTransaksi) &&
+    data.tanggalPembayaran &&
+    data.tanggalPembayaran
       ? [
           {
             field: 'Tanggal Pembagian',

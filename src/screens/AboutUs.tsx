@@ -200,7 +200,7 @@ const AboutUs = () => {
           ]}>
           <View style={styles.youtubeContainer2}>
             <YoutubeIframe
-              height={(width * 168) / 322}
+              height={(width * 9) / 16}
               width={'100%'}
               videoId={'UX6cb8y_Vkg'}
               webViewStyle={{opacity: 0.99}}
@@ -443,12 +443,12 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
     // overflow: 'hidden',
-    padding: 16,
+    padding: 6,
   },
   youtubeContainer2: {
     borderRadius: 16,
     overflow: 'hidden',
-    aspectRatio: 322 / 168,
+    aspectRatio: 16 / 9,
   },
   pharagraph: {
     fontSize: 16,

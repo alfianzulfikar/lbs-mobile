@@ -125,7 +125,7 @@ const DigitalSignature = ({route}: Props) => {
   }, [otpValue.otp6]);
 
   useEffect(() => {
-    startCountdown(20);
+    startCountdown(180);
   }, []);
 
   return (

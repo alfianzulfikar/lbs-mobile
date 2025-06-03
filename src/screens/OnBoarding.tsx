@@ -19,7 +19,6 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {bottomHeight, notchHeight} from '../utils/getNotchHeight';
 
 const OnBoarding = () => {
   const navigation = useNavigation();

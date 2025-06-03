@@ -10,6 +10,7 @@ import FormBuilder from '../components/FormBuilder';
 import Button from '../components/Button';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useKYCFamily} from '../api/kycFamily';
+import {useCallingCode} from '../api/callingCode';
 
 const KYCFamily = () => {
   const tint = useThemeColor({}, 'tint');
@@ -22,6 +23,9 @@ const KYCFamily = () => {
     submitFamily,
     setFamily,
   } = useKYCFamily();
+
+  const {callingCodeLoading, getCallingCodes, callingCodeList} =
+    useCallingCode();
 
   const statusOption = [
     {id: 1, label: 'Single'},
@@ -50,7 +54,7 @@ const KYCFamily = () => {
       name: 'namaPasangan',
       label: 'Nama Lengkap Pasangan',
       type: 'text',
-      required: true,
+      // required: true,
     },
     {
       name: 'namaGadisIbuKandung',
@@ -76,11 +80,13 @@ const KYCFamily = () => {
       label: 'Nomor Telepon Ahli Waris',
       type: 'text',
       required: true,
+      customInput: 'phone',
     },
   ];
 
   useEffect(() => {
     getFamily();
+    getCallingCodes();
   }, []);
 
   return (
@@ -103,6 +109,8 @@ const KYCFamily = () => {
               state={family}
               error={familyError}
               onChange={setFamily}
+              callingCodeList={callingCodeList}
+              callingCodeLoading={callingCodeLoading}
             />
             <Gap height={40} />
             <Button

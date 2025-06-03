@@ -39,12 +39,13 @@ export const Colors = {
     infoSurface: '#F0F9FF',
     warningSurface: '#FFF6E0',
     dangerSurface: '#FFF1F2',
+    dropdownHighlight: '#F5F5F5',
   },
   dark: {
     text: '#ECEDEE',
     text2: '#E0E0E0',
     text3: '#E0E0E0',
-    text4: '#9E9E9E',
+    text4: '#757575',
     textInfo: '#A9CDFF',
     textSuccess: '#93FD9D',
     textDanger: '#FFA9A2',
@@ -66,11 +67,12 @@ export const Colors = {
     buttonTextDanger: '#D50202',
     line: '#404040',
     border: '#E0E0E0',
-    inputDisable: '#E0E0E0',
+    inputDisable: '#9E9E9E',
     successSurface: '#ECFDF5',
     infoSurface: '#F0F9FF',
     warningSurface: '#FFF6E0',
     dangerSurface: '#FFF1F2',
+    dropdownHighlight: '#202020',
   },
 };
 

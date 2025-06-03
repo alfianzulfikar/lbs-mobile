@@ -1,12 +1,13 @@
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   ListRenderItem,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -18,10 +19,12 @@ import SearchBar from '../components/SearchBar';
 import DropdownInput from '../components/DropdownInput';
 import {BusinessType} from '../constants/Types';
 import BusinessCardSkeleton2 from '../components/BusinessCardSkeleton2';
+import {useColorScheme} from '../hooks/useColorScheme';
 
 const Business = () => {
-  const backgroundColor = useThemeColor({}, 'background');
+  const colorScheme = useColorScheme();
   const textColor = useThemeColor({}, 'text');
+  const textColor2 = useThemeColor({}, 'text2');
   const tint = useThemeColor({}, 'tint');
   const {
     businesses,
@@ -187,34 +190,63 @@ const Business = () => {
           <BusinessCardSkeleton2 />
           <Gap width={24} />
         </ScrollView>
-      ) : (
-        <View style={{flexDirection: 'row'}}>
-          <FlatList
-            ref={businessFlatlistRef}
-            horizontal
-            data={businesses}
-            renderItem={({item, index}) => (
-              <View
-                style={{
-                  marginRight: index === businesses.length - 1 ? 24 : 16,
-                  marginLeft: index === 0 ? 24 : 0,
-                  height: businessesLoading ? 0 : 'auto',
-                  overflow: 'hidden',
-                }}>
-                <BusinessCard2 business={item} />
-              </View>
-            )}
-            ListHeaderComponent={renderHeader()}
-            ListFooterComponent={renderFooter()}
-            keyExtractor={(item, id) => id.toString()}
-            showsHorizontalScrollIndicator={false}
-            onEndReachedThreshold={0.1}
-            onEndReached={() => handlePagination(page + 1)}
-            scrollEnabled={flatlistScrollEnabled}
-          />
+      ) : businesses.length === 0 ? (
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: 24,
+            flex: 1,
+          }}>
+          <View style={styles.emptyContainer}>
+            <Image
+              source={
+                colorScheme === 'dark'
+                  ? require('../assets/images/empty-article-dark.png')
+                  : require('../assets/images/empty-article-light.png')
+              }
+              style={{width: 240, height: 240}}
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={[styles.emptyTitle, {color: textColor}]}>
+            Pencarian Tidak Ditemukan
+          </Text>
+          <Text style={[styles.emptyDesc, {color: textColor2}]}>
+            Maaf, kami tidak menemukan bisnis yang Anda cari. Silakan cari
+            dengan kata kunci yang berbeda.
+          </Text>
         </View>
+      ) : (
+        <>
+          <View style={{flexDirection: 'row'}}>
+            <FlatList
+              ref={businessFlatlistRef}
+              horizontal
+              data={businesses}
+              renderItem={({item, index}) => (
+                <View
+                  style={{
+                    marginRight: index === businesses.length - 1 ? 24 : 16,
+                    marginLeft: index === 0 ? 24 : 0,
+                    height: businessesLoading ? 0 : 'auto',
+                    overflow: 'hidden',
+                  }}>
+                  <BusinessCard2 business={item} />
+                </View>
+              )}
+              ListHeaderComponent={renderHeader()}
+              ListFooterComponent={renderFooter()}
+              keyExtractor={(item, id) => id.toString()}
+              showsHorizontalScrollIndicator={false}
+              onEndReachedThreshold={0.1}
+              onEndReached={() => handlePagination(page + 1)}
+              scrollEnabled={flatlistScrollEnabled}
+            />
+          </View>
+        </>
       )}
-      <Gap height={120} />
+      <Gap maxHeight={120} flex={1} />
     </ScreenWrapper>
   );
 };
@@ -226,5 +258,24 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  emptyContainer: {
+    width: 216,
+    height: 216,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

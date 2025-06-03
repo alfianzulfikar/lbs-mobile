@@ -52,8 +52,12 @@ const PortfolioDetail = ({route}: Props) => {
 
   const {portfolio, getPortfolio} = usePortfolio();
   const {businessStatus, getBusinessStatus} = useBusiness();
-  const {transactionDetail, getTransactionDetail, transactionDetailLoading} =
-    useTransaction();
+  const {
+    transactionDetail,
+    getTransactionDetail,
+    transactionDetailLoading,
+    setTransactionDetail,
+  } = useTransaction();
 
   const [info, setInfo] = useState<{field: string; value: number | string}[]>(
     [],
@@ -62,6 +66,22 @@ const PortfolioDetail = ({route}: Props) => {
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  // const [transactionDetail2, setTransactionDetail2] = useState({
+  //     kodeEfek: '',
+  //     kodePembayaran: '',
+  //     merkDagang: '',
+  //     totalTransaksi: 0,
+  //     jenisBisnis: '',
+  //     hargaPerLembar: 0,
+  //     jumlahLembar: 0,
+  //     nominal: 0,
+  //     biayaAdminBank: 0,
+  //     biayaPlatform: 0,
+  //     jenisTransaksi: '',
+  //     statusTransaksi: '',
+  //     periodePembayaran: '',
+  //     tanggalPembayaran: '',
+  //   });
 
   useEffect(() => {
     const asyncFunc = async () => {
@@ -221,13 +241,47 @@ const PortfolioDetail = ({route}: Props) => {
                             : 0,
                       }}>
                       <TransactionItem
-                        transaction={item}
+                        transaction={{
+                          type:
+                            item.type === 'Deviden'
+                              ? portfolio.type === 'SAHAM'
+                                ? 'Dividen'
+                                : 'Bagi Hasil'
+                              : item.type,
+                          date: item.date,
+                          nominal: item.nominal,
+                          status: item.status,
+                        }}
                         onPress={() => {
-                          setShowTransactionDetail(true);
-                          getTransactionDetail({
-                            paymentCode: item.kode,
-                            type: item.type,
-                          });
+                          if (item.type === 'Deviden') {
+                            setTransactionDetail({
+                              kodeEfek: item.kode || '',
+                              kodePembayaran: '',
+                              merkDagang: portfolio.merkDagang || '',
+                              totalTransaksi: item.nominal || 0,
+                              jenisBisnis: portfolio.type || '',
+                              hargaPerLembar: 0,
+                              jumlahLembar: 0,
+                              nominal: item.nominal || 0,
+                              biayaAdminBank: 0,
+                              biayaPlatform: 0,
+                              jenisTransaksi:
+                                portfolio.type === 'SAHAM'
+                                  ? 'Dividen'
+                                  : 'Bagi Hasil',
+                              statusTransaksi: item.status || '',
+                              periodePembayaran: '',
+                              tanggalPembayaran: '',
+                              isIPO: true,
+                            });
+                            setShowTransactionDetail(true);
+                          } else {
+                            setShowTransactionDetail(true);
+                            getTransactionDetail({
+                              paymentCode: item.kode,
+                              type: item.type,
+                            });
+                          }
                         }}
                       />
                     </View>

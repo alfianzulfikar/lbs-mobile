@@ -134,7 +134,7 @@ const OTP = ({route}: Props) => {
       } else if (register) {
         await resendRegisterOTP(register?.token, register?.body);
       }
-      startCountdown(20);
+      startCountdown(180);
     } catch {}
   };
 
@@ -152,7 +152,7 @@ const OTP = ({route}: Props) => {
   }, [otpValue.otp6]);
 
   useEffect(() => {
-    startCountdown(20);
+    startCountdown(180);
   }, []);
 
   return (

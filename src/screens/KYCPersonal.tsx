@@ -1,4 +1,4 @@
-import {ActivityIndicator, Platform, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Keyboard, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -17,13 +17,59 @@ import Button from '../components/Button';
 import {useAPI} from '../services/api';
 import RNFetchBlob from 'rn-fetch-blob';
 import {useThemeColor} from '../hooks/useThemeColor';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
 
 const KYCPersonal = () => {
   const {apiRequest} = useAPI();
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
+
+  const navigation = useNavigation();
+
+  const [IDFormState, setIDFormState] = useState<KYCIDType>({
+    nik: '',
+    tglRegistrasiKTP: '',
+    tglKadaluwarsaKTP: '',
+    fotoKTP: '',
+    fotoSelfieKTP: '',
+    passport: '',
+    isKtpLifetime: null,
+  });
+  const [personalFormState, setPersonalFormState] = useState<KYCPersonalType>({
+    namaDepan: '',
+    namaBelakang: '',
+    email: '',
+    phone: '',
+    tempatLahir: '',
+    tglLahir: '',
+    jenisKelamin: '',
+    agama: '',
+    pendidikan: '',
+  });
+  const [IDFormError, setIDFormError] = useState<KYCIDErrorType>({
+    nik: [],
+    tglRegistrasiKTP: [],
+    tglKadaluwarsaKTP: [],
+    fotoKTP: [],
+    fotoSelfieKTP: [],
+    passport: [],
+    isKtpLifetime: [],
+  });
+  const [personalFormError, setPersonalFormError] =
+    useState<KYCPersonalErrorType>({
+      namaDepan: [],
+      namaBelakang: [],
+      email: [],
+      phone: [],
+      tempatLahir: [],
+      tglLahir: [],
+      jenisKelamin: [],
+      agama: [],
+      pendidikan: [],
+    });
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
 
   const genderOption = [
     {id: 1, label: 'Laki-laki'},
@@ -77,12 +123,16 @@ const KYCPersonal = () => {
       option: ktpPeriodOption,
       placeholder: 'Sementara',
     },
-    {
-      name: 'tglKadaluwarsaKTP',
-      label: '',
-      placeholder: 'DD/MM/YYYY',
-      type: 'date',
-    },
+    ...(IDFormState.isKtpLifetime
+      ? []
+      : [
+          {
+            name: 'tglKadaluwarsaKTP',
+            label: '',
+            placeholder: 'DD/MM/YYYY',
+            type: 'date',
+          },
+        ]),
     {
       name: 'fotoKTP',
       label: 'Foto KTP',
@@ -161,52 +211,6 @@ const KYCPersonal = () => {
     },
   ];
 
-  const navigation = useNavigation();
-
-  const [IDFormState, setIDFormState] = useState<KYCIDType>({
-    nik: '',
-    tglRegistrasiKTP: '',
-    tglKadaluwarsaKTP: '',
-    fotoKTP: '',
-    fotoSelfieKTP: '',
-    passport: '',
-    isKtpLifetime: null,
-  });
-  const [personalFormState, setPersonalFormState] = useState<KYCPersonalType>({
-    namaDepan: '',
-    namaBelakang: '',
-    email: '',
-    phone: '',
-    tempatLahir: '',
-    tglLahir: '',
-    jenisKelamin: '',
-    agama: '',
-    pendidikan: '',
-  });
-  const [IDFormError, setIDFormError] = useState<KYCIDErrorType>({
-    nik: [],
-    tglRegistrasiKTP: [],
-    tglKadaluwarsaKTP: [],
-    fotoKTP: [],
-    fotoSelfieKTP: [],
-    passport: [],
-    isKtpLifetime: [],
-  });
-  const [personalFormError, setPersonalFormError] =
-    useState<KYCPersonalErrorType>({
-      namaDepan: [],
-      namaBelakang: [],
-      email: [],
-      phone: [],
-      tempatLahir: [],
-      tglLahir: [],
-      jenisKelamin: [],
-      agama: [],
-      pendidikan: [],
-    });
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
-
   const getData = async () => {
     setPageLoading(true);
     try {
@@ -214,14 +218,15 @@ const KYCPersonal = () => {
         endpoint: '/user/biodata/pribadi',
         authorization: true,
       });
+      console.log('get data personal', res);
       setIDFormState({
-        nik: res.ktp.nik,
-        tglRegistrasiKTP: res.ktp.tgl_registrasi,
-        tglKadaluwarsaKTP: res.ktp.tgl_kadaluarsa_ktp,
-        fotoKTP: res.ktp.foto_ktp,
-        fotoSelfieKTP: res.ktp.foto_selfie_ktp,
-        isKtpLifetime: res.ktp.is_ktp_lifetime,
-        passport: res.ktp.no_passport,
+        nik: res.ktp?.nik || '',
+        tglRegistrasiKTP: res.ktp?.tgl_registrasi || '',
+        tglKadaluwarsaKTP: res.ktp?.tgl_kadaluarsa_ktp || '',
+        fotoKTP: res.ktp?.foto_ktp || '',
+        fotoSelfieKTP: res.ktp?.foto_selfie_ktp || '',
+        isKtpLifetime: res.ktp?.is_ktp_lifetime || '',
+        passport: res.ktp?.no_passport || '',
       });
       setPersonalFormState({
         namaDepan: res.firstname,
@@ -242,6 +247,7 @@ const KYCPersonal = () => {
   };
 
   const submit = async () => {
+    Keyboard.dismiss();
     setSubmitLoading(true);
     try {
       // let KTPBase64 =
@@ -313,32 +319,39 @@ const KYCPersonal = () => {
         authorization: true,
         body,
       });
-      navigation.navigate('KYC', {screen: 'KYCAddress'});
-    } catch (error: any) {
-      console.log('submit error', error, error?.data?.errors);
-      if (error?.status === 422) {
-        setIDFormError(prev => ({
-          ...prev,
-          nik: error?.data?.errors?.ktp?.nik || [],
-          tglRegistrasiKTP: error?.data?.errors?.ktp?.tgl_registrasi || [],
-          tglKadaluwarsaKTP: error?.data?.errors?.ktp?.tgl_kadaluarsa_ktp || [],
-          isKtpLifetime: error?.data?.errors?.ktp?.is_ktp_lifetime || [],
-          fotoKTP: error?.data?.errors?.ktp?.foto_ktp || [],
-          fotoSelfieKTP: error?.data?.errors?.ktp?.foto_selfie_ktp || [],
-          passport: error?.data?.errors?.ktp?.no_passport || [],
-        }));
-        setPersonalFormError(prev => ({
-          ...prev,
-          namaDepan: error?.data?.errors?.firstname || [],
-          namaBelakang: error?.data?.errors?.lastname || [],
-          email: [],
-          phone: [],
-          tempatLahir: error?.data?.errors?.tempat_lahir || [],
-          tglLahir: error?.data?.errors?.ktp?.tgl_lahir || [],
-          jenisKelamin: error?.data?.errors?.jenis_kelamin_id || [],
-          agama: error?.data?.errors?.agama_id || [],
-          pendidikan: error?.data?.errors?.pendidikan_id || [],
-        }));
+      navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCAddress'}));
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+        if (error?.status === 422) {
+          console.log('submit error', error);
+          setIDFormError(prev => ({
+            ...prev,
+            nik: error?.data?.errors?.ktp?.nik || [],
+            tglRegistrasiKTP: error?.data?.errors?.ktp?.tgl_registrasi || [],
+            tglKadaluwarsaKTP:
+              error?.data?.errors?.ktp?.tgl_kadaluarsa_ktp || [],
+            isKtpLifetime: error?.data?.errors?.ktp?.is_ktp_lifetime || [],
+            fotoKTP: error?.data?.errors?.ktp?.foto_ktp || [],
+            fotoSelfieKTP: error?.data?.errors?.ktp?.foto_selfie_ktp || [],
+            passport: error?.data?.errors?.ktp?.no_passport || [],
+          }));
+          setPersonalFormError(prev => ({
+            ...prev,
+            namaDepan: error?.data?.errors?.firstname || [],
+            namaBelakang: error?.data?.errors?.lastname || [],
+            email: [],
+            phone: [],
+            tempatLahir: error?.data?.errors?.tempat_lahir || [],
+            tglLahir: error?.data?.errors?.tgl_lahir || [],
+            jenisKelamin: error?.data?.errors?.jenis_kelamin_id || [],
+            agama: error?.data?.errors?.agama_id || [],
+            pendidikan: error?.data?.errors?.pendidikan_id || [],
+          }));
+        }
       }
     } finally {
       setSubmitLoading(false);

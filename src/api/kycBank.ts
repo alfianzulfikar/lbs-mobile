@@ -53,14 +53,20 @@ export const useKYCBank = () => {
         body,
       });
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCRisk'}));
-    } catch (error: any) {
-      console.log('bank error', error);
-      if (error?.status === 422) {
-        setBankError({
-          bankId: error?.data?.errors?.bank_id || [],
-          rekeningBank: error?.data?.errors?.rekening || [],
-          namaPemilikRekeningBank: error?.data?.errors?.nama_pemilik || [],
-        });
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+        console.log('bank error', error);
+        if (error?.status === 422) {
+          setBankError({
+            bankId: error?.data?.errors?.bank_id || [],
+            rekeningBank: error?.data?.errors?.rekening || [],
+            namaPemilikRekeningBank: error?.data?.errors?.nama_pemilik || [],
+          });
+        }
       }
     } finally {
       setBankSubmitLoading(false);

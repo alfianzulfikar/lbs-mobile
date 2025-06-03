@@ -15,6 +15,7 @@ export const useKYCFamily = () => {
     namaAhliWaris: '',
     hubunganDenganAhliWaris: null,
     tlpAhliWaris: '',
+    phoneCode: '62',
   });
   const [familyError, setFamilyError] = useState<KYCFamilyErrorType>({
     statusPernikahanId: [],
@@ -23,6 +24,7 @@ export const useKYCFamily = () => {
     namaAhliWaris: [],
     hubunganDenganAhliWaris: [],
     tlpAhliWaris: [],
+    phoneCode: [],
   });
   const [familyLoading, setFamilyLoading] = useState(false);
   const [familySubmitLoading, setFamilySubmitLoading] = useState(false);
@@ -34,15 +36,23 @@ export const useKYCFamily = () => {
         endpoint: '/user/biodata/keluarga',
         authorization: true,
       });
+      const phoneState = res.keluarga.tlp_ahli_waris;
       setFamily({
         statusPernikahanId: res.keluarga.pernikahan.id,
         hubunganDenganAhliWaris: heirRelationshipOption.find(
           item => item.label === res.keluarga.hubungan_dengan_ahli_waris,
         )?.id,
-        tlpAhliWaris: res.keluarga.tlp_ahli_waris,
+        tlpAhliWaris:
+          phoneState && phoneState.split('-').length > 1
+            ? phoneState.split('-')[1]
+            : '',
         namaAhliWaris: res.keluarga.nama_ahli_waris,
         namaGadisIbuKandung: res.keluarga.nama_gadis_ibu_kandung,
         namaPasangan: res.keluarga.nama_pasangan,
+        phoneCode:
+          phoneState && phoneState.split('-').length > 1
+            ? phoneState.split('-')[0]
+            : '',
       });
     } catch {
     } finally {
@@ -61,7 +71,13 @@ export const useKYCFamily = () => {
         hubungan_dengan_ahli_waris: heirRelationshipOption.find(
           item => item.id === family.hubunganDenganAhliWaris,
         )?.label,
-        tlp_ahli_waris: family.tlpAhliWaris,
+        tlp_ahli_waris: `${family.phoneCode}-${
+          family.tlpAhliWaris
+            ? family.tlpAhliWaris.charAt(0) === '0'
+              ? family.tlpAhliWaris.slice(1)
+              : family.tlpAhliWaris
+            : ''
+        }`,
         status_pernikahan_id: family.statusPernikahanId,
       });
       const res = await apiRequest({
@@ -73,19 +89,25 @@ export const useKYCFamily = () => {
       navigation.dispatch(
         StackActions.replace('KYC', {screen: 'KYCOccupation'}),
       );
-    } catch (error: any) {
-      if (error?.status === 422) {
-        setFamilyError(prev => ({
-          ...prev,
-          statusPernikahanId: error?.data?.errors?.status_pernikahan_id || [],
-          namaPasangan: error?.data?.errors?.nama_pasangan || [],
-          namaGadisIbuKandung:
-            error?.data?.errors?.nama_gadis_ibu_kandung || [],
-          namaAhliWaris: error?.data?.errors?.nama_ahli_waris || [],
-          hubunganDenganAhliWaris:
-            error?.data?.errors?.hubungan_dengan_ahli_waris || [],
-          tlpAhliWaris: error?.data?.errors?.tlp_ahli_waris || [],
-        }));
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+        if (error?.status === 422) {
+          setFamilyError(prev => ({
+            ...prev,
+            statusPernikahanId: error?.data?.errors?.status_pernikahan_id || [],
+            namaPasangan: error?.data?.errors?.nama_pasangan || [],
+            namaGadisIbuKandung:
+              error?.data?.errors?.nama_gadis_ibu_kandung || [],
+            namaAhliWaris: error?.data?.errors?.nama_ahli_waris || [],
+            hubunganDenganAhliWaris:
+              error?.data?.errors?.hubungan_dengan_ahli_waris || [],
+            tlpAhliWaris: error?.data?.errors?.tlp_ahli_waris || [],
+          }));
+        }
       }
     } finally {
       setFamilySubmitLoading(false);

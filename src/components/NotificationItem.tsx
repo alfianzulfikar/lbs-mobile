@@ -60,7 +60,9 @@ const NotificationItem = ({
       </View>
       <View style={{flex: 1, marginLeft: 16}}>
         <Text style={styles.title}>{data.title}</Text>
-        <Text style={[styles.message, {color: text2}]}>{data.description}</Text>
+        <Text style={[styles.message, {color: text2}]} numberOfLines={1}>
+          {data.description}
+        </Text>
       </View>
     </TouchableOpacity>
   );

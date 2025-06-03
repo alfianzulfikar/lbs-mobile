@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -26,12 +27,14 @@ import LimitExplanation from '../components/LimitExplanation';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {PortfolioType} from '../constants/Types';
+import {RGBAColors} from '../constants/Colors';
+import BlurOverlay from '../components/BlurOverlay';
 
 const Portfolio = () => {
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
-  const textColor3 = useThemeColor({}, 'text3');
   const navigation = useNavigation();
 
   const {
@@ -168,6 +171,37 @@ const Portfolio = () => {
       </View>
       <Gap height={24} />
       {portfolioLoading && <ActivityIndicator color={tint} />}
+      {!portfolioLoading && portfolioList.length === 0 && (
+        <View style={{paddingHorizontal: 24}}>
+          <BlurOverlay />
+          <View
+            style={[
+              styles.emptyCard,
+              {
+                backgroundColor: RGBAColors(0.3)[colorScheme].background,
+              },
+            ]}>
+            <View style={styles.emptyContainer}>
+              <Image
+                source={
+                  colorScheme === 'dark'
+                    ? require('../assets/images/empty-portfolio-dark.png')
+                    : require('../assets/images/empty-portfolio-light.png')
+                }
+                style={{width: 160, height: 160}}
+                resizeMode="cover"
+              />
+            </View>
+            <Text style={[styles.emptyTitle, {color: textColor}]}>
+              Belum Ada Portofolio
+            </Text>
+            <Text style={[styles.emptyDesc, {color: textColor2}]}>
+              Mulai berinvestasi dengan melakukan pemesanan efek di salah satu
+              bisnis yang sedang listing di platform kami
+            </Text>
+          </View>
+        </View>
+      )}
     </>
   );
 
@@ -267,5 +301,31 @@ const styles = StyleSheet.create({
   cardImageBackground: {
     width: 340,
     height: 192,
+  },
+  emptyContainer: {
+    width: 136,
+    height: 136,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyCard: {
+    zIndex: 2,
+    alignItems: 'center',
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

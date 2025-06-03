@@ -64,6 +64,9 @@ export const useArticle = () => {
         }
       } else if (res.result && res.result.length === 0) {
         isLastPage.current = true;
+        if (!page || page === 1) {
+          setArticles([]);
+        }
       }
     } catch {
     } finally {

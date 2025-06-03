@@ -1,10 +1,7 @@
 import {useState} from 'react';
 import {useAPI} from '../services/api';
+import {CallingCodeType} from '../constants/Types';
 
-type CallingCodeType = {
-  id: string;
-  label: string;
-};
 export const useCallingCode = () => {
   const {apiRequest} = useAPI();
 

@@ -18,16 +18,17 @@ import Button from '../components/Button';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {Item, Item2, Paragraph, Title} from '../components/PharagraphItems';
-import {notchHeight} from '../utils/getNotchHeight';
 import CheckBox from '../components/CheckBox';
 import {useKYCTerms} from '../api/kycTerms';
 import {RGBAColors} from '../constants/Colors';
+import {useInsets} from '../hooks/useInsets';
 
 const KYCTerms = () => {
   const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColor = useThemeColor({}, 'text');
   const textColorDanger = useThemeColor({}, 'textDanger');
+  const {notchHeight} = useInsets();
 
   const {hasRead, setHasRead, submitLoading, submitTerms, checkError} =
     useKYCTerms();

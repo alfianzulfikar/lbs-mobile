@@ -44,11 +44,11 @@ export const usePortfolio = () => {
     }
     const transactions = res?.history
       ? res.history.map((item: any) => ({
-          type: item.type,
           status: item.status,
           kode: item.kode,
           nominal: item.nominal,
           date: item.created_at,
+          type: item.type,
         }))
       : [];
     const disclosureRes = res?.keterbukaan_informasi?.documents
@@ -104,6 +104,7 @@ export const usePortfolio = () => {
         }`,
         authorization: true,
       });
+      console.log('getPortfolioLust', res);
       let newArray: PortfolioType[] = [];
       if (page > 1) {
         newArray = [...portfolioList];

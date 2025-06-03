@@ -53,7 +53,7 @@ const BusinessStatus = ({
                 opacity: statusItem.id <= status ? 1 : 0.3,
               }}>
               <View style={styles.statusContainer}>
-                {capitalize(statusItem.name) === 'Pre-Listing' ? (
+                {capitalize(statusItem.name) === 'Pre-listing' ? (
                   <ICPrelisting
                     color="#FFFFFF"
                     size={40}

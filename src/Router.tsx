@@ -74,6 +74,7 @@ import {
 } from './constants/Types';
 import {navigationRef, tryFlushPendingNavigation} from './services/navigation';
 import NotificationDetail from './screens/NotificationDetail';
+import AccountVerificationExpired from './screens/AccountVerificationExpired';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -100,6 +101,10 @@ function Auth() {
       />
       <AuthStack.Screen name="ForgotPassword" component={ForgotPassword} />
       <AuthStack.Screen name="ResetPassword" component={ResetPassword} />
+      <AuthStack.Screen
+        name="AccountVerificationExpired"
+        component={AccountVerificationExpired}
+      />
     </AuthStack.Navigator>
   );
 }

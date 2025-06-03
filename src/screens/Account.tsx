@@ -14,7 +14,6 @@ import React, {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
-// import {notchHeight} from '../utils/getNotchHeight';
 import {RGBAColors} from '../constants/Colors';
 import ICCheckedShield from '../components/icons/ICCheckedShield';
 import Badge from '../components/Badge';
@@ -60,6 +59,7 @@ import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {useInsets} from '../hooks/useInsets';
+import {useInitTheme} from '../hooks/useInitTheme';
 
 const MenuItem = ({
   title,
@@ -124,6 +124,7 @@ const Account = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
   const {width} = Dimensions.get('window');
+  const {initTheme} = useInitTheme();
 
   const [biometric, setBiometric] = useState(false);
   const [dark, setDark] = useState(colorScheme === 'dark');
@@ -196,6 +197,7 @@ const Account = () => {
 
   useFocusEffect(
     useCallback(() => {
+      initTheme();
       const asyncFunc = async () => {
         setLoading(true);
         await getKycProgress();
@@ -412,7 +414,7 @@ const Account = () => {
       {showChangePhoto && (
         <BottomSheet
           setShow={() => setShowChangePhoto(false)}
-          snapPoints={['25%']}>
+          snapPoints={['40%']}>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
               style={{alignItems: 'center', width: 100}}
@@ -432,6 +434,7 @@ const Account = () => {
               <Text style={styles.photoOptionText}>Ambil dari Galeri</Text>
             </TouchableOpacity>
           </View>
+          <Gap height={40} />
         </BottomSheet>
       )}
     </ScreenWrapper>

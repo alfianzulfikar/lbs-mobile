@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -14,6 +15,7 @@ import {useNotificationAPI} from '../api/notification';
 import NotificationItem from '../components/NotificationItem';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useNavigation} from '@react-navigation/native';
+import {useColorScheme} from '../hooks/useColorScheme';
 
 const NotificationHistory = () => {
   const {
@@ -29,7 +31,10 @@ const NotificationHistory = () => {
   const onEndReachedCalledDuringMomentum = useRef(false);
   const [scrollEnabled, setScrollEnabled] = useState(false);
 
+  const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
+  const textColor2 = useThemeColor({}, 'text2');
 
   const handlePagination = (nextPage: number) => {
     if (!isFetching.current) {
@@ -59,6 +64,34 @@ const NotificationHistory = () => {
       <Header title="Notifikasi" />
       <Gap height={20} />
       {notificationsLoading && <ActivityIndicator color={tint} />}
+      {!notificationsLoading && notifications.length === 0 && (
+        <View
+          style={{
+            alignItems: 'center',
+            paddingHorizontal: 24,
+            flex: 1,
+            justifyContent: 'center',
+          }}>
+          <View style={styles.emptyContainer}>
+            <Image
+              source={
+                colorScheme === 'dark'
+                  ? require('../assets/images/empty-notification-dark.png')
+                  : require('../assets/images/empty-notification-light.png')
+              }
+              style={{width: 240, height: 240}}
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={[styles.emptyTitle, {color: textColor}]}>
+            Belum Ada Notifikasi
+          </Text>
+          <Text style={[styles.emptyDesc, {color: textColor2}]}>
+            Saat ini Anda belum menerima notifikasi.
+          </Text>
+          <Gap maxHeight={160} flex={1} />
+        </View>
+      )}
       <FlatList
         data={notificationsLoading ? [] : notifications}
         renderItem={({item, index}) => (
@@ -96,7 +129,6 @@ const NotificationHistory = () => {
         onMomentumScrollBegin={() => {
           onEndReachedCalledDuringMomentum.current = false;
         }}
-        // scrollEnabled={scrollEnabled}
       />
     </ScreenWrapper>
   );
@@ -104,4 +136,24 @@ const NotificationHistory = () => {
 
 export default NotificationHistory;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  emptyContainer: {
+    width: 216,
+    height: 216,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});

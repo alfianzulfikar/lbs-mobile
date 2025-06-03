@@ -21,6 +21,12 @@ import numberFormat from '../utils/numberFormat';
 import capitalize from '../utils/capitalize';
 import RoundedProgressIndicator from './RoundedProgressIndicator';
 import {useNavigation} from '@react-navigation/native';
+import Gap from './Gap';
+import ICPrelisting from './icons/ICPrelisting';
+import ICListing from './icons/ICListing';
+import ICTerpenuhi from './icons/ICTerpenuhi';
+import ICBerjalan from './icons/ICBerjalan';
+import ICSelesai from './icons/ICSelesai';
 
 const BusinessCard2 = ({business}: {business: BusinessType}) => {
   const colorScheme = useColorScheme();
@@ -63,7 +69,27 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
           />
         )}
         <View style={{padding: 16}}>
-          <Badge text={capitalize(business.tipeBisnis || '')} />
+          <View style={{flexDirection: 'row'}}>
+            <Badge text={capitalize(business.tipeBisnis || '')} />
+            <Gap width={8} />
+            <Badge
+              text={capitalize(business.status)}
+              transparent
+              icon={
+                capitalize(business.status) === 'Pre-listing' ? (
+                  <ICPrelisting color={textColor2} size={16} />
+                ) : capitalize(business.status) === 'Listing' ? (
+                  <ICListing color={textColor2} size={16} />
+                ) : capitalize(business.status) === 'Terpenuhi' ? (
+                  <ICTerpenuhi color={textColor2} size={16} />
+                ) : capitalize(business.status) === 'Berjalan' ? (
+                  <ICBerjalan color={textColor2} size={16} />
+                ) : (
+                  <ICSelesai color={textColor2} size={16} />
+                )
+              }
+            />
+          </View>
           <Text style={styles.title} numberOfLines={3}>
             {business.merkDagang}
           </Text>

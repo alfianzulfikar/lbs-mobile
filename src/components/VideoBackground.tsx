@@ -40,10 +40,11 @@ const VideoBackground = () => {
         style={styles.backgroundVideo}
         resizeMode="cover"
         repeat
-        muted={true}
-        ignoreSilentSwitch="ignore"
-        playInBackground={false}
-        playWhenInactive={false}
+        disableFocus={true}
+        // muted={true}
+        // ignoreSilentSwitch="ignore"
+        // playInBackground={false}
+        // playWhenInactive={false}
       />
     </View>
   );

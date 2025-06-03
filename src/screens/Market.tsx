@@ -131,6 +131,28 @@ const Market = () => {
             <View style={{zIndex: 2, padding: 24}}>
               {stockListLoading ? (
                 <ActivityIndicator color={tint} />
+              ) : stockList.length === 0 ? (
+                <View style={{alignItems: 'center', paddingHorizontal: 24}}>
+                  <View style={styles.emptyContainer}>
+                    <Image
+                      source={
+                        colorScheme === 'dark'
+                          ? require('../assets/images/empty-market-dark.png')
+                          : require('../assets/images/empty-market-light.png')
+                      }
+                      style={{width: 200, height: 200}}
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <Text style={[styles.emptyTitle, {color: textColor}]}>
+                    Pasar Sekunder Ditutup
+                  </Text>
+                  <Text style={[styles.emptyDesc, {color: textColor2}]}>
+                    Saat ini tidak ada sesi perdagangan saham karena periode
+                    pasar sekunder telah berakhir. Pasar sekunder Insyaa
+                    Allah akan kembali dibuka pada periode berikutnya.
+                  </Text>
+                </View>
               ) : (
                 stockList.map((item, index) => (
                   <Pressable
@@ -249,5 +271,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 16,
+  },
+  emptyContainer: {
+    width: 176,
+    height: 176,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

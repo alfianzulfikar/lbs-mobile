@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Image,
+  Keyboard,
   Pressable,
   StyleSheet,
   TextInput,
@@ -36,6 +37,7 @@ import Gap from './Gap';
 import {checkNonNumeric} from '../utils/checkNonNumeric';
 import CheckBox from './CheckBox';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 
 const Input = ({
   label,
@@ -81,6 +83,7 @@ const Input = ({
   const textColorDanger = useThemeColor({}, 'textDanger');
   const textColorDisable = useThemeColor({}, 'textDisable');
   const tint = useThemeColor({}, 'tint');
+  const dropdownHighlight = useThemeColor({}, 'dropdownHighlight');
 
   const [showPassword, setShowPassword] = useState(true);
   const [showOption, setShowOption] = useState(false);
@@ -140,7 +143,7 @@ const Input = ({
       {type === 'otp-method' ? (
         <Pressable onPress={onPress}>
           <InputWrapper borderColor={isActive ? textColor : undefined}>
-            <View style={styles.contentContainer}>
+            <View style={[styles.contentContainer, {zIndex: 2}]}>
               <Text
                 style={[
                   styles.input,
@@ -235,7 +238,7 @@ const Input = ({
             </View>
           ) : (
             <TouchableOpacity
-              style={styles.contentContainer}
+              style={{zIndex: 2}}
               disabled={
                 disable || !['dropdown', 'picture', 'date'].includes(type || '')
               }
@@ -249,7 +252,9 @@ const Input = ({
                 }
               }}>
               {type === 'dropdown' ? (
-                <>
+                <TouchableWithoutFeedback
+                  onPress={() => Keyboard.dismiss()}
+                  style={styles.contentContainer}>
                   <View
                     style={{
                       flex: 1,
@@ -278,9 +283,11 @@ const Input = ({
                     </Text>
                   </View>
                   <ICCaretArrowDown color={iconColor} />
-                </>
+                </TouchableWithoutFeedback>
               ) : type === 'picture' ? (
-                <>
+                <TouchableWithoutFeedback
+                  onPress={() => Keyboard.dismiss()}
+                  style={styles.contentContainer}>
                   {picture && typeof picture === 'string' ? (
                     <Image
                       source={{uri: picture}}
@@ -293,9 +300,9 @@ const Input = ({
                       <Text style={styles.pictureText}>Ambil Foto</Text>
                     </View>
                   )}
-                </>
+                </TouchableWithoutFeedback>
               ) : (
-                <>
+                <View style={styles.contentContainer}>
                   <TextInput
                     value={
                       value
@@ -357,7 +364,7 @@ const Input = ({
                       <ICDate color={textColor2} />
                     </View>
                   )}
-                </>
+                </View>
               )}
             </TouchableOpacity>
           )}
@@ -373,12 +380,16 @@ const Input = ({
       )}
 
       {showOption && (
-        <BottomSheet setShow={setShowOption}>
+        <BottomSheet setShow={setShowOption} paddingHorizontal={0}>
           {option &&
             option.map((item, id) => (
               <Pressable
                 key={id}
-                style={{marginVertical: 4}}
+                style={{
+                  marginVertical: 4,
+                  backgroundColor:
+                    item.id === value ? dropdownHighlight : 'transparent',
+                }}
                 onPress={() => {
                   onChange(item.id);
                   setShowOption(false);
@@ -387,8 +398,9 @@ const Input = ({
                   style={{
                     flexDirection: 'row',
                     paddingVertical: 20,
-                    borderBottomWidth: 1,
-                    borderColor: RGBAColors(0.05)[colorScheme].text,
+                    paddingHorizontal: 24,
+                    // borderBottomWidth: 1,
+                    // borderColor: RGBAColors(0.05)[colorScheme].text,
                   }}>
                   {item?.image && (
                     <Image
@@ -447,12 +459,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   contentContainer: {
-    zIndex: 2,
+    // zIndex: 2,
     flexDirection: 'row',
-    // paddingVertical: 14,
     paddingHorizontal: 18,
     alignItems: 'center',
-    // height: 52,
   },
   input: {
     flex: 1,

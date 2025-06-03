@@ -12,7 +12,6 @@ import {
 import React, {useEffect, useState} from 'react';
 import {RGBAColors} from '../constants/Colors';
 import BlurOverlay from './BlurOverlay';
-import {notchHeight} from '../utils/getNotchHeight';
 import Header from './Header';
 import IconWrapper from './IconWrapper';
 import ICCancel from './icons/ICCancel';
@@ -216,7 +215,7 @@ const Calculator = ({
                 <Text style={styles.estimationTitle}>Estimasi Keuntungan:</Text>
                 <View style={{flexDirection: 'row', marginTop: 16}}>
                   <Text style={[styles.estimation, {color: textColor2}]}>
-                    Keuntungan
+                    Keuntungan*
                   </Text>
                   <Text
                     style={[

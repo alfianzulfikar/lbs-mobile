@@ -86,7 +86,14 @@ export const useAPI = () => {
             });
           } else {
             if (response.status === 429) {
-              Alert.alert('Terlalu banyak percobaan');
+              if (endpoint?.includes('verify-register')) {
+                Alert.alert(
+                  'Permintaan Gagal',
+                  'Permintaan OTP baru bisa dilakukan setelah 3 menit. Mohon coba lagi nanti.',
+                );
+              } else {
+                Alert.alert('Terlalu banyak percobaan');
+              }
             } else if (response.status === 500) {
               Alert.alert('Terjadi kesalan pada server');
             }

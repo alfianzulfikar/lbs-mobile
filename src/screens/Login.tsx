@@ -1,4 +1,13 @@
-import {Alert, Keyboard, Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
 import {useThemeColor} from '../hooks/useThemeColor';

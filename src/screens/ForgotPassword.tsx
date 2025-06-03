@@ -51,9 +51,11 @@ const ForgotPassword = () => {
   return (
     <ScreenWrapper background backgroundType="gradient" scrollView>
       <View style={[styles.container, {paddingTop: 40}]}>
-        <Text style={[styles.heading, {color: textColor}]}>Lupa Password</Text>
+        <Text style={[styles.heading, {color: textColor}]}>
+          Lupa Kata Sandi
+        </Text>
         <Text style={[styles.desc, {color: textColor3}]}>
-          Masukan email yang Anda gunakan.
+          Masukkan email yang Anda gunakan dan pastikan email tersebut aktif.
         </Text>
         <Gap height={40} />
         <Input

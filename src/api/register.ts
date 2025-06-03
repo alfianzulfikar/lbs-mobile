@@ -62,8 +62,6 @@ export const useRegister = () => {
         Alert.alert(
           error.data.errors?.msg || `Token tidak valid (${error.status})`,
         );
-      } else {
-        Alert.alert('Terjadi kesalahan');
       }
     } finally {
       setVerificationLoading(false);

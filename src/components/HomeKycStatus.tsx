@@ -56,6 +56,9 @@ const HomeKycStatus = ({
                 })
               : null
           }>
+          {/* navigation.navigate('KYC', {
+                  screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
+                }) */}
           <ICUser color={tint} type="outline" />
           <Text style={[styles.desc, {color: tint}]}>Isi Data KYC</Text>
         </TouchableOpacity>

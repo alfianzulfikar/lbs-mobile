@@ -14,11 +14,13 @@ const CustomBottomSheet = ({
   children,
   snapPoints,
   onDismiss,
+  paddingHorizontal,
 }: {
   setShow?: React.Dispatch<React.SetStateAction<boolean>>;
   children: ReactNode;
   snapPoints?: string[];
   onDismiss?: () => void;
+  paddingHorizontal?: number;
 }) => {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor2 = useThemeColor({}, 'text2');
@@ -67,14 +69,18 @@ const CustomBottomSheet = ({
       snapPoints={snapPointsMemo}
       backgroundStyle={{backgroundColor}}
       handleIndicatorStyle={{backgroundColor: textColor2}}
-      maxDynamicContentSize={
-        (height *
-          Number(snapPointsMemo[snapPointsMemo.length - 1].replace('%', ''))) /
-        100
-      }>
+      // maxDynamicContentSize={
+      //   (height *
+      //     Number(snapPointsMemo[snapPointsMemo.length - 1].replace('%', ''))) /
+      //   100
+      // }
+      >
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
-        style={styles.bottomSheetContainer}
+        style={[
+          styles.bottomSheetContainer,
+          {paddingHorizontal: paddingHorizontal ?? 24},
+        ]}
         keyboardShouldPersistTaps="handled">
         <Gap height={8} />
         {children}
@@ -109,7 +115,7 @@ export default CustomBottomSheet;
 const styles = StyleSheet.create({
   bottomSheetContainer: {
     flex: 1,
-    padding: 24,
+    paddingVertical: 24,
     paddingTop: 0,
   },
 });

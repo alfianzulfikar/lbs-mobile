@@ -21,10 +21,16 @@ export const useKYCTerms = () => {
         },
       });
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCWaiting'}));
-    } catch (error: any) {
-      console.log('submitTerms error', error);
-      if (error.status === 422) {
-        setCheckError(error?.data?.errors?.check || []);
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+        console.log('submitTerms error', error);
+        if (error.status === 422) {
+          setCheckError(error?.data?.errors?.check || []);
+        }
       }
     } finally {
       setSubmitLoading(false);

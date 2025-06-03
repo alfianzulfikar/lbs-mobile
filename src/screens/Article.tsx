@@ -1,9 +1,15 @@
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Gap from '../components/Gap';
-import {notchHeight} from '../utils/getNotchHeight';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
@@ -12,9 +18,13 @@ import {useArticle} from '../api/article';
 import {ArticleType} from '../constants/Types';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useNavigation} from '@react-navigation/native';
+import {useColorScheme} from '../hooks/useColorScheme';
 
 const Article = () => {
+  const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
+  const textColor2 = useThemeColor({}, 'text2');
   const {
     articles,
     getArticles,
@@ -24,6 +34,7 @@ const Article = () => {
     isFetchingArticles,
   } = useArticle();
   const navigation = useNavigation();
+  const {height} = useWindowDimensions();
 
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
@@ -85,6 +96,33 @@ const Article = () => {
         />
         <Gap height={38} />
         {articlesLoading && <ActivityIndicator color={tint} />}
+        {!articlesLoading && articles.length === 0 && (
+          <View
+            style={{
+              alignItems: 'center',
+              paddingHorizontal: 24,
+            }}>
+            <Gap height={height / 27 > 1 ? height / 27 : 0} />
+            <View style={styles.emptyContainer}>
+              <Image
+                source={
+                  colorScheme === 'dark'
+                    ? require('../assets/images/empty-article-dark.png')
+                    : require('../assets/images/empty-article-light.png')
+                }
+                style={{width: 240, height: 240}}
+                resizeMode="cover"
+              />
+            </View>
+            <Text style={[styles.emptyTitle, {color: textColor}]}>
+              Pencarian Tidak Ditemukan
+            </Text>
+            <Text style={[styles.emptyDesc, {color: textColor2}]}>
+              Maaf, kami tidak menemukan artikel yang Anda cari. Silakan cari
+              dengan kata kunci atau filter yang berbeda.
+            </Text>
+          </View>
+        )}
       </>
     );
   };
@@ -145,4 +183,24 @@ const Article = () => {
 
 export default Article;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  emptyContainer: {
+    width: 216,
+    height: 216,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+});

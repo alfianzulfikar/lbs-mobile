@@ -45,11 +45,11 @@ import {useAPI} from '../services/api';
 import {useUser} from '../api/user';
 import LoadingModal from '../components/LoadingModal';
 import {useColorScheme} from '../hooks/useColorScheme';
-import {notchHeight} from '../utils/getNotchHeight';
 import ICLikeFill from '../components/icons/ICLikeFill';
 import BottomSheet from '../components/BottomSheet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {OrderStackParamList, RootStackParamList} from '../constants/Types';
+import {useInsets} from '../hooks/useInsets';
 
 // type Props = StaticScreenProps<{
 //   slug: string;
@@ -82,6 +82,7 @@ const BusinessDetail = ({route}: Props) => {
     isNotFound,
   } = useBusiness();
   const {user, getUser} = useUser();
+  const {notchHeight} = useInsets();
 
   const [loadingOrder, setLoadingOrder] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);

@@ -6,34 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
 import {useDeepLinks} from '../utils/handleDeepLinks';
+import {useInitTheme} from '../hooks/useInitTheme';
 
 const Splash = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme() ?? 'light';
   const videoRef = useRef<VideoRef>(null);
   const background = require('../assets/videos/splash.mp4');
-  const dispatch = useDispatch();
   const {handleDeepLinks} = useDeepLinks();
-
-  const initTheme = async () => {
-    const theme = await AsyncStorage.getItem('theme');
-    if (!theme) {
-      const currentTheme = colorScheme === 'dark' ? 'dark' : 'light';
-      await AsyncStorage.setItem('theme', currentTheme);
-      dispatch(setColorScheme(currentTheme));
-    } else {
-      const currentTheme = await AsyncStorage.getItem('theme');
-      dispatch(setColorScheme(currentTheme === 'dark' ? 'dark' : 'light'));
-    }
-  };
-
-  // useEffect(() => {
-  //   const asyncFunc = async () => {
-  //     await initTheme();
-  //     await handleDeepLinks();
-  //   };
-  //   asyncFunc();
-  // }, []);
+  const {initTheme} = useInitTheme();
 
   return (
     <View style={styles.container}>
@@ -52,9 +33,10 @@ const Splash = () => {
           await handleDeepLinks();
         }}
         muted={true}
-        ignoreSilentSwitch="ignore"
-        playInBackground={false}
-        playWhenInactive={false}
+        disableFocus={true}
+        // ignoreSilentSwitch="ignore"
+        // playInBackground={false}
+        // playWhenInactive={false}
       />
     </View>
   );

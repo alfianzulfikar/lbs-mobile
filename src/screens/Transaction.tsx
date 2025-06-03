@@ -4,11 +4,13 @@ import {
   Animated,
   Dimensions,
   FlatList,
+  Image,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   useAnimatedValue,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
@@ -64,9 +66,11 @@ const Transaction = () => {
   const {apiRequest} = useAPI();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
+  const textColor2 = useThemeColor({}, 'text2');
   const tint = useThemeColor({}, 'tint');
   let colorScheme = useColorScheme() ?? 'light';
   const onEndReachedCalledDuringMomentum = useRef(false);
+  const {height} = useWindowDimensions();
 
   const [activeMenu, setActiveMenu] = useState<'dividen' | 'transaksi'>(
     'transaksi',
@@ -201,6 +205,7 @@ const Transaction = () => {
       };
     });
     setLoadingDetail(true);
+    console.log('type', paymentCode, type);
     try {
       const res = await apiRequest({
         endpoint: `/waiting-payment/${paymentCode}`,
@@ -360,6 +365,37 @@ const Transaction = () => {
         )}
         <Gap height={40} />
         {loadingTransaction && <ActivityIndicator color={tint} />}
+        {!loadingTransaction && transactions.length === 0 && (
+          <View
+            style={{
+              alignItems: 'center',
+              paddingHorizontal: 24,
+            }}>
+            {activeMenu === 'dividen' ? (
+              <Gap height={height / 10 > 1 ? height / 10 : 0} />
+            ) : (
+              <Gap height={height / 27 > 1 ? height / 27 : 0} />
+            )}
+            <View style={styles.emptyContainer}>
+              <Image
+                source={
+                  colorScheme === 'dark'
+                    ? require('../assets/images/empty-transaction-dark.png')
+                    : require('../assets/images/empty-transaction-light.png')
+                }
+                style={{width: 240, height: 240}}
+                resizeMode="cover"
+              />
+            </View>
+            <Text style={[styles.emptyTitle, {color: textColor}]}>
+              Belum Ada Transaksi
+            </Text>
+            <Text style={[styles.emptyDesc, {color: textColor2}]}>
+              Belum ada transaksi masuk. Silakan mulai bertransaksi dengan
+              berinvestasi di bisnis kami.
+            </Text>
+          </View>
+        )}
       </>
     );
   };
@@ -568,7 +604,7 @@ export default Transaction;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
     // paddingHorizontal: 24,
@@ -596,5 +632,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'center',
+  },
+  emptyContainer: {
+    width: 216,
+    height: 216,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

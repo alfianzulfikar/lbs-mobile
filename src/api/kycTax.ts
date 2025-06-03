@@ -103,21 +103,27 @@ export const useKYCTax = () => {
         body,
       });
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCBank'}));
-    } catch (error: any) {
-      console.log('tax error', error);
-      if (error?.status === 422) {
-        setTaxError(prev => ({
-          kodePajakId: error?.data?.errors?.kode_pajak_id || [],
-          penghasilanPerTahunSebelumPajak:
-            error?.data?.errors?.penghasilan_per_tahun_sebelum_pajak || [],
-          npwp: error?.data?.errors?.npwp || [],
-          tglRegistrasi: error?.data?.errors?.tgl_registrasi || [],
-        }));
-        setTax2Error(prev => ({
-          rekeningSid: error?.data?.errors?.rekening_sid || [],
-          fotoRekeningSid: error?.data?.errors?.foto_rekening_sid || [],
-          tglRegistrasiSid: error?.data?.errors?.tgl_registrasi_sid || [],
-        }));
+    } catch (err: any) {
+      if (typeof err === 'object' && err !== null && 'status' in err) {
+        const error = err as {
+          status: number;
+          data?: any;
+        };
+        console.log('tax error', error);
+        if (error?.status === 422) {
+          setTaxError(prev => ({
+            kodePajakId: error?.data?.errors?.kode_pajak_id || [],
+            penghasilanPerTahunSebelumPajak:
+              error?.data?.errors?.penghasilan_per_tahun_sebelum_pajak || [],
+            npwp: error?.data?.errors?.npwp || [],
+            tglRegistrasi: error?.data?.errors?.tgl_registrasi || [],
+          }));
+          setTax2Error(prev => ({
+            rekeningSid: error?.data?.errors?.rekening_sid || [],
+            fotoRekeningSid: error?.data?.errors?.foto_rekening_sid || [],
+            tglRegistrasiSid: error?.data?.errors?.tgl_registrasi_sid || [],
+          }));
+        }
       }
     } finally {
       setTaxSubmitLoading(false);
