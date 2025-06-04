@@ -107,6 +107,7 @@ const Transaction = () => {
   const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const typeOption = [
     {name: 'Jenis', id: ''},
@@ -205,7 +206,6 @@ const Transaction = () => {
       };
     });
     setLoadingDetail(true);
-    console.log('type', paymentCode, type);
     try {
       const res = await apiRequest({
         endpoint: `/waiting-payment/${paymentCode}`,
@@ -409,23 +409,32 @@ const Transaction = () => {
     );
   };
 
+  const asyncFunc = async () => {
+    setLoadingTransaction(true);
+    await getTransaction(
+      1,
+      {
+        type: '',
+        order: '',
+        status: '',
+      },
+      activeMenu,
+    );
+    setTimeout(() => {
+      setScrollEnabled(true);
+    }, 2000);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setIsLastPage(false);
+    setPage(1);
+    await asyncFunc();
+    setRefreshing(false);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const asyncFunc = async () => {
-        setLoadingTransaction(true);
-        await getTransaction(
-          1,
-          {
-            type: '',
-            order: '',
-            status: '',
-          },
-          activeMenu,
-        );
-        setTimeout(() => {
-          setScrollEnabled(true);
-        }, 2000);
-      };
       asyncFunc();
 
       return () => {
@@ -448,6 +457,8 @@ const Transaction = () => {
       <ScreenWrapper background backgroundType="gradient">
         <View style={styles.container}>
           <FlatList
+            onRefresh={onRefresh}
+            refreshing={refreshing}
             data={transactions}
             renderItem={({item, index}) => (
               <View
@@ -585,7 +596,7 @@ const Transaction = () => {
               Belum ada {activeMenu}
             </Text>
           )} */}
-          <Gap height={104} />
+          {/* <Gap height={104} /> */}
         </View>
       </ScreenWrapper>
 

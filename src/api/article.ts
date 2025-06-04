@@ -51,6 +51,9 @@ export const useArticle = () => {
           page ? page : 1
         }&per_page=${perpage || 10}&search=${keyword ? keyword : ''}`,
       });
+      if (!page && page === 1) {
+        isLastPage.current = false;
+      }
       if (res.result && res.result.length > 0) {
         let newArray: ArticleType[] = [];
         res.result.map((item: any) => {

@@ -15,7 +15,7 @@ import {
 import FormBuilder from '../components/FormBuilder';
 import Button from '../components/Button';
 import {useAPI} from '../services/api';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';

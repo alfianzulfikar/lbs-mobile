@@ -44,6 +44,7 @@ const Business = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [flatlistScrollEnabled, setFlatlistScrollEnabled] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const progressOption = [
     {name: 'Terkumpul', id: ''},
@@ -133,18 +134,27 @@ const Business = () => {
     setFilter(currentFilter);
   };
 
+  const asyncFunc = async () => {
+    if (businessFlatlistRef?.current) {
+      businessFlatlistRef.current.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+    }
+    await getBusinesses(1, 10, null);
+    setFlatlistScrollEnabled(true);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setIsLastPage(false);
+    setPage(1);
+    await asyncFunc();
+    setRefreshing(false);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const asyncFunc = async () => {
-        if (businessFlatlistRef?.current) {
-          businessFlatlistRef.current.scrollToOffset({
-            offset: 0,
-            animated: true,
-          });
-        }
-        await getBusinesses(1, 10, null);
-        setFlatlistScrollEnabled(true);
-      };
       asyncFunc();
       return () => {
         setFlatlistScrollEnabled(false);
@@ -221,6 +231,8 @@ const Business = () => {
         <>
           <View style={{flexDirection: 'row'}}>
             <FlatList
+              onRefresh={onRefresh}
+              refreshing={refreshing}
               ref={businessFlatlistRef}
               horizontal
               data={businesses}

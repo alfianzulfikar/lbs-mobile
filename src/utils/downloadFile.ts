@@ -97,7 +97,7 @@ export const useDownload = () => {
     fileUrl: string;
   }) => {
     const fileName = getFileNameFromUrl(fileUrl);
-    const path = `${fs.dirs.DocumentDir}/${fileName}`;
+    const path = `${fs.dirs.DownloadDir}/${fileName}`;
     const fileExist = await findPath(path);
 
     if (fileExist) {

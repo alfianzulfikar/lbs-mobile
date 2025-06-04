@@ -56,6 +56,7 @@ const Portfolio = () => {
   const [overviewLoading, setOverviewLoading] = useState(false);
   const [showLimit, setShowLimit] = useState(false);
   const [scrollEnabled, setScrollEnabled] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onEndReachedCalledDuringMomentum = useRef(false);
   const isFiltering = useRef(false);
@@ -233,13 +234,21 @@ const Portfolio = () => {
     </>
   );
 
+  const asyncFunc = async () => {
+    await getPortfolioList({page: 1, filter});
+    await getOverview();
+    setScrollEnabled(true);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setPage(1);
+    await asyncFunc();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
-    const handleAsync = async () => {
-      await getPortfolioList({page: 1, filter});
-      await getOverview();
-      setScrollEnabled(true);
-    };
-    handleAsync();
+    asyncFunc();
   }, []);
 
   useEffect(() => {
@@ -251,7 +260,9 @@ const Portfolio = () => {
   return (
     <ScreenWrapper background backgroundType="gradient">
       <FlatList
-        data={portfolioList}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        data={portfolioLoading ? [] : portfolioList}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         ListHeaderComponent={renderHeader()}

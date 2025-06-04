@@ -39,6 +39,7 @@ const Article = () => {
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   const onEndReachedCalledDuringMomentum = useRef(false);
 
@@ -135,6 +136,13 @@ const Article = () => {
     );
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setPage(1);
+    await handleGetArticles();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     handleGetArticles();
   }, []);
@@ -142,7 +150,9 @@ const Article = () => {
   return (
     <ScreenWrapper background backgroundType="gradient">
       <FlatList
-        data={articles}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        data={articlesLoading ? [] : articles}
         renderItem={({item, index}) => (
           <View
             style={{

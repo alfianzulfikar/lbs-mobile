@@ -97,17 +97,18 @@ export const usePortfolio = () => {
     }
     try {
       const res = await apiRequest({
-        endpoint: `/user/investasi?page=${page ? page : 1}&per_page=10${
+        endpoint: `/user/investasi?page=${page ? page : 1}&per_page=8${
           filter?.type ? '&jenis=' + filter?.type : ''
         }${filter?.status ? '&status=' + filter?.status : ''}${
           filter?.order ? '&order=' + filter?.order : ''
         }`,
         authorization: true,
       });
-      console.log('getPortfolioLust', res);
       let newArray: PortfolioType[] = [];
       if (page > 1) {
         newArray = [...portfolioList];
+      } else {
+        isLastPage.current = false;
       }
       res.map((item: any) => {
         newArray.push(composeData(item));

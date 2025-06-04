@@ -16,20 +16,17 @@ import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
 import {RGBAColors} from '../constants/Colors';
 import ICCheckedShield from '../components/icons/ICCheckedShield';
-import Badge from '../components/Badge';
 import Button from '../components/Button';
 import ICTakePicture from '../components/icons/ICTakePicture';
 import ICRoundedUser from '../components/icons/ICRoundedUser';
 import ICChevronArrowRight from '../components/icons/ICChevronArrowRight';
 import Gap from '../components/Gap';
 import BlurOverlay from '../components/BlurOverlay';
-import ICBell from '../components/icons/ICBell';
 import ICBell2 from '../components/icons/ICBell2';
 import ICLock from '../components/icons/ICLock';
 import ICBiometric from '../components/icons/ICBiometric';
 import ICMoon from '../components/icons/ICMoon';
 import ICBuilding from '../components/icons/ICBuilding';
-import ICFile from '../components/icons/ICFile';
 import ICPrivacy from '../components/icons/ICPrivacy';
 import ICFile2 from '../components/icons/ICFile2';
 import ICFile3 from '../components/icons/ICFile3';
@@ -44,22 +41,16 @@ import LoadingModal from '../components/LoadingModal';
 import {useAPI} from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet from '../components/BottomSheet';
-import RoundedNumbering from '../components/RoundedNumbering';
 import IconWrapper2 from '../components/IconWrapper2';
 import ICCamera from '../components/icons/ICCamera';
 import ICPicture from '../components/icons/ICPicture';
-import {
-  CameraOptions,
-  launchCamera,
-  launchImageLibrary,
-  MediaType,
-} from 'react-native-image-picker';
 import ICWarning from '../components/icons/ICWarning';
 import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {useInsets} from '../hooks/useInsets';
 import {useInitTheme} from '../hooks/useInitTheme';
+import ImagePicker, {Options} from 'react-native-image-crop-picker';
 
 const MenuItem = ({
   title,
@@ -162,31 +153,28 @@ const Account = () => {
   };
 
   const handleImageRes = (res: any) => {
-    if (!res?.didCancel) {
-      const assets = res?.assets
-        ? res.assets.length > 0
-          ? res.assets[0]
-          : {}
-        : {};
-      navigation.navigate('ImagePreview', {
-        base64: assets.base64 || '',
-        path: assets.uri || '',
-      });
-    }
+    navigation.navigate('ImagePreview', {
+      base64: res.data || '',
+      path: res.path || '',
+    });
   };
 
   const takePicture = async ({type}: {type: 'camera' | 'galery'}) => {
     try {
-      const options: CameraOptions = {
-        mediaType: 'photo',
+      const options: Options = {
+        width: 500,
+        height: 500,
+        cropping: true,
         includeBase64: true,
-        maxHeight: 1000,
-        maxWidth: 1000,
       };
       if (type === 'galery') {
-        await launchImageLibrary(options, res => handleImageRes(res));
+        ImagePicker.openPicker(options).then(image => {
+          handleImageRes(image);
+        });
       } else {
-        await launchCamera(options, res => handleImageRes(res));
+        ImagePicker.openCamera(options).then(image => {
+          handleImageRes(image);
+        });
       }
     } catch (error) {
       console.log('take picture error', error);
@@ -201,8 +189,6 @@ const Account = () => {
       const asyncFunc = async () => {
         setLoading(true);
         await getKycProgress();
-        // const currentTheme = await AsyncStorage.getItem('theme');
-        // setDark(currentTheme === 'dark');
         await getUser();
         setLoading(false);
       };

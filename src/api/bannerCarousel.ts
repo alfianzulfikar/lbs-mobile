@@ -16,10 +16,14 @@ export const useBannerCarousel = () => {
       res.map((item: any) => {
         newBanners.push({
           image: item.image,
-          link:
-            envMode === 'prod'
-              ? 'https://www.lbs.id/publication/investasi/cuan-atau-boncos-ini-prospek-investasi-pasar-modal-syariah-di-indonesia'
-              : 'https://dev.lbs.id/publication/investasi/why-do-we-use-it',
+          link: item.url
+            ? item.url.includes('publication') || item.url.includes('detail')
+              ? item.url
+              : ''
+            : '',
+          // envMode === 'prod'
+          //   ? 'https://www.lbs.id/publication/investasi/cuan-atau-boncos-ini-prospek-investasi-pasar-modal-syariah-di-indonesia'
+          //   : 'https://dev.lbs.id/publication/investasi/why-do-we-use-it',
           isPublished: item.publish,
         });
       });
