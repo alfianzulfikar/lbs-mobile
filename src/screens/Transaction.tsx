@@ -1,15 +1,12 @@
 import {
   ActivityIndicator,
   Alert,
-  Animated,
-  Dimensions,
   FlatList,
   Image,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
-  useAnimatedValue,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -24,7 +21,6 @@ import TransactionItem from '../components/TransactionItem';
 import HorizontalLine from '../components/HorizontalLine';
 import TransactionDetail from '../components/TransactionDetail';
 import {useAPI} from '../services/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
 

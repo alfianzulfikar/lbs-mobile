@@ -1,10 +1,10 @@
 import {
-  Dimensions,
   FlatList,
   Image,
   Pressable,
   ScrollView,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -20,7 +20,7 @@ const BannerCarousel = ({
   banners: BannerType[];
   loading: boolean;
 }) => {
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   const backgroundColor = useThemeColor({}, 'background');
   const navigation = useNavigation();
 
@@ -37,7 +37,7 @@ const BannerCarousel = ({
           styles.itemContainer,
           {
             backgroundColor,
-            width: (width * 84) / 100,
+            width: 340,
             marginLeft: index === 0 ? 24 : 16,
             marginRight: index !== banners.length - 1 ? 0 : 24,
           },

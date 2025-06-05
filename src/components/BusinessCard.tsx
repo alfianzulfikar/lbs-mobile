@@ -1,9 +1,9 @@
 import {
-  Dimensions,
   Image,
   Platform,
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React from 'react';
@@ -23,15 +23,13 @@ import ICListing from './icons/ICListing';
 import ICTerpenuhi from './icons/ICTerpenuhi';
 import ICBerjalan from './icons/ICBerjalan';
 import ICSelesai from './icons/ICSelesai';
-import ICArrowLeft from './icons/ICArrowLeft';
 
 const BusinessCard = ({data}: {data: BusinessType}) => {
   let colorScheme = useColorScheme();
   const textColor2 = useThemeColor({}, 'text2');
   const tint = useThemeColor({}, 'tint');
-  const background = useThemeColor({}, 'background');
   const navigation = useNavigation();
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   return (
     <Pressable
       style={[
@@ -68,11 +66,13 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
               backgroundColor:
                 Platform.OS === 'android'
                   ? RGBAColors(0.2)['light'].background
-                  : RGBAColors(colorScheme === 'dark' ? 0.1 : 0.7)[colorScheme]
+                  : RGBAColors(colorScheme === 'dark' ? 0 : 0.4)['light']
                       .background,
             },
           ]}>
-          <BlurOverlay blurType="light" blurAmount={80} />
+          <BlurOverlay
+            blurType={colorScheme === 'dark' ? 'regular' : undefined}
+          />
           <View style={styles.information}>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>

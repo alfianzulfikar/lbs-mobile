@@ -37,7 +37,6 @@ import Gap from './Gap';
 import {checkNonNumeric} from '../utils/checkNonNumeric';
 import CheckBox from './CheckBox';
 import {useColorScheme} from '../hooks/useColorScheme';
-import {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 
 const Input = ({
   label,
@@ -250,11 +249,10 @@ const Input = ({
                 } else {
                   takePicture({type: 'camera'});
                 }
+                Keyboard.dismiss();
               }}>
               {type === 'dropdown' ? (
-                <TouchableWithoutFeedback
-                  onPress={() => Keyboard.dismiss()}
-                  style={styles.contentContainer}>
+                <View style={styles.contentContainer}>
                   <View
                     style={{
                       flex: 1,
@@ -283,11 +281,9 @@ const Input = ({
                     </Text>
                   </View>
                   <ICCaretArrowDown color={iconColor} />
-                </TouchableWithoutFeedback>
+                </View>
               ) : type === 'picture' ? (
-                <TouchableWithoutFeedback
-                  onPress={() => Keyboard.dismiss()}
-                  style={styles.contentContainer}>
+                <View style={styles.contentContainer}>
                   {picture && typeof picture === 'string' ? (
                     <Image
                       source={{uri: picture}}
@@ -300,20 +296,38 @@ const Input = ({
                       <Text style={styles.pictureText}>Ambil Foto</Text>
                     </View>
                   )}
-                </TouchableWithoutFeedback>
+                </View>
+              ) : type === 'date' ? (
+                <View style={[styles.contentContainer, {height: 52}]}>
+                  <Text
+                    style={[
+                      styles.input,
+                      {
+                        height: 'auto',
+                        color: disable ? textColor4 : textColor3,
+                      },
+                    ]}>
+                    {value
+                      ? typeof value === 'string'
+                        ? new Date(value).getDate() +
+                          '-' +
+                          (new Date(value).getMonth() + 1) +
+                          '-' +
+                          new Date(value).getFullYear()
+                        : ''
+                      : ''}
+                  </Text>
+                  <View style={{marginLeft: 8}}>
+                    <ICDate color={textColor2} />
+                  </View>
+                </View>
               ) : (
                 <View style={styles.contentContainer}>
                   <TextInput
                     value={
                       value
                         ? typeof value === 'string'
-                          ? type === 'date'
-                            ? new Date(value).getDate() +
-                              '-' +
-                              (new Date(value).getMonth() + 1) +
-                              '-' +
-                              new Date(value).getFullYear()
-                            : value
+                          ? value
                           : String(value)
                         : ''
                     }
@@ -330,9 +344,7 @@ const Input = ({
                         ? 'number-pad'
                         : 'default'
                     }
-                    editable={
-                      type === 'date' ? false : disable ? !disable : true
-                    }
+                    editable={disable ? !disable : true}
                     onChangeText={value => {
                       if (type === 'number') {
                         if (!checkNonNumeric(value)) {
@@ -342,6 +354,7 @@ const Input = ({
                         onChange(value);
                       }
                     }}
+                    // onPress={() => }
                     placeholderTextColor={
                       disable
                         ? textColorDisable
@@ -358,11 +371,6 @@ const Input = ({
                         <ICEyeDisable color={textColor3} />
                       )}
                     </Pressable>
-                  )}
-                  {type === 'date' && (
-                    <View style={{marginLeft: 8}}>
-                      <ICDate color={textColor2} />
-                    </View>
                   )}
                 </View>
               )}

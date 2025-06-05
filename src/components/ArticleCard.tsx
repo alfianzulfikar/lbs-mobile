@@ -1,9 +1,9 @@
 import {
-  Dimensions,
   Image,
   Platform,
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React from 'react';
@@ -24,7 +24,7 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
   const tint = useThemeColor({}, 'tint');
   const backgroundColor = useThemeColor({}, 'background');
   const navigation = useNavigation();
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   return (
     <Pressable
       style={[
@@ -58,7 +58,7 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
                   : RGBAColors(0.2)['light'].background,
             },
           ]}>
-          <BlurOverlay />
+          <BlurOverlay blurType="dark" />
           <View style={styles.information}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Badge text={capitalize(data.category)} transparent mode="dark" />

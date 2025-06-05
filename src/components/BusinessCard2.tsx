@@ -1,9 +1,10 @@
 import {
-  Dimensions,
   Image,
   ImageBackground,
+  Platform,
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React from 'react';
@@ -13,7 +14,6 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import Badge from './Badge';
-import IconWrapper from './IconWrapper';
 import ICTarget from './icons/ICTarget';
 import IconWrapper2 from './IconWrapper2';
 import ICRoi from './icons/ICRoi';
@@ -27,6 +27,7 @@ import ICListing from './icons/ICListing';
 import ICTerpenuhi from './icons/ICTerpenuhi';
 import ICBerjalan from './icons/ICBerjalan';
 import ICSelesai from './icons/ICSelesai';
+import BlurOverlay from './BlurOverlay';
 
 const BusinessCard2 = ({business}: {business: BusinessType}) => {
   const colorScheme = useColorScheme();
@@ -34,7 +35,7 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const navigation = useNavigation();
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   return (
     <Pressable
       style={[styles.container, {width: (width * 76) / 100}]}
@@ -61,14 +62,15 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
                 : RGBAColors(0.7)[colorScheme].background,
           },
         ]}>
-        {colorScheme === 'dark' && (
+        {Platform.OS === 'android' && colorScheme === 'dark' ? (
           <ImageBackground
             source={require('../assets/images/bg-business-card-dark.png')}
             style={{position: 'absolute', width: '100%', height: '100%'}}
             resizeMode="cover"
           />
-        )}
-        <View style={{padding: 16}}>
+        ) : null}
+        <BlurOverlay blurType="regular" />
+        <View style={{padding: 16, zIndex: 2}}>
           <View style={{flexDirection: 'row'}}>
             <Badge text={capitalize(business.tipeBisnis || '')} />
             <Gap width={8} />

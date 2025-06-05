@@ -231,6 +231,7 @@ const Business = () => {
         <>
           <View style={{flexDirection: 'row'}}>
             <FlatList
+              bounces={false}
               onRefresh={onRefresh}
               refreshing={refreshing}
               ref={businessFlatlistRef}

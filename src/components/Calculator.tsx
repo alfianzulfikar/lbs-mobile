@@ -1,12 +1,10 @@
 import {
   Animated,
-  Dimensions,
-  ImageBackground,
   Modal,
   Platform,
-  ScrollView,
   StyleSheet,
   useAnimatedValue,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -25,13 +23,9 @@ import ScreenWrapper from './ScreenWrapper';
 import {useColorScheme} from '../hooks/useColorScheme';
 
 const Calculator = ({
-  // translateYAnim,
-  // slideOut,
   business,
   onClose,
 }: {
-  // translateYAnim: Animated.Value;
-  // slideOut: () => void;
   business: BusinessType;
   onClose: () => void;
 }) => {
@@ -41,7 +35,7 @@ const Calculator = ({
   const textColor2 = useThemeColor({}, 'text2');
   const backgroundColor = useThemeColor({}, 'background');
 
-  const {height} = Dimensions.get('window');
+  const {height} = useWindowDimensions();
   const translateYAnim = useAnimatedValue(height);
 
   const slideIn = () => {
@@ -198,8 +192,7 @@ const Calculator = ({
                   {
                     backgroundColor:
                       Platform.OS === 'ios'
-                        ? RGBAColors(colorScheme === 'dark' ? 1 : 0.2).light
-                            .background
+                        ? RGBAColors(0.2).light.background
                         : backgroundColor,
                   },
                 ]}>

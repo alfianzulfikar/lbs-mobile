@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Image,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -44,6 +45,7 @@ const PortfolioDetail = ({route}: Props) => {
   const {id, slug} = route.params;
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const textColor4 = useThemeColor({}, 'text4');
   const lineColor = useThemeColor({}, 'line');
@@ -304,7 +306,7 @@ const PortfolioDetail = ({route}: Props) => {
         <BottomSheet setShow={setShowDisclosure}>
           {pageLoading ? (
             <ActivityIndicator color={tint} />
-          ) : portfolio.disclosures ? (
+          ) : portfolio.disclosures && portfolio.disclosures.length > 0 ? (
             portfolio.disclosures.map((item, disclosureId) => (
               <View
                 key={disclosureId}
@@ -351,7 +353,31 @@ const PortfolioDetail = ({route}: Props) => {
                 </View>
               </View>
             ))
-          ) : null}
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                paddingHorizontal: 24,
+              }}>
+              <View style={styles.emptyContainer}>
+                <Image
+                  source={
+                    colorScheme === 'dark'
+                      ? require('../assets/images/empty-article-dark.png')
+                      : require('../assets/images/empty-article-light.png')
+                  }
+                  style={{width: 240, height: 240}}
+                  resizeMode="cover"
+                />
+              </View>
+              <Text style={[styles.emptyTitle, {color: textColor}]}>
+                Belum ada informasi
+              </Text>
+              <Text style={[styles.emptyDesc, {color: textColor2}]}>
+                Keterbukaan informasi belum tersedia untuk bisnis ini
+              </Text>
+            </View>
+          )}
         </BottomSheet>
       )}
       {downloadLoading && <LoadingModal />}
@@ -433,5 +459,24 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginHorizontal: 8,
+  },
+  emptyContainer: {
+    width: 216,
+    height: 216,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

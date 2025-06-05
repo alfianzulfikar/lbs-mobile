@@ -1,19 +1,17 @@
 import {
   ActivityIndicator,
   Animated,
-  Dimensions,
   Modal,
   Platform,
-  ScrollView,
   StyleSheet,
   useAnimatedValue,
+  useWindowDimensions,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import Text from './Text';
 import {RGBAColors} from '../constants/Colors';
 import {useThemeColor} from '../hooks/useThemeColor';
-import BlurOverlay from './BlurOverlay';
 import Header from './Header';
 import IconWrapper from './IconWrapper';
 import ICCancel from './icons/ICCancel';
@@ -56,8 +54,7 @@ const TransactionDetail = ({
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const textColorDanger = useThemeColor({}, 'textDanger');
-  const backgroundColor = useThemeColor({}, 'background');
-  const {height} = Dimensions.get('window');
+  const {height} = useWindowDimensions();
   const translateYAnim = useAnimatedValue(height);
   const navigation = useNavigation();
 

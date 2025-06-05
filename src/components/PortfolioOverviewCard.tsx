@@ -1,4 +1,9 @@
-import {Dimensions, ImageBackground, StyleSheet, View} from 'react-native';
+import {
+  ImageBackground,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import React from 'react';
 import Text from './Text';
 import Badge from './Badge';
@@ -16,13 +21,14 @@ const PortfolioOverviewCard = ({
 }) => {
   let colorScheme = useColorScheme();
   const textColor3 = useThemeColor({}, 'text3');
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   return (
     <View
       style={{
         width: (width * 84) / 100,
         maxWidth: 340,
         aspectRatio: 340 / 192,
+        overflow: 'hidden',
       }}>
       <ImageBackground
         source={
@@ -30,7 +36,7 @@ const PortfolioOverviewCard = ({
             ? require('../assets/images/portfolio-card-dark.png')
             : require('../assets/images/portfolio-card-light.png')
         }
-        style={[styles.cardImageBackground, {width: (width * 84) / 100}]}
+        style={[styles.cardImageBackground, {width: '100%', height: '100%'}]}
         resizeMode="contain"
       />
       <View style={styles.cardContentContainer}>
@@ -58,8 +64,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 1,
     top: 1,
-    maxWidth: 340,
-    aspectRatio: 340 / 192,
   },
   cardContentContainer: {
     zIndex: 2,

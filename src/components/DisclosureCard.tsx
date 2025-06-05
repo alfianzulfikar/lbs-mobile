@@ -1,4 +1,4 @@
-import {Dimensions, Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native';
 import React, {useState} from 'react';
 import Text from './Text';
 import Button from './Button';
@@ -12,7 +12,7 @@ import {useColorScheme} from '../hooks/useColorScheme';
 const DisclosureCard = ({name, file}: {name: string; file: string}) => {
   const {downloadFile} = useDownload();
   const colorScheme = useColorScheme();
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   const [loading, setLoading] = useState(false);
   const handleDownload = async () => {
     setLoading(true);
@@ -26,12 +26,13 @@ const DisclosureCard = ({name, file}: {name: string; file: string}) => {
         {
           backgroundColor:
             Platform.OS === 'ios'
-              ? 'transparent'
-              : RGBAColors(0.2)[colorScheme].background,
+              ? RGBAColors(colorScheme === 'dark' ? 0.1 : 0.4)[colorScheme]
+                  .background
+              : RGBAColors(0.2)['light'].background,
           width: (width * 84) / 100,
         },
       ]}>
-      <BlurOverlay blurType="light" />
+      <BlurOverlay blurType="regular" />
       <View style={styles.contentWrapper}>
         <Text style={styles.name} numberOfLines={3}>
           {name}

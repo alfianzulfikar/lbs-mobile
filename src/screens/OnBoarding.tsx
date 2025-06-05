@@ -1,11 +1,10 @@
 import {
   Animated,
-  Dimensions,
   FlatList,
   Image,
   Platform,
   StyleSheet,
-  useAnimatedValue,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -25,7 +24,7 @@ const OnBoarding = () => {
   const textColor2 = useThemeColor({}, 'text2');
   const backgroundColor = useThemeColor({}, 'background');
   let colorScheme = useColorScheme();
-  const {width, height} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
 
   const contentRef = useRef(null);
   const buttonRef = useRef(null);

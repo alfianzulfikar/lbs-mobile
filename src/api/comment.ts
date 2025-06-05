@@ -157,9 +157,13 @@ export const useComment = () => {
       setComment('');
       setError([]);
     } catch (error: any) {
+      let newError = [];
       if (error?.status === 422) {
-        setError(error?.data?.errors?.comment || []);
+        newError = error?.data?.errors?.comment || [];
+      } else if (error?.status === 403) {
+        newError = error?.data?.errors?.msg ? [error?.data?.errors?.msg] : [];
       }
+      setError(newError);
       console.log('submit error', error);
     } finally {
       setSubmitLoading(false);

@@ -1,4 +1,4 @@
-import {Dimensions, StatusBar, StyleSheet, View} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {HomeMenuScreenType} from '../constants/Types';
@@ -39,7 +39,7 @@ const Home = () => {
   const {disclosureList, getDisclosureList, disclosureListLoading} =
     useDisclosure();
   const {banners, bannersLoading, getBanners} = useBannerCarousel();
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -59,7 +59,7 @@ const Home = () => {
     getBusinesses(1, 5, true);
     getArticles();
     getDisclosureList(5);
-    getBanners();
+    // getBanners();
     setRefreshing(false);
   };
 

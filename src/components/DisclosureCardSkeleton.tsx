@@ -1,19 +1,9 @@
-import {
-  ActivityIndicator,
-  Animated,
-  Dimensions,
-  Easing,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Animated, Easing, StyleSheet, useWindowDimensions} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {RGBAColors} from '../constants/Colors';
-import {useThemeColor} from '../hooks/useThemeColor';
 
 const DisclosureCardSkeleton = () => {
-  const {width} = Dimensions.get('window');
-  const tint = useThemeColor({}, 'tint');
+  const {width} = useWindowDimensions();
 
   const fadeAnimation = useRef(new Animated.Value(1)).current;
 

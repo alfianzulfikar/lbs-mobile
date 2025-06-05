@@ -92,6 +92,7 @@ const ScreenWrapper = ({
         )}
         {scrollView ? (
           <ScrollView
+            // bounces={false}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{flexGrow: 1}}
             style={{zIndex: 3}}

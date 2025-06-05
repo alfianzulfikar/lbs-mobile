@@ -1,10 +1,10 @@
 import {
   Animated,
-  Dimensions,
   Modal,
   Platform,
   StyleSheet,
   useAnimatedValue,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useEffect} from 'react';
@@ -34,7 +34,7 @@ const LimitExplanation = ({
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
   const backgroundColor = useThemeColor({}, 'background');
-  const {height} = Dimensions.get('window');
+  const {height} = useWindowDimensions();
   const translateYAnim = useAnimatedValue(height);
 
   const slideIn = () => {

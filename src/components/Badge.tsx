@@ -66,29 +66,18 @@ const Badge = ({
         <LinearGradient
           colors={
             (mode || colorScheme) === 'dark'
-              ? ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
+              ? Platform.OS === 'ios'
+                ? ['transparent', 'transparent']
+                : ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
               : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,1)']
           }
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
-          // locations={Platform.OS === 'android' ? [0, 0.5] : [0, 0.3]}
-          // locations={[0, 0.1]}
           style={[
             styles.overlay,
             {transform: [{rotate: '180deg'}]},
           ]}></LinearGradient>
-        {/* <LinearGradient
-          colors={
-            colorScheme === 'dark'
-              ? ['#404040', '#1A1A1A']
-              : ['#FFFFFF', '#E0E0E0']
-          }
-          style={styles.overlay}></LinearGradient> */}
-        {/* <BlurView
-          blurAmount={80}
-          blurType="light"
-          style={styles.blurView}></BlurView> */}
-        {/* <BlurOverlay /> */}
+        <BlurOverlay />
         <View
           style={[
             styles.textContainer,
@@ -125,7 +114,7 @@ export default Badge;
 const styles = StyleSheet.create({
   outer: {
     shadowOffset: {width: 0, height: 0},
-    shadowRadius: 5,
+    shadowRadius: 0.5,
     shadowOpacity: 0.2,
     elevation: 5,
   },

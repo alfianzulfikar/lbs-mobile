@@ -1,16 +1,14 @@
 import {
-  ActivityIndicator,
-  Dimensions,
   Image,
   ImageBackground,
-  Modal,
   Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
-import React, {ReactNode, useCallback, useEffect, useState} from 'react';
+import React, {ReactNode, useCallback, useState} from 'react';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -114,7 +112,7 @@ const Account = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
-  const {width} = Dimensions.get('window');
+  const {width} = useWindowDimensions();
   const {initTheme} = useInitTheme();
 
   const [biometric, setBiometric] = useState(false);

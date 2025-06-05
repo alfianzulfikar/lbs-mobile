@@ -1,14 +1,11 @@
 import {
   Alert,
-  Animated,
-  Dimensions,
   Image,
   ImageBackground,
   Platform,
   ScrollView,
   Share,
   StyleSheet,
-  useAnimatedValue,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -16,12 +13,7 @@ import Text from '../components/Text';
 import {useThemeColor} from '../hooks/useThemeColor';
 import ScreenWrapper from '../components/ScreenWrapper';
 import IconWrapper from '../components/IconWrapper';
-import {
-  CommonActions,
-  CompositeScreenProps,
-  StaticScreenProps,
-  useNavigation,
-} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {useBusiness} from '../api/business';
 import ICShare from '../components/icons/ICShare';
 import ICLike from '../components/icons/ICLike';
@@ -37,7 +29,6 @@ import ICFile from '../components/icons/ICFile';
 import Header from '../components/Header';
 import BlurOverlay from '../components/BlurOverlay';
 import {RGBAColors} from '../constants/Colors';
-import ICCancel from '../components/icons/ICCancel';
 import Calculator from '../components/Calculator';
 import numberFormat from '../utils/numberFormat';
 import capitalize from '../utils/capitalize';
@@ -48,17 +39,8 @@ import {useColorScheme} from '../hooks/useColorScheme';
 import ICLikeFill from '../components/icons/ICLikeFill';
 import BottomSheet from '../components/BottomSheet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {OrderStackParamList, RootStackParamList} from '../constants/Types';
+import {OrderStackParamList} from '../constants/Types';
 import {useInsets} from '../hooks/useInsets';
-
-// type Props = StaticScreenProps<{
-//   slug: string;
-// }>;
-
-// type Props = CompositeScreenProps<
-//   NativeStackScreenProps<OrderStackParamList, 'BusinessDetail'>,
-//   NativeStackScreenProps<RootStackParamList>
-// >;
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'BusinessDetail'>;
 

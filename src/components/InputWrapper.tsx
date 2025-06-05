@@ -30,7 +30,7 @@ const InputWrapper = ({
         },
       ]}>
       <BlurOverlay />
-      {children}
+      <View style={{zIndex: 2}}>{children}</View>
     </View>
   );
 };
@@ -42,6 +42,5 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     overflow: 'hidden',
     borderWidth: 1,
-    zIndex: 2,
   },
 });
