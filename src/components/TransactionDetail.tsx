@@ -181,7 +181,7 @@ const TransactionDetail = ({
           backgroundType="gradient"
           statusBar={false}
           scrollView
-          notch={false}>
+          notch={Platform.OS === 'ios' ? true : false}>
           {/* <BlurOverlay blurAmount={40} /> */}
           <View
             style={{

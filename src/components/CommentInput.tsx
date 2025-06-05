@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -39,7 +40,10 @@ const CommentInput = ({
         <View style={styles.container}>
           <TextInput
             placeholder="Tulis komentar di sini"
-            style={[styles.input, {color: textColor2}]}
+            style={[
+              styles.input,
+              {color: textColor2, paddingTop: Platform.OS === 'ios' ? 11 : 0},
+            ]}
             placeholderTextColor={RGBAColors(0.5)[colorScheme].text}
             onChangeText={onChange}
             value={value}

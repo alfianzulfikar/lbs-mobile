@@ -62,13 +62,14 @@ const HomeMenu = ({
         style={[
           styles.container,
           {
-            backgroundColor:
-              Platform.OS === 'ios'
-                ? RGBAColors(0.2)['light'].background
-                : RGBAColors(0.2)['light'].background,
+            backgroundColor: RGBAColors(Platform.OS === 'ios' ? 0.1 : 0.2)[
+              'light'
+            ].background,
           },
         ]}>
-        {Platform.OS === 'ios' && <BlurOverlay blurAmount={10} />}
+        {Platform.OS === 'ios' && (
+          <BlurOverlay blurAmount={10} blurType="light" />
+        )}
         <View style={styles.menuItem}>
           <LottieView
             autoPlay

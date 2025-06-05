@@ -14,6 +14,7 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A0AF00AEE671486EBEC9C160 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 164B1FAF93604CA395350CB1 /* Inter-Medium.ttf */; };
+		AAB7015E2DF023BA001E3D7C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AAB7015D2DF023BA001E3D7C /* GoogleService-Info.plist */; };
 		DCDE0F147BC746F2A0E32460 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0FBAF74B9CD46D9B866118C /* Inter-Bold.ttf */; };
 		E0A69920CD7C42F487AF619C /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 727FBDB669A1467380ADBC52 /* Inter-Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -31,6 +32,8 @@
 		727FBDB669A1467380ADBC52 /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = TestLBSMobileReactNAtive/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TestLBSMobileReactNAtive/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AAB7015D2DF023BA001E3D7C /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AAB7015F2DF024CD001E3D7C /* TestLBSMobileReactNAtive.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TestLBSMobileReactNAtive.entitlements; path = TestLBSMobileReactNAtive/TestLBSMobileReactNAtive.entitlements; sourceTree = "<group>"; };
 		E0FBAF74B9CD46D9B866118C /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -50,6 +53,7 @@
 		13B07FAE1A68108700A75B9A /* TestLBSMobileReactNAtive */ = {
 			isa = PBXGroup;
 			children = (
+				AAB7015F2DF024CD001E3D7C /* TestLBSMobileReactNAtive.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -78,6 +82,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AAB7015D2DF023BA001E3D7C /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* TestLBSMobileReactNAtive */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -180,6 +185,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				AAB7015E2DF023BA001E3D7C /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				49645C696E0B97C61B35F08F /* PrivacyInfo.xcprivacy in Resources */,
 				DCDE0F147BC746F2A0E32460 /* Inter-Bold.ttf in Resources */,
@@ -297,8 +303,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TestLBSMobileReactNAtive/TestLBSMobileReactNAtive.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZS5H7372N4;
+				DEVELOPMENT_TEAM = 6WG6K3F8UQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TestLBSMobileReactNAtive/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -313,7 +320,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = id.lbs.app;
 				PRODUCT_NAME = TestLBSMobileReactNAtive;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -327,8 +334,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TestLBSMobileReactNAtive/TestLBSMobileReactNAtive.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZS5H7372N4;
+				DEVELOPMENT_TEAM = 6WG6K3F8UQ;
 				INFOPLIST_FILE = TestLBSMobileReactNAtive/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -342,7 +350,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = id.lbs.app;
 				PRODUCT_NAME = TestLBSMobileReactNAtive;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -429,10 +437,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -512,10 +517,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

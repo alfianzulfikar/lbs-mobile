@@ -4,12 +4,18 @@ import {BlurView} from '@react-native-community/blur';
 import Svg, {Defs, FeGaussianBlur, Filter, Rect} from 'react-native-svg';
 import {useColorScheme} from '../hooks/useColorScheme';
 
-const BlurOverlay = ({blurAmount = 10}: {blurAmount?: number}) => {
+const BlurOverlay = ({
+  blurAmount = 10,
+  blurType,
+}: {
+  blurAmount?: number;
+  blurType?: 'light' | 'dark' | 'regular';
+}) => {
   let colorScheme = useColorScheme();
   return Platform.OS === 'ios' ? (
     <BlurView
       blurAmount={blurAmount}
-      blurType={colorScheme}
+      blurType={blurType || colorScheme}
       style={styles.blurView}
     />
   ) : null;

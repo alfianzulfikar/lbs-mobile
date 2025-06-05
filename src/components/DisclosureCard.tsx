@@ -24,13 +24,14 @@ const DisclosureCard = ({name, file}: {name: string; file: string}) => {
       style={[
         styles.container,
         {
-          backgroundColor: RGBAColors(Platform.OS === 'ios' ? 0.1 : 0.2)[
-            'light'
-          ].background,
+          backgroundColor:
+            Platform.OS === 'ios'
+              ? 'transparent'
+              : RGBAColors(0.2)[colorScheme].background,
           width: (width * 84) / 100,
         },
       ]}>
-      <BlurOverlay />
+      <BlurOverlay blurType="light" />
       <View style={styles.contentWrapper}>
         <Text style={styles.name} numberOfLines={3}>
           {name}
@@ -56,15 +57,16 @@ export default DisclosureCard;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
     borderRadius: 24,
     // elevation: 1,
     maxWidth: 340,
     aspectRatio: 340 / 192,
+    overflow: 'hidden',
   },
   contentWrapper: {
     flex: 1,
     zIndex: 2,
+    padding: 16,
   },
   name: {
     fontSize: 14,

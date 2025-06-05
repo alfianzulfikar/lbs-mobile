@@ -150,7 +150,7 @@ const Calculator = ({
           scrollView
           statusBar
           overlay
-          notch={false}>
+          notch={Platform.OS === 'ios' ? true : false}>
           <View style={{flexGrow: 1}}>
             <Gap height={24} />
             <Header

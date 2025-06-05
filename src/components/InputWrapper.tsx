@@ -42,5 +42,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     overflow: 'hidden',
     borderWidth: 1,
+    zIndex: 2,
   },
 });

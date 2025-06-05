@@ -5,6 +5,7 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {store} from './store';
 import {Provider} from 'react-redux';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useNotification} from './services/notification';
 
@@ -58,9 +59,13 @@ const App = () => {
       <GestureHandlerRootView style={{flex: 1}}>
         <BottomSheetModalProvider>
           <SafeAreaProvider>
-            <SafeAreaView style={{flex: 1}} edges={['bottom']}>
+            {Platform.OS === 'ios' ? (
               <Router />
-            </SafeAreaView>
+            ) : (
+              <SafeAreaView style={{flex: 1}} edges={['bottom']}>
+                <Router />
+              </SafeAreaView>
+            )}
           </SafeAreaProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>

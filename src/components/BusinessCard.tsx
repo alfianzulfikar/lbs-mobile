@@ -68,10 +68,11 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
               backgroundColor:
                 Platform.OS === 'android'
                   ? RGBAColors(0.2)['light'].background
-                  : RGBAColors(0.2)['light'].background,
+                  : RGBAColors(colorScheme === 'dark' ? 0.1 : 0.7)[colorScheme]
+                      .background,
             },
           ]}>
-          <BlurOverlay />
+          <BlurOverlay blurType="light" blurAmount={80} />
           <View style={styles.information}>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
