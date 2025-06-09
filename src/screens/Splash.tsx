@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
 import {useDeepLinks} from '../utils/handleDeepLinks';
-import {useInitTheme} from '../hooks/useInitTheme';
 
 const Splash = () => {
   const navigation = useNavigation();
@@ -14,7 +13,6 @@ const Splash = () => {
   const videoRef = useRef<VideoRef>(null);
   const background = require('../assets/videos/splash.mp4');
   const {handleDeepLinks} = useDeepLinks();
-  const {initTheme} = useInitTheme();
 
   return (
     <View style={styles.container}>
@@ -29,7 +27,6 @@ const Splash = () => {
         style={styles.backgroundVideo}
         resizeMode="cover"
         onEnd={async () => {
-          await initTheme();
           await handleDeepLinks();
         }}
         muted={true}

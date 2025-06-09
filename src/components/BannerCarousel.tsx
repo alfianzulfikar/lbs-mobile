@@ -24,7 +24,6 @@ const BannerCarousel = ({
   const backgroundColor = useThemeColor({}, 'background');
   const navigation = useNavigation();
 
-  // const [visibleSlide, setVisibleSlide] = useState(0);
   const visibleSlide = useRef(1);
   const autoScroll = useRef<NodeJS.Timeout | number | null>(null);
 
@@ -37,7 +36,7 @@ const BannerCarousel = ({
           styles.itemContainer,
           {
             backgroundColor,
-            width: 340,
+            width: (width * 84) / 100,
             marginLeft: index === 0 ? 24 : 16,
             marginRight: index !== banners.length - 1 ? 0 : 24,
           },

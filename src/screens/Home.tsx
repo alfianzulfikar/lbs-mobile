@@ -8,7 +8,7 @@ import Gap from '../components/Gap';
 import HomeMenu from '../components/HomeMenu';
 import VideoBackground from '../components/VideoBackground';
 import HelpButton from '../components/HelpButton';
-import {Colors, RGBAColors} from '../constants/Colors';
+import {Colors} from '../constants/Colors';
 import Badge from '../components/Badge';
 import ICBell from '../components/icons/ICBell';
 import IconWrapper from '../components/IconWrapper';
@@ -20,7 +20,6 @@ import DisclosureCarousel from '../components/DisclosureCarousel';
 import {useColorScheme} from '../hooks/useColorScheme';
 import BannerCarousel from '../components/BannerCarousel';
 import {useBannerCarousel} from '../api/bannerCarousel';
-import BlurOverlay from '../components/BlurOverlay';
 import HomeKycStatus from '../components/HomeKycStatus';
 
 const Home = () => {

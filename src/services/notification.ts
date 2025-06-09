@@ -6,12 +6,9 @@ import {
 } from '@react-native-firebase/messaging';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
 import {replace} from './navigation';
 
 export const useNotification = () => {
-  // const navigation = useNavigation()
-
   const createChannel = async () => {
     await notifee
       .createChannel({
@@ -71,10 +68,13 @@ export const useNotification = () => {
     if (data) {
       if (data.key === 'Account') {
         replace({screen: 'MainTab', params: {screen: 'AccountScreen'}});
-      } else if (data.key === 'BusinessDetail') {
+      } else if (data?.BusinessDetail) {
         replace({
           screen: 'Order',
-          params: {screen: 'BusinessDetail', params: {slug: data.value}},
+          params: {
+            screen: 'BusinessDetail',
+            params: {slug: data?.BusinessDetail},
+          },
         });
       } else if (data.key === 'WaitingPayment') {
         replace({

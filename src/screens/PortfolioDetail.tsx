@@ -363,8 +363,8 @@ const PortfolioDetail = ({route}: Props) => {
                 <Image
                   source={
                     colorScheme === 'dark'
-                      ? require('../assets/images/empty-article-dark.png')
-                      : require('../assets/images/empty-article-light.png')
+                      ? require('../assets/images/empty-search-dark.png')
+                      : require('../assets/images/empty-search-light.png')
                   }
                   style={{width: 240, height: 240}}
                   resizeMode="cover"

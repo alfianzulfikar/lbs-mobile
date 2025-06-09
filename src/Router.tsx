@@ -75,6 +75,7 @@ import {
 import {navigationRef, tryFlushPendingNavigation} from './services/navigation';
 import NotificationDetail from './screens/NotificationDetail';
 import AccountVerificationExpired from './screens/AccountVerificationExpired';
+import {useInitTheme} from './hooks/useInitTheme';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -436,6 +437,13 @@ declare global {
 //   return <Navigation />;
 
 export default function App() {
+  const {initTheme} = useInitTheme();
+
+  React.useEffect(() => {
+    initTheme();
+    console.log('render router');
+  }, []);
+
   return (
     <NavigationContainer
       ref={navigationRef}

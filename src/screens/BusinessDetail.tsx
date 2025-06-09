@@ -398,9 +398,21 @@ const BusinessDetail = ({route}: Props) => {
             navigation.dispatch(
               CommonActions.reset({index: 0, routes: [{name: 'MainTab'}]}),
             )
-          }
-          snapPoints={['30%']}>
-          <Text style={{color: textColor}}>Bisnis tidak ditemukan</Text>
+          }>
+          <View style={styles.emptyContainer}>
+            <Image
+              source={
+                colorScheme === 'dark'
+                  ? require('../assets/images/empty-search-dark.png')
+                  : require('../assets/images/empty-search-light.png')
+              }
+              style={{width: 240, height: 240}}
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={[styles.emptyTitle, {color: textColor}]}>
+            Bisnis tidak ditemukan
+          </Text>
           <Gap flex={1} />
           <Gap height={24} />
           <Button
@@ -501,5 +513,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'space-evenly'
+  },
+  emptyContainer: {
+    width: '100%',
+    height: 216,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  emptyDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

@@ -47,7 +47,6 @@ import {useDispatch} from 'react-redux';
 import {setColorScheme} from '../slices/colorScheme';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {useInsets} from '../hooks/useInsets';
-import {useInitTheme} from '../hooks/useInitTheme';
 import ImagePicker, {Options} from 'react-native-image-crop-picker';
 
 const MenuItem = ({
@@ -113,7 +112,6 @@ const Account = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
   const {width} = useWindowDimensions();
-  const {initTheme} = useInitTheme();
 
   const [biometric, setBiometric] = useState(false);
   const [dark, setDark] = useState(colorScheme === 'dark');
@@ -183,7 +181,6 @@ const Account = () => {
 
   useFocusEffect(
     useCallback(() => {
-      initTheme();
       const asyncFunc = async () => {
         setLoading(true);
         await getKycProgress();
