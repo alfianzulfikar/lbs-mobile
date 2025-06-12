@@ -2,6 +2,7 @@ import {
   Alert,
   Image,
   ImageBackground,
+  Keyboard,
   Platform,
   ScrollView,
   Share,
@@ -41,6 +42,8 @@ import BottomSheet from '../components/BottomSheet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {OrderStackParamList} from '../constants/Types';
 import {useInsets} from '../hooks/useInsets';
+import {useDispatch} from 'react-redux';
+import {setAlert, setShowAlert} from '../slices/globalError';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'BusinessDetail'>;
 
@@ -65,6 +68,7 @@ const BusinessDetail = ({route}: Props) => {
   } = useBusiness();
   const {user, getUser} = useUser();
   const {notchHeight} = useInsets();
+  const dispatch = useDispatch();
 
   const [loadingOrder, setLoadingOrder] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
@@ -82,18 +86,26 @@ const BusinessDetail = ({route}: Props) => {
           screen: 'OrderBusiness',
           params: {slug, customerCode: res.customer_code},
         });
-      } catch {
-        Alert.alert(
-          'Gagal',
-          'Tidak dapat melakukan pemesanan. Hubungi Customer Service untuk keterangan lebih lanjut.',
+      } catch (error: any) {
+        dispatch(
+          setAlert({
+            title: 'Tidak dapat melakukan pemesanan.',
+            desc: `Hubungi Customer Service untuk keterangan lebih lanjut.`,
+            type: 'danger',
+            showAlert: true,
+          }),
         );
       } finally {
         setLoadingOrder(false);
       }
     } else {
-      Alert.alert(
-        'Gagal',
-        'Transaksi tidak dapat dilanjutkan. Lengkapi data KYC Anda.',
+      dispatch(
+        setAlert({
+          title: 'Transaksi tidak dapat dilanjutkan. Lengkapi data KYC Anda.',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
       );
     }
   };
@@ -105,9 +117,14 @@ const BusinessDetail = ({route}: Props) => {
         title: 'LBS Urun Dana',
       });
     } catch (error) {
-      Alert.alert('Gagal', 'Silahkan coba lagi', [
-        {text: 'Tutup', onPress: () => {}},
-      ]);
+      dispatch(
+        setAlert({
+          title: 'Gagal',
+          desc: 'Silahkan coba lagi',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     }
   };
 
@@ -170,18 +187,20 @@ const BusinessDetail = ({route}: Props) => {
                   )}
                 </IconWrapper>
                 <Gap width={16} />
-                <IconWrapper
-                  onPress={() =>
-                    navigation.navigate('Order', {
-                      screen: 'BusinessDiscussion',
-                      params: {
-                        slug: business.slug,
-                        businessStatus: business.status,
-                      },
-                    })
-                  }>
-                  <ICChat color={iconColor} size={24} />
-                </IconWrapper>
+                {['PRE-LISTING', 'LISTING'].includes(business.status) && (
+                  <IconWrapper
+                    onPress={() =>
+                      navigation.navigate('Order', {
+                        screen: 'BusinessDiscussion',
+                        params: {
+                          slug: business.slug,
+                          businessStatus: business.status,
+                        },
+                      })
+                    }>
+                    <ICChat color={iconColor} size={24} />
+                  </IconWrapper>
+                )}
                 {['PRE-LISTING', 'LISTING'].includes(business.status) && (
                   <>
                     <Gap width={16} />
@@ -191,11 +210,6 @@ const BusinessDetail = ({route}: Props) => {
                           ['PRE-LISTING', 'LISTING'].includes(business.status)
                         ) {
                           setShowCalculator(true);
-                        } else {
-                          Alert.alert(
-                            'Tidak Tersedia',
-                            'Maaf, kalkulator investasi tidak tersedia untuk bisnis ini.',
-                          );
                         }
                       }}
                       width={204}>

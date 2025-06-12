@@ -59,9 +59,13 @@ const ComplaintProcedure = () => {
   ];
 
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView overlay>
-      <Gap height={24} />
-      <Header title="Prosedur Pengaduan" />
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      scrollView
+      overlay
+      header
+      headerTitle="Prosedur Pengaduan">
       <View style={styles.container}>
         <Text style={styles.heading}>
           Standar Prosedur Layanan Pengaduan LBS Urun Dana
@@ -149,7 +153,7 @@ export default ComplaintProcedure;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 24,
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 24,
   },
   heading: {

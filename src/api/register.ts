@@ -2,10 +2,13 @@ import {useState} from 'react';
 import {useAPI} from '../services/api';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {Alert} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useRegister = () => {
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   // verifikasi
   const [verificationLoading, setVerificationLoading] = useState(false);
@@ -59,8 +62,14 @@ export const useRegister = () => {
           otp_methods: error.data.errors.otp_methods || [],
         });
       } else if (error.status === 400) {
-        Alert.alert(
-          error.data.errors?.msg || `Token tidak valid (${error.status})`,
+        dispatch(
+          setAlert({
+            title:
+              error.data.errors?.msg || `Token tidak valid (${error.status})`,
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
         );
       }
     } finally {
@@ -97,11 +106,32 @@ export const useRegister = () => {
       console.log(error);
       if (error?.status === 422) {
         console.log('resend otp', error?.data?.errors);
-        Alert.alert('Maaf, terjadi kesalahan');
+        dispatch(
+          setAlert({
+            title: 'Maaf, terjadi kesalahan',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else if (error?.status === 403) {
-        Alert.alert(error?.data?.errors?.msg || 'Maaf, permintaan tertolak');
+        dispatch(
+          setAlert({
+            title: error?.data?.errors?.msg || 'Maaf, permintaan tertolak',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else {
-        Alert.alert('Terjadi kesalahan pada sistem');
+        dispatch(
+          setAlert({
+            title: 'Terjadi kesalahan pada sistem',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setOtpLoading(false);
@@ -130,11 +160,32 @@ export const useRegister = () => {
     } catch (error: any) {
       if (error?.status === 422) {
         console.log('resend otp', error?.data?.errors);
-        Alert.alert('Maaf, terjadi kesalahan');
+        dispatch(
+          setAlert({
+            title: 'Maaf, terjadi kesalahan',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else if (error?.status === 403) {
-        Alert.alert(error?.data?.errors?.msg || 'Maaf, permintaan tertolak');
+        dispatch(
+          setAlert({
+            title: error?.data?.errors?.msg || 'Maaf, permintaan tertolak',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else {
-        Alert.alert('Terjadi kesalahan pada sistem');
+        dispatch(
+          setAlert({
+            title: 'Terjadi kesalahan pada sistem',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setOtpLoading(false);

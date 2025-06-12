@@ -106,6 +106,7 @@ export type MarketStackParamList = {
     code: string;
     feeBuy: number;
     feeSell: number;
+    defaultPrice?: number;
   };
   MarketGuide: undefined;
 };

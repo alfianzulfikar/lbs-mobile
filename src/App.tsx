@@ -8,6 +8,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useNotification} from './services/notification';
+import NetworkErrorBottomSheet from './components/NetworkErrorBottomSheet';
 
 const App = () => {
   const {

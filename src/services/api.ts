@@ -8,12 +8,22 @@ import {
 } from '@react-navigation/native';
 import {envMode} from '../constants/Env';
 import {Alert} from 'react-native';
+import {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setAlert,
+  setShowAlert,
+  setShowNetworkError,
+} from '../slices/globalError';
+import {RootState} from '../store';
 
 const API_BASE_URL =
   envMode === 'prod' ? 'https://uda-api.lbs.id' : 'https://dev-api.lbs.id';
 
 export const useAPI = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {showAlert} = useSelector((item: RootState) => item.globalError);
 
   const apiRequest = async ({
     endpoint,
@@ -34,6 +44,9 @@ export const useAPI = () => {
     responseType?: 'blob' | 'json';
     url?: string;
   }) => {
+    if (showAlert) {
+      dispatch(setShowAlert(false));
+    }
     const accessToken = await AsyncStorage.getItem('access_token');
     const composedUrl = url || `${baseUrl || API_BASE_URL}${endpoint}`;
     const defaultHeaders = {
@@ -87,15 +100,34 @@ export const useAPI = () => {
           } else {
             if (response.status === 429) {
               if (endpoint?.includes('verify-register')) {
-                Alert.alert(
-                  'Permintaan Gagal',
-                  'Permintaan OTP baru bisa dilakukan setelah 3 menit. Mohon coba lagi nanti.',
+                dispatch(
+                  setAlert({
+                    title:
+                      'Permintaan OTP baru bisa dilakukan setelah 3 menit. Mohon coba lagi nanti.',
+                    desc: '',
+                    type: 'danger',
+                    showAlert: true,
+                  }),
                 );
               } else {
-                Alert.alert('Terlalu banyak percobaan');
+                dispatch(
+                  setAlert({
+                    title: 'Terlalu banyak percobaan',
+                    desc: '',
+                    type: 'danger',
+                    showAlert: true,
+                  }),
+                );
               }
             } else if (response.status === 500) {
-              Alert.alert('Terjadi kesalan pada server');
+              dispatch(
+                setAlert({
+                  title: 'Terjadi kesalan pada server',
+                  desc: '',
+                  type: 'danger',
+                  showAlert: true,
+                }),
+              );
             }
             throw data
               ? {data, status: response.status}
@@ -116,9 +148,7 @@ export const useAPI = () => {
     } catch (error: any) {
       console.log('fetch error', error);
       if (error instanceof TypeError) {
-        Alert.alert(
-          'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.',
-        );
+        dispatch(setShowNetworkError({showNetworkError: true}));
       }
       throw error;
     }

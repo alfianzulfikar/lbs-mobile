@@ -24,8 +24,9 @@ const OnBoarding = () => {
   const textColor2 = useThemeColor({}, 'text2');
   const backgroundColor = useThemeColor({}, 'background');
   let colorScheme = useColorScheme();
-  const {width} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
 
+  const flatlistRef = useRef<FlatList | null>(null);
   const contentRef = useRef(null);
   const buttonRef = useRef(null);
 
@@ -55,6 +56,7 @@ const OnBoarding = () => {
   const [visibleSlide, setVisibleSlide] = useState('1');
   const [contentHeight, setContentHeight] = useState(0);
   const [buttonHeight, setButtonHeight] = useState(0);
+  const [maxImageHeight, setMaxImageHeight] = useState(0);
 
   const onViewRef = useRef(({viewableItems}: {viewableItems: any}) => {
     if (viewableItems.length > 0) {
@@ -78,38 +80,40 @@ const OnBoarding = () => {
 
   useEffect(() => {
     AsyncStorage.setItem('onboarding', 'true');
+    console.log('contentRef', contentRef.current);
   }, []);
+
+  useEffect(() => {
+    console.log('contentHeight', contentHeight);
+    setMaxImageHeight(
+      Math.min(300, height - (contentHeight + 56 + 24)),
+    );
+  }, [contentHeight]);
 
   return (
     <ScreenWrapper
       background
-      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
-      scrollView>
+      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
       <Gap height={56} />
-      <Image
-        source={require('../assets/images/onboarding-img.png')}
-        resizeMode="cover"
-        style={styles.illustration}
-      />
+      <View
+        style={{
+          width: '100%',
+          // maxWidth: (width * 74) / 100 <= 300 ? (width * 74) / 100 : 300,
+          // maxHeight: (width * 74) / 100 <= 300 ? (width * 74) / 100 : 300,
+          maxHeight: maxImageHeight,
+          aspectRatio: 1 / 1,
+          alignSelf: 'center',
+          overflow: 'hidden',
+        }}>
+        <Image
+          source={require('../assets/images/onboarding-img.png')}
+          resizeMode="cover"
+          style={styles.illustration}
+        />
+      </View>
       <Gap flex={1} />
       <View style={{}}>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          {slides.map((item, index) => (
-            <Animated.View
-              style={[
-                styles.dot,
-                {
-                  width: item.id === visibleSlide ? 90 : 16,
-                  backgroundColor: RGBAColors(
-                    visibleSlide === item.id ? 0.8 : 0.3,
-                  ).light.background,
-                  marginRight: index !== slides.length - 1 ? 8 : 0,
-                },
-              ]}
-              key={index}></Animated.View>
-          ))}
-        </View>
-        <Gap height={24} />
+        {/* <Gap height={24} /> */}
         <View
           style={[
             styles.descContainer,
@@ -122,17 +126,17 @@ const OnBoarding = () => {
           ]}>
           <BlurOverlay />
           <View
+            onLayout={handleContentLayout}
             style={[
               styles.descContentContainer,
               {paddingTop: 24, paddingBottom: 24},
             ]}>
-            {/* <Gap flex={1} /> */}
             <FlatList
+              ref={flatlistRef}
               data={slides}
               renderItem={({item}) => (
                 <View>
                   <View
-                    onLayout={handleContentLayout}
                     style={{
                       width: width,
                       paddingHorizontal: 24,
@@ -152,17 +156,41 @@ const OnBoarding = () => {
               viewabilityConfig={viewabilityConfig}
               onViewableItemsChanged={onViewRef.current}
             />
-            {/* <Gap flex={1} /> */}
+            <Gap height={24} />
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              {slides.map((item, index) => (
+                <Animated.View
+                  style={[
+                    styles.dot,
+                    {
+                      width: item.id === visibleSlide ? 90 : 16,
+                      backgroundColor: RGBAColors(
+                        visibleSlide === item.id ? 0.8 : 0.3,
+                      ).light.background,
+                      marginRight: index !== slides.length - 1 ? 8 : 0,
+                    },
+                  ]}
+                  key={index}></Animated.View>
+              ))}
+            </View>
             <Gap height={24} />
             <View style={{paddingHorizontal: 24}}>
               <Button
-                title="Mulai Investasi"
-                onPress={() =>
-                  navigation.dispatch(StackActions.replace('Auth'))
-                }
+                title={visibleSlide !== '4' ? 'Selanjutnya' : 'Mulai Investasi'}
+                onPress={() => {
+                  if (visibleSlide !== '4') {
+                    if (flatlistRef.current) {
+                      flatlistRef.current.scrollToIndex({
+                        index: Number(visibleSlide),
+                        animated: true,
+                      });
+                    }
+                  } else {
+                    navigation.dispatch(StackActions.replace('Auth'));
+                  }
+                }}
               />
             </View>
-            {/* <Gap height={24} /> */}
           </View>
         </View>
       </View>
@@ -259,9 +287,9 @@ export default OnBoarding;
 
 const styles = StyleSheet.create({
   illustration: {
-    width: 300,
-    height: 300,
-    alignSelf: 'center',
+    width: '100%',
+    height: '100%',
+    // backgroundColor: 'yellow',
   },
   descContainer: {
     overflow: 'hidden',

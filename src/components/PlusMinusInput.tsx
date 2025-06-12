@@ -14,11 +14,13 @@ const PlusMinusInput = ({
   onChange,
   usingRP,
   error = [],
+  increment,
 }: {
   value: number;
   onChange: React.Dispatch<React.SetStateAction<number>>;
   usingRP?: boolean;
   error?: string[];
+  increment?: number;
 }) => {
   const colorScheme = useColorScheme();
   const textColor = useThemeColor({}, 'text');
@@ -52,7 +54,19 @@ const PlusMinusInput = ({
             ]}
             onPress={() => {
               if (Number(value) > 0) {
-                onChange(value - 1);
+                if (increment) {
+                  const rest = (value - increment) % increment;
+                  console.log('rest', rest);
+                  if (rest !== 0) {
+                    const newValue = value - rest;
+                    console.log('newValue', newValue);
+                    onChange(rest < 0 ? 0 : newValue);
+                  } else {
+                    onChange(value - (increment || 1));
+                  }
+                } else {
+                  onChange(value - 1);
+                }
               }
             }}>
             {Platform.OS === 'ios' && <BlurOverlay />}
@@ -74,7 +88,21 @@ const PlusMinusInput = ({
               styles.textContainer,
               {backgroundColor: RGBAColors(0.4)[colorScheme].background},
             ]}
-            onPress={() => onChange(value + 1)}>
+            onPress={() => {
+              if (increment) {
+                const rest = (value + increment) % increment;
+                console.log('rest', rest);
+                if (rest !== 0) {
+                  const newValue = value + increment - rest;
+                  console.log('newValue', newValue);
+                  onChange(newValue);
+                } else {
+                  onChange(value + (increment || 1));
+                }
+              } else {
+                onChange(value + 1);
+              }
+            }}>
             {Platform.OS === 'ios' && <BlurOverlay />}
             <Text style={[styles.text, {color: textColor}]}>+</Text>
           </Pressable>

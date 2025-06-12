@@ -28,11 +28,13 @@ type Props = {
       code: string;
       feeBuy: number;
       feeSell: number;
+      defaultPrice?: number;
     };
   };
 };
 const MarketOrder = ({route}: Props) => {
-  const {code, merkDagang, type, feeBuy, feeSell, id} = route.params;
+  const {code, merkDagang, type, feeBuy, feeSell, id, defaultPrice} =
+    route.params;
   const colorScheme = useColorScheme();
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
@@ -52,7 +54,7 @@ const MarketOrder = ({route}: Props) => {
     setShowSuccessOrderDialog,
   } = useMarket();
 
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>(defaultPrice || 0);
   const [volume, setVolume] = useState<number>(0);
   const [nominal, setNominal] = useState(0);
   const [bank, setBank] = useState('');
@@ -99,14 +101,14 @@ const MarketOrder = ({route}: Props) => {
     <ScreenWrapper
       background
       backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
+      <Gap height={24} />
+      <Header title="Detail Order" />
+      <Gap height={20} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}>
-        <Gap height={24} />
-        <Header title="Detail Order" />
-        <Gap height={32} />
-
         <View style={{paddingHorizontal: 24}}>
+          <Gap height={12} />
           <View
             style={[
               styles.cardContainer,
@@ -178,6 +180,7 @@ const MarketOrder = ({route}: Props) => {
               onChange={setPrice}
               usingRP
               error={orderError.price}
+              increment={25}
             />
             <Gap height={24} />
             <Text style={[styles.paymentTitle, {color: textColor2}]}>
@@ -401,6 +404,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingVertical: 20,
     paddingHorizontal: 24,
+    zIndex: 2,
   },
   infoContainer: {
     flex: 1,

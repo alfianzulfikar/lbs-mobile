@@ -12,11 +12,14 @@ import {useAPI} from '../services/api';
 import {useDisclosure} from './disclosure';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {Alert} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useMarket = () => {
   const {apiRequest} = useAPI();
   const {disclosureList, getDisclosureList} = useDisclosure();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [stockList, setStockList] = useState<StockType[]>([]);
   const [stockListLoading, setStockListLoading] = useState(false);
@@ -321,9 +324,23 @@ export const useMarket = () => {
           });
         }
       } else if (error.status === 403) {
-        Alert.alert(error.data.errors.msg || 'Maaf, permintaan tertolak');
+        dispatch(
+          setAlert({
+            title: error.data.errors.msg || 'Maaf, permintaan tertolak',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else {
-        Alert.alert('Terjadi kesalahan pada sistem');
+        dispatch(
+          setAlert({
+            title: 'Terjadi kesalahan pada sistem',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setOrderLoading(false);
@@ -362,7 +379,14 @@ export const useMarket = () => {
           error?.data?.errors?.msg || ['Maaf, permintaan tertolak'],
         );
       } else {
-        Alert.alert(`Terjadi kesalahan ${error?.status || 'jaringan'}`);
+        dispatch(
+          setAlert({
+            title: `Terjadi kesalahan ${error?.status || 'jaringan'}`,
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setOtpLoading(false);
@@ -388,11 +412,32 @@ export const useMarket = () => {
     } catch (error: any) {
       if (error?.status === 422) {
         console.log('resend otp', error?.data?.errors);
-        Alert.alert('Maaf, terjadi kesalahan');
+        dispatch(
+          setAlert({
+            title: 'Maaf, terjadi kesalahan',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else if (error?.status === 403) {
-        Alert.alert(error?.data?.errors?.msg || 'Maaf, permintaan tertolak');
+        dispatch(
+          setAlert({
+            title: error?.data?.errors?.msg || 'Maaf, permintaan tertolak',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else {
-        Alert.alert('Terjadi kesalahan pada sistem');
+        dispatch(
+          setAlert({
+            title: 'Terjadi kesalahan pada sistem',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setOtpLoading(false);

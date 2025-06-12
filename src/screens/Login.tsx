@@ -24,6 +24,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNotificationAPI} from '../api/notification';
 import {useNotification} from '../services/notification';
 import {useUser} from '../api/user';
+import {useDispatch} from 'react-redux';
+import {setAlert, setShowAlert} from '../slices/globalError';
 
 type Props = {
   route: {
@@ -49,6 +51,7 @@ const Login = ({route}: Props) => {
   const {registerFCMToken} = useNotificationAPI();
   const {requestNotificationPermission} = useNotification();
   const {getUser} = useUser();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -113,7 +116,14 @@ const Login = ({route}: Props) => {
         });
       }
       if (error?.status === 422) {
-        Alert.alert(errorString || 'Terjadi kesalahan.');
+        dispatch(
+          setAlert({
+            title: 'Terjadi kesalahan',
+            desc: errorString,
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setLoading(false);
@@ -150,20 +160,26 @@ const Login = ({route}: Props) => {
           value={password}
           onChange={(value: string) => setPassword(value)}
         />
-        <Text
-          style={[styles.forgot, {color: tint}]}
-          onPress={() =>
-            navigation.navigate('Auth', {screen: 'ForgotPassword'})
-          }>
-          Lupa kata sandi?
-        </Text>
+        <View style={{alignItems: 'flex-end'}}>
+          <Text
+            style={[styles.forgot, {color: tint}]}
+            onPress={() => {
+              Keyboard.dismiss();
+              navigation.navigate('Auth', {screen: 'ForgotPassword'});
+            }}>
+            Lupa kata sandi?
+          </Text>
+        </View>
         <Gap flex={1} />
         <Button title="Masuk Akun" onPress={submit} loading={loading} />
         <Text style={[styles.link, {color: textColor2}]}>
           Belum Punya Akun?{' '}
           <Text
             style={{fontWeight: '700', color: tint}}
-            onPress={() => navigation.navigate('Auth', {screen: 'Register'})}>
+            onPress={() => {
+              Keyboard.dismiss();
+              navigation.navigate('Auth', {screen: 'Register'});
+            }}>
             Daftar Sekarang
           </Text>
         </Text>

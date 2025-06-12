@@ -17,6 +17,7 @@ const BlurOverlay = ({
       blurAmount={blurAmount}
       blurType={blurType || colorScheme}
       style={styles.blurView}
+      // reducedTransparencyFallbackColor={'transparent'}
     />
   ) : null;
   // return (
@@ -58,6 +59,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: 1,
+    backgroundColor: 'rgba(64, 64, 64, 0)'
   },
 });
 

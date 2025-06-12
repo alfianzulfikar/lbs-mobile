@@ -75,18 +75,30 @@ const TransactionDetail = ({
   };
 
   const firstSection = [
-    {
-      field: 'Kode ' + capitalize(data.jenisBisnis),
-      value: data.kodeEfek,
-    },
-    {
-      field: 'Nama Bisnis',
-      value: data.merkDagang,
-    },
-    {
-      field: 'Jenis Bisnis',
-      value: data.jenisBisnis,
-    },
+    ...(data.kodeEfek
+      ? [
+          {
+            field: 'Kode ' + capitalize(data.jenisBisnis),
+            value: data.kodeEfek,
+          },
+        ]
+      : []),
+    ...(data.merkDagang
+      ? [
+          {
+            field: 'Nama Bisnis',
+            value: data.merkDagang,
+          },
+        ]
+      : []),
+    ...(data.jenisBisnis
+      ? [
+          {
+            field: 'Jenis Bisnis',
+            value: data.jenisBisnis,
+          },
+        ]
+      : []),
     {
       field: 'Jenis Transaksi',
       value: data.jenisTransaksi,

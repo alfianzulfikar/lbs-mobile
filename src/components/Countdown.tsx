@@ -19,23 +19,27 @@ export const Countdown = ({
     let now = new Date().getTime();
     let distance = value - now;
 
+    console.log('countdown', value, now);
+
     if (value) {
       if (distance < 0) {
         setResult('Expired');
         setCountdownExpired();
       } else {
-        const second = Math.floor((distance % (1000 * 60)) / 1000);
-        const minute = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
-        const hour = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        const hours = String(Math.floor(distance / (1000 * 60 * 60))).padStart(
+          2,
+          '0',
         );
+        const minutes = String(
+          Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        ).padStart(2, '0');
+        const seconds = String(
+          Math.floor((distance % (1000 * 60)) / 1000),
+        ).padStart(2, '0');
 
-        setResult(
-          `${String(hour).padStart(2, '0')}:${String(minute).padStart(
-            2,
-            '0',
-          )}:${String(second).padStart(2, '0')}`,
-        );
+        console.log('countdown', seconds, minutes, hours);
+
+        setResult(`${hours}:${minutes}:${seconds}`);
       }
     }
     clearInterval(countdownInterval);

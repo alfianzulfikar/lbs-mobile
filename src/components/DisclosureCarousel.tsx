@@ -52,6 +52,7 @@ const DisclosureCarousel = ({
         </ScrollView>
       ) : (
         <FlatList
+          bounces={false}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={disclosures}

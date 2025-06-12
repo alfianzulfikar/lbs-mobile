@@ -1,4 +1,4 @@
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -98,7 +98,7 @@ const Prospectus = ({route}: Props) => {
       // set category
       let newCategory: InputDropdownOption[] = [];
       businessContent.map(item => {
-        if (item.bisnis_side_menu.id !== 13) {
+        if (![13, 15].includes(item.bisnis_side_menu.id)) {
           newCategory.push({
             id: String(item.bisnis_side_menu.id),
             label: item.bisnis_side_menu.name,
@@ -151,7 +151,7 @@ const Prospectus = ({route}: Props) => {
   }, []);
 
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
+    <ScreenWrapper background backgroundType="gradient">
       <Gap height={24} />
       <Header
         rightIcon={
@@ -167,170 +167,175 @@ const Prospectus = ({route}: Props) => {
           </IconWrapper>
         }
       />
-      <Gap height={40} />
-      <View
-        style={[
-          styles.container,
-          {backgroundColor: RGBAColors(0.5)[colorScheme].background},
-        ]}>
-        <View>
-          <CategoryFilter
-            options={categoryOption}
-            value={String(category)}
-            setValue={value => {
-              setCategory(value);
-              handleFilter(value);
-            }}
-            activeColor={textColor}
-          />
-        </View>
-        <View style={{paddingHorizontal: 24, marginTop: 24}}>
-          <Html source={htmlBody} />
-
-          {category === '1' && (
-            <View style={{marginTop: 40}}>
-              {businessHightlightInfo.map((item, index) => (
-                <View
-                  key={index}
-                  style={{
-                    marginBottom:
-                      index !== businessHightlightInfo.length - 1 ? 24 : 0,
-                  }}>
-                  <Text
-                    style={[
-                      styles.businessHighlightInfoField,
-                      {color: textColor2},
-                    ]}>
-                    {item.field}
-                  </Text>
-                  <Text style={styles.businessHighlightInfoValue}>
-                    {item.value}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          )}
-
-          {category === '2' && (
-            <View style={{borderWidth: 1, borderColor: textColor2}}>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: 64,
-                    borderBottomWidth: 1,
-                    borderRightWidth: 1,
-                    borderColor: textColor2,
-                    paddingBottom: 4,
-                  }}></View>
-                <View
-                  style={{
-                    flex: 1,
-                    borderBottomWidth: 1,
-                    borderColor: textColor2,
-                    paddingLeft: 4,
-                    paddingBottom: 4,
-                  }}>
-                  <Text style={[{color: textColor2, fontWeight: '600'}]}>
-                    Tersisa
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    borderBottomWidth: 1,
-                    borderColor: textColor2,
-                    paddingLeft: 4,
-                    paddingBottom: 4,
-                  }}>
-                  <Text style={[{color: textColor2, fontWeight: '600'}]}>
-                    Terjual
-                  </Text>
-                </View>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: 64,
-                    borderRightWidth: 1,
-                    borderColor: textColor2,
-                    paddingTop: 4,
-                    paddingLeft: 4,
-                  }}>
-                  <Text style={[{color: textColor2, fontWeight: '600'}]}>
-                    Pers.
-                  </Text>
-                </View>
-                <View style={{flex: 1, paddingLeft: 4, paddingTop: 4}}>
-                  <Text style={[{color: textColor2}]}>
-                    {shareOfferingInfo.persenTersisa}%
-                  </Text>
-                </View>
-                <View style={{flex: 1, paddingLeft: 4, paddingTop: 4}}>
-                  <Text style={[{color: textColor2}]}>
-                    {shareOfferingInfo.persenTerjual}%
-                  </Text>
-                </View>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: 64,
-                    borderRightWidth: 1,
-                    borderColor: textColor2,
-                    paddingLeft: 4,
-                  }}>
-                  <Text style={[{color: textColor2, fontWeight: '600'}]}>
-                    Jumlah
-                  </Text>
-                </View>
-                <View style={{flex: 1, paddingLeft: 4}}>
-                  <Text style={[{color: textColor2}]}>
-                    Rp{numberFormat(shareOfferingInfo.tersisa)}
-                  </Text>
-                </View>
-                <View style={{flex: 1, paddingLeft: 4}}>
-                  <Text style={[{color: textColor2}]}>
-                    Rp{numberFormat(shareOfferingInfo.terjual)}
-                  </Text>
-                </View>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: 64,
-                    borderRightWidth: 1,
-                    borderColor: textColor2,
-                    paddingLeft: 4,
-                    paddingBottom: 4,
-                  }}>
-                  <Text style={[{color: textColor2, fontWeight: '600'}]}>
-                    Lembar
-                  </Text>
-                </View>
-                <View style={{flex: 1, paddingLeft: 4, paddingBottom: 4}}>
-                  <Text style={[{color: textColor2}]}>
-                    {numberFormat(shareOfferingInfo.lembarTersisa)}
-                  </Text>
-                </View>
-                <View style={{flex: 1, paddingLeft: 4, paddingBottom: 4}}>
-                  <Text style={[{color: textColor2}]}>
-                    {numberFormat(shareOfferingInfo.lembarTerjual)}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          )}
-
-          {category === '5' && mapSource ? (
-            <WebView
-              source={{
-                html: `<iframe width="100%" height="100%" id="gmap_canvas" ${mapSource} frameborder="0" scrolling="yes" marginheight="0" marginwidth="0"></iframe>`,
+      <Gap height={20} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: 1}}>
+        <Gap height={20} />
+        <View
+          style={[
+            styles.container,
+            {backgroundColor: RGBAColors(0.5)[colorScheme].background},
+          ]}>
+          <View>
+            <CategoryFilter
+              options={categoryOption}
+              value={String(category)}
+              setValue={value => {
+                setCategory(value);
+                handleFilter(value);
               }}
-              style={{height: 315, borderRadius: 20}}
+              activeColor={textColor}
             />
-          ) : null}
+          </View>
+          <View style={{paddingHorizontal: 24, marginTop: 24}}>
+            <Html source={htmlBody} />
+
+            {category === '1' && (
+              <View style={{marginTop: 40}}>
+                {businessHightlightInfo.map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      marginBottom:
+                        index !== businessHightlightInfo.length - 1 ? 24 : 0,
+                    }}>
+                    <Text
+                      style={[
+                        styles.businessHighlightInfoField,
+                        {color: textColor2},
+                      ]}>
+                      {item.field}
+                    </Text>
+                    <Text style={styles.businessHighlightInfoValue}>
+                      {item.value}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {category === '2' && (
+              <View style={{borderWidth: 1, borderColor: textColor2}}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 64,
+                      borderBottomWidth: 1,
+                      borderRightWidth: 1,
+                      borderColor: textColor2,
+                      paddingBottom: 4,
+                    }}></View>
+                  <View
+                    style={{
+                      flex: 1,
+                      borderBottomWidth: 1,
+                      borderColor: textColor2,
+                      paddingLeft: 4,
+                      paddingBottom: 4,
+                    }}>
+                    <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                      Tersisa
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      borderBottomWidth: 1,
+                      borderColor: textColor2,
+                      paddingLeft: 4,
+                      paddingBottom: 4,
+                    }}>
+                    <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                      Terjual
+                    </Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 64,
+                      borderRightWidth: 1,
+                      borderColor: textColor2,
+                      paddingTop: 4,
+                      paddingLeft: 4,
+                    }}>
+                    <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                      Pers.
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, paddingLeft: 4, paddingTop: 4}}>
+                    <Text style={[{color: textColor2}]}>
+                      {shareOfferingInfo.persenTersisa}%
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, paddingLeft: 4, paddingTop: 4}}>
+                    <Text style={[{color: textColor2}]}>
+                      {shareOfferingInfo.persenTerjual}%
+                    </Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 64,
+                      borderRightWidth: 1,
+                      borderColor: textColor2,
+                      paddingLeft: 4,
+                    }}>
+                    <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                      Jumlah
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, paddingLeft: 4}}>
+                    <Text style={[{color: textColor2}]}>
+                      Rp{numberFormat(shareOfferingInfo.tersisa)}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, paddingLeft: 4}}>
+                    <Text style={[{color: textColor2}]}>
+                      Rp{numberFormat(shareOfferingInfo.terjual)}
+                    </Text>
+                  </View>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      width: 64,
+                      borderRightWidth: 1,
+                      borderColor: textColor2,
+                      paddingLeft: 4,
+                      paddingBottom: 4,
+                    }}>
+                    <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                      Lembar
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, paddingLeft: 4, paddingBottom: 4}}>
+                    <Text style={[{color: textColor2}]}>
+                      {numberFormat(shareOfferingInfo.lembarTersisa)}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, paddingLeft: 4, paddingBottom: 4}}>
+                    <Text style={[{color: textColor2}]}>
+                      {numberFormat(shareOfferingInfo.lembarTerjual)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            )}
+
+            {category === '5' && mapSource ? (
+              <WebView
+                source={{
+                  html: `<iframe width="100%" height="100%" id="gmap_canvas" ${mapSource} frameborder="0" scrolling="yes" marginheight="0" marginwidth="0"></iframe>`,
+                }}
+                style={{height: 315, borderRadius: 20}}
+              />
+            ) : null}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 };

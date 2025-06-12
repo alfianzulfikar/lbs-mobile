@@ -1,4 +1,4 @@
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, Keyboard, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -26,6 +26,8 @@ import {useAPI} from '../services/api';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {OrderStackParamList} from '../constants/Types';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 type InfoType = {
   label: string;
@@ -52,6 +54,7 @@ const OrderBusiness = ({route}: Props) => {
   const {slug, customerCode} = route.params;
   const {business, getBusinessDetail} = useBusiness();
   const {paymentBankList, getPaymentBankList} = useBank();
+  const dispatch = useDispatch();
 
   const getDetail = async () => {
     await getBusinessDetail(slug);
@@ -59,10 +62,25 @@ const OrderBusiness = ({route}: Props) => {
   };
 
   const order = async () => {
+    Keyboard.dismiss();
     if (Number(shares) <= 0) {
-      Alert.alert('Silahkan masukkan jumlah lembar Saham');
+      dispatch(
+        setAlert({
+          title: 'Silahkan masukkan jumlah lembar Saham',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } else if (!bank) {
-      Alert.alert('Silahkan pilih metode pembayaran');
+      dispatch(
+        setAlert({
+          title: 'Silahkan pilih metode pembayaran',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } else {
       setLoadingSubmit(true);
       try {
@@ -87,9 +105,23 @@ const OrderBusiness = ({route}: Props) => {
         );
       } catch (error: any) {
         if (error?.status === 403) {
-          Alert.alert(error?.data?.errors?.msg || `Terjadi kesalahan 403`);
+          dispatch(
+            setAlert({
+              title: error?.data?.errors?.msg || `Terjadi kesalahan 403`,
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         } else {
-          Alert.alert(`Terjadi kesalahan ${error?.status || 'Server'}`);
+          dispatch(
+            setAlert({
+              title: `Terjadi kesalahan ${error?.status || 'Server'}`,
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         }
       } finally {
         setLoadingSubmit(false);
@@ -134,105 +166,104 @@ const OrderBusiness = ({route}: Props) => {
   return (
     <ScreenWrapper
       background
-      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
-      <ScrollView
+      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
+      header
+      headerTitle="Keterangan Investasi"
+      scrollView>
+      {/* <Gap height={24} />
+      <Header title="Keterangan Investasi" />
+      <Gap height={20} /> */}
+      {/* <ScrollView
         bounces={false}
         contentContainerStyle={{flexGrow: 1}}
         showsVerticalScrollIndicator={false}>
-        <View style={[styles.container, {paddingTop: 24}]}>
-          <Header title="Keterangan Investasi" />
-
-          <View style={{paddingHorizontal: 24}}>
-            <View
-              style={[
-                styles.informationCard,
-                {backgroundColor: RGBAColors(0.4)[colorScheme].background},
-              ]}>
-              <BlurOverlay />
-              <View style={styles.informationContentWrapper}>
-                {informationContent.map((item, infoId) => (
-                  <View key={infoId}>
-                    <View style={styles.informationItem}>
-                      <View style={{width: '40%'}}>
-                        <Text
-                          style={[
-                            styles.informationLabel,
-                            {color: textColor2},
-                          ]}>
-                          {item.label}
-                        </Text>
-                      </View>
-                      <View style={{width: '60%'}}>
-                        <Text
-                          style={[styles.informationValue, {color: textColor}]}>
-                          {item.value}
-                        </Text>
-                      </View>
-                    </View>
-                    {infoId !== informationContent.length + 1 && (
-                      <Gap height={16} />
-                    )}
-                  </View>
-                ))}
-              </View>
-            </View>
-          </View>
-
+      </ScrollView> */}
+      <View style={styles.container}>
+        <View style={{paddingHorizontal: 24}}>
           <View
             style={[
-              styles.section2,
+              styles.informationCard,
               {backgroundColor: RGBAColors(0.4)[colorScheme].background},
             ]}>
             <BlurOverlay />
-            <View style={{zIndex: 2, padding: 24}}>
-              <Text style={[styles.paymentTitle, {color: textColor2}]}>
-                Total Pembayaran
-              </Text>
-              <Text style={[styles.total, {color: textColor}]}>
-                Rp{total.toLocaleString('id-ID')}
-              </Text>
-              <Gap height={40} />
-              <Text style={[styles.paymentTitle, {color: textColor2}]}>
-                Masukkan Jumlah Lembar
-              </Text>
-              <Gap height={16} />
-              <PlusMinusInput value={shares} onChange={setShares} />
-              <Gap height={40} />
-              <Text style={[styles.paymentTitle2, {color: textColor2}]}>
-                Transfer Antar Bank
-              </Text>
-              <Gap height={8} />
-              <Input
-                type="dropdown"
-                value={bank}
-                selectedOptionImage={
-                  bank && paymentBankList.length > 0
-                    ? paymentBankList.find(item => item.id === bank)?.image ||
-                      ''
-                    : ''
-                }
-                option={paymentBankList}
-                optionWithImage
-                onChange={(value: string) => setBank(value)}
-              />
-              <View style={styles.bankInfoContainer}>
-                <ICInfo color={iconColor} />
-                <Text style={[styles.bankInfoText, {color: textColor2}]}>
-                  Jika tidak memiliki rekening dari pilihan bank yang tersedia,
-                  Anda dapat memilih Danamon Syariah sebagai bank tujuan
-                  transfer
-                </Text>
-              </View>
-              <Gap height={32} />
-              <CheckBox
-                value={isRead}
-                label="Saya sudah membaca dan memahami prospektus bisnis ini"
-                onChange={() => setIsRead(prev => !prev)}
-              />
+            <View style={styles.informationContentWrapper}>
+              {informationContent.map((item, infoId) => (
+                <View key={infoId}>
+                  <View style={styles.informationItem}>
+                    <View style={{width: '40%'}}>
+                      <Text
+                        style={[styles.informationLabel, {color: textColor2}]}>
+                        {item.label}
+                      </Text>
+                    </View>
+                    <View style={{width: '60%'}}>
+                      <Text
+                        style={[styles.informationValue, {color: textColor}]}>
+                        {item.value}
+                      </Text>
+                    </View>
+                  </View>
+                  {infoId !== informationContent.length + 1 && (
+                    <Gap height={16} />
+                  )}
+                </View>
+              ))}
             </View>
           </View>
         </View>
-      </ScrollView>
+
+        <View
+          style={[
+            styles.section2,
+            {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+          ]}>
+          <BlurOverlay />
+          <View style={{zIndex: 2, padding: 24}}>
+            <Text style={[styles.paymentTitle, {color: textColor2}]}>
+              Total Pembayaran
+            </Text>
+            <Text style={[styles.total, {color: textColor}]}>
+              Rp{total.toLocaleString('id-ID')}
+            </Text>
+            <Gap height={40} />
+            <Text style={[styles.paymentTitle, {color: textColor2}]}>
+              Masukkan Jumlah Lembar
+            </Text>
+            <Gap height={16} />
+            <PlusMinusInput value={shares} onChange={setShares} />
+            <Gap height={40} />
+            <Text style={[styles.paymentTitle2, {color: textColor2}]}>
+              Transfer Antar Bank
+            </Text>
+            <Gap height={8} />
+            <Input
+              type="dropdown"
+              value={bank}
+              selectedOptionImage={
+                bank && paymentBankList.length > 0
+                  ? paymentBankList.find(item => item.id === bank)?.image || ''
+                  : ''
+              }
+              option={paymentBankList}
+              optionWithImage
+              onChange={(value: string) => setBank(value)}
+            />
+            <View style={styles.bankInfoContainer}>
+              <ICInfo color={iconColor} />
+              <Text style={[styles.bankInfoText, {color: textColor2}]}>
+                Jika tidak memiliki rekening dari pilihan bank yang tersedia,
+                Anda dapat memilih Danamon Syariah sebagai bank tujuan transfer
+              </Text>
+            </View>
+            <Gap height={32} />
+            <CheckBox
+              value={isRead}
+              label="Saya sudah membaca dan memahami prospektus bisnis ini"
+              onChange={() => setIsRead(prev => !prev)}
+            />
+          </View>
+        </View>
+      </View>
       <View style={{backgroundColor: RGBAColors(0.4)[colorScheme].background}}>
         <BlurOverlay />
         <View style={styles.buttonWrapper}>
@@ -267,7 +298,7 @@ const styles = StyleSheet.create({
   informationCard: {
     borderRadius: 24,
     overflow: 'hidden',
-    marginTop: 32,
+    marginTop: 12,
     position: 'relative',
   },
   informationItem: {

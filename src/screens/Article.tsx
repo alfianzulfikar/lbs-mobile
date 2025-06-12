@@ -76,10 +76,7 @@ const Article = () => {
   const renderHeader = () => {
     return (
       <>
-        <Gap height={24} />
         <View style={{paddingHorizontal: 24}}>
-          <Header title="Berita & Artikel" paddingHorizontal={0} />
-          <Gap height={24} />
           <SearchBar
             keyword={keyword}
             setKeyword={value => setKeyword(value)}
@@ -149,6 +146,11 @@ const Article = () => {
 
   return (
     <ScreenWrapper background backgroundType="gradient">
+      <Gap height={24} />
+      <View style={{paddingHorizontal: 24}}>
+        <Header title="Berita & Artikel" paddingHorizontal={0} />
+        <Gap height={24} />
+      </View>
       <FlatList
         onRefresh={onRefresh}
         refreshing={refreshing}

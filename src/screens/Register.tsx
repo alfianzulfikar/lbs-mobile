@@ -104,9 +104,10 @@ const Register = () => {
           Sudah Punya Akun?{' '}
           <Text
             style={{fontWeight: '700', color: tint}}
-            onPress={() =>
-              navigation.navigate('Auth', {screen: 'Login', params: {}})
-            }>
+            onPress={() => {
+              Keyboard.dismiss();
+              navigation.navigate('Auth', {screen: 'Login', params: {}});
+            }}>
             Masuk Sekarang
           </Text>
         </Text>

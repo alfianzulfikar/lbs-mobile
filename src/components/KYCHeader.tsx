@@ -3,14 +3,11 @@ import React from 'react';
 import ICArrowLeft from './icons/ICArrowLeft';
 import {useThemeColor} from '../hooks/useThemeColor';
 import BlurOverlay from './BlurOverlay';
-import {useSelector} from 'react-redux';
-import {RootState} from '../store';
 import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import Text from './Text';
 import Gap from './Gap';
-import Header from './Header';
 import KYCProgressBar from './KYCProgressBar';
 import {KYCBackScreen} from '../constants/Types';
 

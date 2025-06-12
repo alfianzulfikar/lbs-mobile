@@ -26,6 +26,7 @@ const IconWrapper = ({
   transparent,
   mode,
   loading,
+  blur = true,
 }: {
   width?: number;
   height?: number;
@@ -37,6 +38,7 @@ const IconWrapper = ({
   transparent?: boolean;
   mode?: 'light' | 'dark';
   loading?: boolean;
+  blur?: boolean;
 }) => {
   let colorScheme = useColorScheme();
   let shadowColor = useThemeColor({}, 'tint');
@@ -60,6 +62,20 @@ const IconWrapper = ({
         <LinearGradient
           colors={
             (mode || colorScheme) === 'dark'
+              ? Platform.OS === 'ios' || !blur
+                ? ['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)']
+                : ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
+              : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,1)']
+          }
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={[
+            styles.overlay,
+            {transform: [{rotate: '180deg'}]},
+          ]}></LinearGradient>
+        {/* <LinearGradient
+          colors={
+            (mode || colorScheme) === 'dark'
               ? Platform.OS === 'ios'
                 ? ['transparent', 'transparent']
                 : ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
@@ -70,8 +86,8 @@ const IconWrapper = ({
           style={[
             styles.overlay,
             {transform: [{rotate: '180deg'}]},
-          ]}></LinearGradient>
-        <BlurOverlay />
+          ]}></LinearGradient> */}
+        {blur && <BlurOverlay />}
         <View
           style={[
             styles.childrenWrapper,

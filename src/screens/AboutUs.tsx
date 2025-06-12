@@ -1,4 +1,10 @@
-import {Image, StyleSheet, useWindowDimensions, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import React from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -185,9 +191,12 @@ const AboutUs = () => {
   ];
 
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
-      <Gap height={24} />
-      <Header title="Tentang Kami" />
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      header
+      headerTitle="Tentang Kami"
+      scrollView>
       <View style={{paddingHorizontal: 24}}>
         <Text style={[styles.heading]}>
           Solusi Investasi Halal, Nyaman dan Berkah
@@ -433,7 +442,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 36,
     textAlign: 'center',
-    marginTop: 40,
+    marginTop: 20,
   },
   youtubeContainer: {
     // aspectRatio: 354 / 200,

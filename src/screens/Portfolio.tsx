@@ -107,21 +107,7 @@ const Portfolio = () => {
 
   const renderHeader = () => (
     <>
-      <Gap height={24} />
-      <Header
-        rightIcon={
-          <IconWrapper width={178} onPress={() => setShowLimit(prev => !prev)}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <ICWarning />
-              <Text style={[styles.limitButtonText, {color: textColor2}]}>
-                Limit Investasi
-              </Text>
-              <ICCaretArrowDown color={textColor2} />
-            </View>
-          </IconWrapper>
-        }
-      />
-      <Gap height={40} />
+      <Gap height={20} />
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Gap width={24} />
@@ -174,7 +160,6 @@ const Portfolio = () => {
       {portfolioLoading && <ActivityIndicator color={tint} />}
       {!portfolioLoading && portfolioList.length === 0 && (
         <View style={{paddingHorizontal: 24}}>
-          <BlurOverlay />
           <View
             style={[
               styles.emptyCard,
@@ -182,24 +167,27 @@ const Portfolio = () => {
                 backgroundColor: RGBAColors(0.3)[colorScheme].background,
               },
             ]}>
-            <View style={styles.emptyContainer}>
-              <Image
-                source={
-                  colorScheme === 'dark'
-                    ? require('../assets/images/empty-portfolio-dark.png')
-                    : require('../assets/images/empty-portfolio-light.png')
-                }
-                style={{width: 160, height: 160}}
-                resizeMode="cover"
-              />
+            <BlurOverlay />
+            <View style={styles.emptyContentContainer}>
+              <View style={styles.emptyContainer}>
+                <Image
+                  source={
+                    colorScheme === 'dark'
+                      ? require('../assets/images/empty-portfolio-dark.png')
+                      : require('../assets/images/empty-portfolio-light.png')
+                  }
+                  style={{width: 160, height: 160}}
+                  resizeMode="cover"
+                />
+              </View>
+              <Text style={[styles.emptyTitle, {color: textColor}]}>
+                Belum Ada Portofolio
+              </Text>
+              <Text style={[styles.emptyDesc, {color: textColor2}]}>
+                Mulai berinvestasi dengan melakukan pemesanan efek di salah satu
+                bisnis yang sedang listing di platform kami
+              </Text>
             </View>
-            <Text style={[styles.emptyTitle, {color: textColor}]}>
-              Belum Ada Portofolio
-            </Text>
-            <Text style={[styles.emptyDesc, {color: textColor2}]}>
-              Mulai berinvestasi dengan melakukan pemesanan efek di salah satu
-              bisnis yang sedang listing di platform kami
-            </Text>
           </View>
         </View>
       )}
@@ -259,6 +247,21 @@ const Portfolio = () => {
 
   return (
     <ScreenWrapper background backgroundType="gradient">
+      <Gap height={24} />
+      <Header
+        rightIcon={
+          <IconWrapper width={178} onPress={() => setShowLimit(prev => !prev)}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <ICWarning />
+              <Text style={[styles.limitButtonText, {color: textColor2}]}>
+                Limit Investasi
+              </Text>
+              <ICCaretArrowDown color={textColor2} />
+            </View>
+          </IconWrapper>
+        }
+      />
+      <Gap height={20} />
       <FlatList
         onRefresh={onRefresh}
         refreshing={refreshing}
@@ -321,11 +324,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyCard: {
-    zIndex: 2,
-    alignItems: 'center',
+    overflow: 'hidden',
     borderRadius: 24,
+  },
+  emptyContentContainer: {
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingBottom: 16,
+    zIndex: 2,
   },
   emptyTitle: {
     fontSize: 16,

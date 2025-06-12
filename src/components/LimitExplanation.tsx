@@ -76,7 +76,6 @@ const LimitExplanation = ({
               : backgroundColor,
           zIndex: 2,
         }}>
-        <BlurOverlay blurAmount={50} />
         <ScreenWrapper
           background
           backgroundType="gradient"

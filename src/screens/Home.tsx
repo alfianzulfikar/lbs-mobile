@@ -79,8 +79,8 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
+      <VideoBackground />
       <ScreenWrapper scrollView onRefresh={onRefresh} refreshing={refreshing}>
-        <VideoBackground />
         <View
           style={[
             styles.main,
@@ -104,7 +104,8 @@ const Home = () => {
             />
             <IconWrapper
               transparent
-              onPress={() => navigation.navigate('NotificationHistory')}>
+              onPress={() => navigation.navigate('NotificationHistory')}
+              blur={false}>
               <ICBell color={Colors[colorScheme].text} />
             </IconWrapper>
           </View>

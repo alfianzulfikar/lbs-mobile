@@ -2,10 +2,13 @@ import {Alert, PermissionsAndroid, Platform} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import getFileNameFromUrl from './getFileNameFromUrl';
 import {useAPI} from '../services/api';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useDownload = () => {
   const {apiRequest} = useAPI();
   const {fs} = RNFetchBlob;
+  const dispatch = useDispatch();
 
   const findPath = async (path: string) => {
     const {fs} = RNFetchBlob;
@@ -51,10 +54,24 @@ export const useDownload = () => {
               RNFetchBlob.ios.previewDocument(path);
             }, 300);
           }
-          Alert.alert('File berhasil dimuat');
+          dispatch(
+            setAlert({
+              title: 'File berhasil dimuat',
+              desc: '',
+              type: 'success',
+              showAlert: true,
+            }),
+          );
         })
         .catch(() => {
-          Alert.alert('File gagal dimuat');
+          dispatch(
+            setAlert({
+              title: 'File gagal dimuat',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         });
     };
 
@@ -82,10 +99,24 @@ export const useDownload = () => {
             RNFetchBlob.ios.previewDocument(path);
           }, 300);
         }
-        Alert.alert('File berhasil dimuat');
+        dispatch(
+          setAlert({
+            title: 'File berhasil dimuat',
+            desc: '',
+            type: 'success',
+            showAlert: true,
+          }),
+        );
       })
       .catch(() => {
-        Alert.alert('File gagal dimuat');
+        dispatch(
+          setAlert({
+            title: 'File gagal dimuat',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       });
   };
 
@@ -97,15 +128,19 @@ export const useDownload = () => {
     fileUrl: string;
   }) => {
     const fileName = getFileNameFromUrl(fileUrl);
-    const path = `${fs.dirs.DownloadDir}/${fileName}`;
+    const path = `${
+      Platform.OS === 'ios' ? fs.dirs.DocumentDir : fs.dirs.DownloadDir
+    }/${fileName}`;
     const fileExist = await findPath(path);
 
-    if (fileExist) {
-      if (Platform.OS === 'ios') {
-        RNFetchBlob.ios.previewDocument(path);
-      } else {
-        RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
-      }
+    console.log('path', fileExist, path);
+
+    if (Platform.OS === 'android' && fileExist) {
+      // if (Platform.OS === 'ios') {
+      //   RNFetchBlob.ios.previewDocument(path);
+      // } else {
+      // }
+      RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
     } else {
       if (Platform.OS === 'ios') {
         if (type === 'write-file') {
@@ -126,7 +161,14 @@ export const useDownload = () => {
                 await downloadDirectly({fileUrl, path});
               }
             } else {
-              Alert.alert('Izinkan aplikasi mengakses media penyimpanan');
+              dispatch(
+                setAlert({
+                  title: 'Izinkan aplikasi mengakses media penyimpanan',
+                  desc: '',
+                  type: 'info',
+                  showAlert: true,
+                }),
+              );
             }
           } else {
             if (type === 'write-file') {

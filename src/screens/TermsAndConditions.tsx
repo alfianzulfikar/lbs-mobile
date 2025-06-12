@@ -9,10 +9,13 @@ import {Item, Item2, Paragraph, Title} from '../components/PharagraphItems';
 
 const TermsAndConditions = () => {
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
-      <Gap height={24} />
-      <Header title="Syarat & Ketentuan" />
-      <View style={{marginTop: 40, paddingHorizontal: 24}}>
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      scrollView
+      header
+      headerTitle="Syarat & Ketentuan">
+      <View style={{marginTop: 20, paddingHorizontal: 24}}>
         <>
           <Title number="I" text="DEFINISI" />
           <Item

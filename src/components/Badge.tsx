@@ -66,6 +66,18 @@ const Badge = ({
         <LinearGradient
           colors={
             (mode || colorScheme) === 'dark'
+              ? ['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)']
+              : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,1)']
+          }
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={[
+            styles.overlay,
+            {transform: [{rotate: '180deg'}]},
+          ]}></LinearGradient>
+        {/* <LinearGradient
+          colors={
+            (mode || colorScheme) === 'dark'
               ? Platform.OS === 'ios'
                 ? ['transparent', 'transparent']
                 : ['rgba(26,26,26,0.8)', 'rgba(26,26,26,0.5)']
@@ -76,8 +88,8 @@ const Badge = ({
           style={[
             styles.overlay,
             {transform: [{rotate: '180deg'}]},
-          ]}></LinearGradient>
-        <BlurOverlay />
+          ]}></LinearGradient> */}
+        {/* <BlurOverlay /> */}
         <View
           style={[
             styles.textContainer,

@@ -77,6 +77,17 @@ export const useDeepLinks = () => {
         },
         accessToken,
       );
+    } else if (splitUrl[3] == 'publication') {
+      handleProtectedRoute(
+        {
+          mainRoute: 'Article',
+          options: {
+            screen: 'ArticleDetail',
+            params: {category: splitUrl[4], slug: splitUrl[5]},
+          },
+        },
+        accessToken,
+      );
     } else if (
       baseURL === (envMode === 'dev' ? 'dev.lbs.id' : 'www.lbs.id') &&
       splitUrl[3] == 'digital-signature-verification'

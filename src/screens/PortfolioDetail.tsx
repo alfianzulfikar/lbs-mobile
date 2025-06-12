@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Image,
   Platform,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -31,6 +32,7 @@ import dateTimeFormat from '../utils/dateTimeFormat';
 import {useDownload} from '../utils/downloadFile';
 import {useColorScheme} from '../hooks/useColorScheme';
 import LoadingModal from '../components/LoadingModal';
+import ICWarningRounded from '../components/icons/ICWarningRounded';
 
 type Props = {
   route: {
@@ -68,6 +70,7 @@ const PortfolioDetail = ({route}: Props) => {
   const [showTransactionDetail, setShowTransactionDetail] = useState(false);
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
   // const [transactionDetail2, setTransactionDetail2] = useState({
   //     kodeEfek: '',
   //     kodePembayaran: '',
@@ -84,6 +87,29 @@ const PortfolioDetail = ({route}: Props) => {
   //     periodePembayaran: '',
   //     tanggalPembayaran: '',
   //   });
+
+  const explanation = [
+    {
+      title: 'Harga Pasar',
+      desc: 'Harga efek berdasarkan penilaian pasar yang dipengaruhi oleh permintaan dan penawaran di pasar sekunder',
+    },
+    {
+      title: 'Harga Perolehan',
+      desc: 'Harga rata-rata dari perolehan nilai saham per lembar yang Anda miliki',
+    },
+    {
+      title: 'Jumlah Lembar',
+      desc: 'Lembar kepemilikan atas efek yang Anda miliki',
+    },
+    {
+      title: 'Total Investasi',
+      desc: 'Nilai investasi yang didapat dari Harga Pasar dikalikan dengan jumlah lembar yang Anda miliki. Sehingga nilai investasi Anda dipengaruhi oleh Harga Pasar',
+    },
+    {
+      title: 'Return (Unrealized)',
+      desc: 'Potensi keuntungan (Gain) atau kerugian (Loss) yang didapatkan atas portofolio saham Anda. Return didapatkan dari selisih antara Harga Pasar dan Harga Perolehan, dikalikan jumlah lembar yang Anda miliki',
+    },
+  ];
 
   useEffect(() => {
     const asyncFunc = async () => {
@@ -132,7 +158,7 @@ const PortfolioDetail = ({route}: Props) => {
   }, [transactionDetailLoading]);
 
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
+    <ScreenWrapper background backgroundType="gradient">
       <Gap height={24} />
       <Header
         rightIcon={
@@ -147,152 +173,198 @@ const PortfolioDetail = ({route}: Props) => {
           </IconWrapper>
         }
       />
-      {!pageLoading && (
-        <>
-          <Gap height={40} />
-          <View style={{paddingHorizontal: 24}}>
-            <View
-              style={[
-                styles.card,
-                {backgroundColor: RGBAColors(0.6)[colorScheme].background},
-              ]}>
-              <Text style={styles.merkDagang}>{portfolio?.merkDagang}</Text>
-              <Text style={[styles.company, {color: textColor2}]}>
-                {portfolio?.company}
-              </Text>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: 8,
-                }}
-                onPress={() =>
-                  navigation.navigate('Order', {
-                    screen: 'BusinessDetail',
-                    params: {slug: portfolio.slug},
-                  })
-                }>
-                <Text style={[styles.detailButton, {color: tint}]}>
-                  Lihat Detail Bisnis
+      <Gap height={20} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: 1}}>
+        {!pageLoading && (
+          <>
+            <Gap height={20} />
+            <View style={{paddingHorizontal: 24}}>
+              <View
+                style={[
+                  styles.card,
+                  {backgroundColor: RGBAColors(0.6)[colorScheme].background},
+                ]}>
+                <Text style={styles.merkDagang}>{portfolio?.merkDagang}</Text>
+                <Text style={[styles.company, {color: textColor2}]}>
+                  {portfolio?.company}
                 </Text>
-                <ICArrowLeft
-                  color={tint}
-                  style={{transform: [{rotate: '180deg'}]}}
-                  size={20}
-                />
-              </TouchableOpacity>
-              <View style={{marginTop: 24}}>
-                {info.map((item, infoId) => (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: infoId !== info.length - 1 ? 16 : 0,
-                    }}
-                    key={infoId}>
-                    <Text style={[styles.infoField, {color: textColor2}]}>
-                      {item.field}
-                    </Text>
-                    <Text style={styles.infoValue}>{item.value}</Text>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 8,
+                  }}
+                  onPress={() =>
+                    navigation.navigate('Order', {
+                      screen: 'BusinessDetail',
+                      params: {slug: portfolio.slug},
+                    })
+                  }>
+                  <Text style={[styles.detailButton, {color: tint}]}>
+                    Lihat Detail Bisnis
+                  </Text>
+                  <ICArrowLeft
+                    color={tint}
+                    style={{transform: [{rotate: '180deg'}]}}
+                    size={20}
+                  />
+                </TouchableOpacity>
+                {portfolio.type === 'SUKUK' && (
+                  <View style={{marginTop: 16}}>
+                    {info.map((item, infoId) => (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: infoId !== info.length - 1 ? 16 : 0,
+                        }}
+                        key={infoId}>
+                        <Text style={[styles.infoField, {color: textColor2}]}>
+                          {item.field}
+                        </Text>
+                        <Text style={styles.infoValue}>{item.value}</Text>
+                      </View>
+                    ))}
                   </View>
-                ))}
+                )}
               </View>
-            </View>
-          </View>
-          <Gap height={40} />
-          {businessStatus.length > 0 && portfolio?.status && (
-            <BusinessStatus
-              status={
-                businessStatus.filter(
-                  item => item.name === portfolio?.status,
-                )[0].id
-              }
-              list={businessStatus}
-              businessType={portfolio.type}
-              backgroundType={colorScheme === 'dark' ? undefined : 'tint'}
-            />
-          )}
-        </>
-      )}
-      <View
-        style={[
-          styles.transactionContainer,
-          {
-            backgroundColor:
-              Platform.OS === 'ios'
-                ? 'transparent'
-                : RGBAColors(0.6)[colorScheme].background,
-          },
-        ]}>
-        <BlurOverlay />
-        <View style={styles.container}>
-          {pageLoading ? (
-            <ActivityIndicator color={tint} />
-          ) : (
-            <>
-              <Text style={styles.transactionHeading}>Transaksi</Text>
-              <Gap height={24} />
-              {portfolio?.transactions
-                ? portfolio?.transactions.map((item, transactionId) => (
-                    <View
-                      key={transactionId}
-                      style={{
-                        marginBottom:
-                          transactionId !== portfolio.transactions.length - 1
-                            ? 24
-                            : 0,
-                      }}>
-                      <TransactionItem
-                        transaction={{
-                          type:
-                            item.type === 'Deviden'
-                              ? portfolio.type === 'SAHAM'
-                                ? 'Dividen'
-                                : 'Bagi Hasil'
-                              : item.type,
-                          date: item.date,
-                          nominal: item.nominal,
-                          status: item.status,
-                        }}
-                        onPress={() => {
-                          if (item.type === 'Deviden') {
-                            setTransactionDetail({
-                              kodeEfek: item.kode || '',
-                              kodePembayaran: '',
-                              merkDagang: portfolio.merkDagang || '',
-                              totalTransaksi: item.nominal || 0,
-                              jenisBisnis: portfolio.type || '',
-                              hargaPerLembar: 0,
-                              jumlahLembar: 0,
-                              nominal: item.nominal || 0,
-                              biayaAdminBank: 0,
-                              biayaPlatform: 0,
-                              jenisTransaksi:
-                                portfolio.type === 'SAHAM'
-                                  ? 'Dividen'
-                                  : 'Bagi Hasil',
-                              statusTransaksi: item.status || '',
-                              periodePembayaran: '',
-                              tanggalPembayaran: '',
-                              isIPO: true,
-                            });
-                            setShowTransactionDetail(true);
-                          } else {
-                            setShowTransactionDetail(true);
-                            getTransactionDetail({
-                              paymentCode: item.kode,
-                              type: item.type,
-                            });
-                          }
-                        }}
-                      />
+              {portfolio.type === 'SAHAM' && (
+                <>
+                  <Gap height={16} />
+                  <View
+                    style={[
+                      styles.card,
+                      {
+                        backgroundColor:
+                          RGBAColors(0.6)[colorScheme].background,
+                      },
+                    ]}>
+                    <TouchableOpacity
+                      style={{flexDirection: 'row', alignItems: 'center'}}
+                      onPress={() => setShowExplanation(true)}>
+                      <Text style={{fontSize: 16, fontWeight: '700'}}>
+                        Keterangan
+                      </Text>
+                      <Gap width={4} />
+                      <ICWarningRounded color={tint} size={20} />
+                    </TouchableOpacity>
+                    <View style={{marginTop: 16}}>
+                      {info.map((item, infoId) => (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginBottom: infoId !== info.length - 1 ? 16 : 0,
+                          }}
+                          key={infoId}>
+                          <Text style={[styles.infoField, {color: textColor2}]}>
+                            {item.field}
+                          </Text>
+                          <Text style={styles.infoValue}>{item.value}</Text>
+                        </View>
+                      ))}
                     </View>
-                  ))
-                : null}
-            </>
-          )}
+                  </View>
+                </>
+              )}
+            </View>
+            <Gap height={40} />
+            {businessStatus.length > 0 && portfolio?.status && (
+              <BusinessStatus
+                status={
+                  businessStatus.filter(
+                    item => item.name === portfolio?.status,
+                  )[0].id
+                }
+                list={businessStatus}
+                businessType={portfolio.type}
+                backgroundType={colorScheme === 'dark' ? undefined : 'tint'}
+              />
+            )}
+          </>
+        )}
+        <View
+          style={[
+            styles.transactionContainer,
+            {
+              backgroundColor:
+                Platform.OS === 'ios'
+                  ? 'transparent'
+                  : RGBAColors(0.6)[colorScheme].background,
+            },
+          ]}>
+          <BlurOverlay />
+          <View style={styles.container}>
+            {pageLoading ? (
+              <ActivityIndicator color={tint} />
+            ) : (
+              <>
+                <Text style={styles.transactionHeading}>Transaksi</Text>
+                <Gap height={24} />
+                {portfolio?.transactions
+                  ? portfolio?.transactions.map((item, transactionId) => (
+                      <View
+                        key={transactionId}
+                        style={{
+                          marginBottom:
+                            transactionId !== portfolio.transactions.length - 1
+                              ? 24
+                              : 0,
+                        }}>
+                        <TransactionItem
+                          transaction={{
+                            type:
+                              item.type === 'Deviden'
+                                ? portfolio.type === 'SAHAM'
+                                  ? 'Dividen'
+                                  : 'Bagi Hasil'
+                                : item.type,
+                            date: item.date,
+                            nominal: item.nominal,
+                            status: item.status,
+                          }}
+                          onPress={() => {
+                            if (item.type === 'Deviden') {
+                              setTransactionDetail({
+                                kodeEfek: item.kode || '',
+                                kodePembayaran: '',
+                                merkDagang: portfolio.merkDagang || '',
+                                totalTransaksi: item.nominal || 0,
+                                jenisBisnis: portfolio.type || '',
+                                hargaPerLembar: 0,
+                                jumlahLembar: 0,
+                                nominal: item.nominal || 0,
+                                biayaAdminBank: 0,
+                                biayaPlatform: 0,
+                                jenisTransaksi:
+                                  portfolio.type === 'SAHAM'
+                                    ? 'Dividen'
+                                    : 'Bagi Hasil',
+                                statusTransaksi: item.status || '',
+                                periodePembayaran: '',
+                                tanggalPembayaran: '',
+                                isIPO: true,
+                              });
+                              setShowTransactionDetail(true);
+                            } else {
+                              setShowTransactionDetail(true);
+                              getTransactionDetail({
+                                paymentCode: item.kode,
+                                type: item.type,
+                              });
+                            }
+                          }}
+                        />
+                      </View>
+                    ))
+                  : null}
+              </>
+            )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
 
       {showTransactionDetail && (
         <TransactionDetail
@@ -380,6 +452,26 @@ const PortfolioDetail = ({route}: Props) => {
           )}
         </BottomSheet>
       )}
+
+      {showExplanation && (
+        <BottomSheet
+          setShow={() => setShowExplanation(false)}
+          snapPoints={['75%']}>
+          {explanation.map((item, index) => (
+            <View
+              key={index}
+              style={{
+                marginBottom: index !== explanation.length - 1 ? 24 : 0,
+              }}>
+              <Text style={styles.explTitle}>{item.title}</Text>
+              <Text style={[styles.explDesc, {color: textColor2}]}>
+                {item.desc}
+              </Text>
+            </View>
+          ))}
+        </BottomSheet>
+      )}
+
       {downloadLoading && <LoadingModal />}
     </ScreenWrapper>
   );
@@ -429,7 +521,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
     overflow: 'hidden',
     flexGrow: 1,
-    marginTop: 40,
+    marginTop: 20,
   },
   container: {
     padding: 24,
@@ -478,5 +570,15 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     marginTop: 8,
+  },
+  explTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 24,
+  },
+  explDesc: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 4,
   },
 });

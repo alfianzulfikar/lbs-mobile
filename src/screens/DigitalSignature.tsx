@@ -15,6 +15,8 @@ import {
 import LoadingModal from '../components/LoadingModal';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {OrderStackParamList} from '../constants/Types';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'DigitalSignature'>;
 
@@ -23,6 +25,7 @@ const DigitalSignature = ({route}: Props) => {
 
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
@@ -79,11 +82,32 @@ const DigitalSignature = ({route}: Props) => {
     } catch (error: any) {
       if (error?.status === 422) {
         console.log('resend otp', error?.data?.errors);
-        Alert.alert('Maaf, terjadi kesalahan');
+        dispatch(
+          setAlert({
+            title: 'Maaf, terjadi kesalahan',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else if (error?.status === 403) {
-        Alert.alert(error?.data?.errors?.msg || 'Maaf, permintaan tertolak');
+        dispatch(
+          setAlert({
+            title: error?.data?.errors?.msg || 'Maaf, permintaan tertolak',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       } else {
-        Alert.alert('Terjadi kesalahan pada sistem');
+        dispatch(
+          setAlert({
+            title: 'Terjadi kesalahan pada sistem',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
       }
     } finally {
       setLoading(false);
@@ -105,7 +129,14 @@ const DigitalSignature = ({route}: Props) => {
         StackActions.replace('Order', {screen: 'DigitalSignatureResend'}),
       );
     } catch (error: any) {
-      Alert.alert(`Terjadi kesalahan [Error: ${error?.status || 'system'}]`);
+      dispatch(
+        setAlert({
+          title: `Terjadi kesalahan [Error: ${error?.status || 'system'}]`,
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } finally {
       setLoading(false);
     }

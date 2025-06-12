@@ -3,9 +3,13 @@ import React from 'react';
 import Svg, {G, Mask, Path, Rect} from 'react-native-svg';
 import {SvgIconType} from '../../constants/Types';
 
-const ICInfo = ({color}: SvgIconType) => {
+const ICInfo = ({color, size}: SvgIconType) => {
   return (
-    <Svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <Svg
+      width={size || '16'}
+      height={size || '16'}
+      viewBox="0 0 16 16"
+      fill="none">
       <Mask
         id="mask0_887_6805"
         // style="mask-type:alpha"

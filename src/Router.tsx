@@ -76,6 +76,11 @@ import {navigationRef, tryFlushPendingNavigation} from './services/navigation';
 import NotificationDetail from './screens/NotificationDetail';
 import AccountVerificationExpired from './screens/AccountVerificationExpired';
 import {useInitTheme} from './hooks/useInitTheme';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from './store';
+import NetworkErrorBottomSheet from './components/NetworkErrorBottomSheet';
+import CustomAlert from './components/CustomAlert';
+import {setShowAlert} from './slices/globalError';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -438,6 +443,10 @@ declare global {
 
 export default function App() {
   const {initTheme} = useInitTheme();
+  const {showNetworkError, showAlert} = useSelector(
+    (item: RootState) => item.globalError,
+  );
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     initTheme();
@@ -452,6 +461,7 @@ export default function App() {
         tryFlushPendingNavigation();
       }}>
       <RootStack />
+      {showNetworkError && <NetworkErrorBottomSheet />}
     </NavigationContainer>
   );
 }

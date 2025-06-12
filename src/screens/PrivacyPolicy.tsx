@@ -7,10 +7,13 @@ import {Item, Item2, Paragraph, Title} from '../components/PharagraphItems';
 
 const PrivacyPolicy = () => {
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
-      <Gap height={24} />
-      <Header title="Kebijakan Privasi" />
-      <View style={{marginTop: 40, paddingHorizontal: 24}}>
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      scrollView
+      header
+      headerTitle="Kebijakan Privasi">
+      <View style={{marginTop: 20, paddingHorizontal: 24}}>
         <Title number="I" text="INFORMASI RAHASIA" />
         <Item
           number="1"

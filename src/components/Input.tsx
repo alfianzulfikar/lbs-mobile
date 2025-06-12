@@ -388,7 +388,10 @@ const Input = ({
       )}
 
       {showOption && (
-        <BottomSheet setShow={setShowOption} paddingHorizontal={0}>
+        <BottomSheet
+          setShow={setShowOption}
+          paddingHorizontal={0}
+          snapPoints={['75%']}>
           {option &&
             option.map((item, id) => (
               <Pressable

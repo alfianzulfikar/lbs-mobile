@@ -23,6 +23,8 @@ import TransactionDetail from '../components/TransactionDetail';
 import {useAPI} from '../services/api';
 import {useFocusEffect} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 const MenuItem = ({
   name,
@@ -67,6 +69,7 @@ const Transaction = () => {
   let colorScheme = useColorScheme() ?? 'light';
   const onEndReachedCalledDuringMomentum = useRef(false);
   const {height} = useWindowDimensions();
+  const dispatch = useDispatch();
 
   const [activeMenu, setActiveMenu] = useState<'dividen' | 'transaksi'>(
     'transaksi',
@@ -207,6 +210,7 @@ const Transaction = () => {
         endpoint: `/waiting-payment/${paymentCode}`,
         authorization: true,
       });
+      console.log('res detail', res);
       const jenisTransaksi = type;
       const fee = res.total_nominal - res.nominal;
       let feeObject = {};
@@ -253,7 +257,14 @@ const Transaction = () => {
       });
     } catch {
       setShowDetail(false);
-      Alert.alert('Terjadi Kesalahan');
+      dispatch(
+        setAlert({
+          title: 'Terjadi Kesalahan',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } finally {
       setLoadingDetail(false);
     }

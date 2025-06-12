@@ -27,6 +27,8 @@ import BottomSheet from '../components/BottomSheet';
 import {useNavigation} from '@react-navigation/native';
 import {useStatistc} from '../api/statistic';
 import {useBusiness} from '../api/business';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 type Props = {
   route: {
@@ -46,6 +48,7 @@ const MarketDetail = ({route}: Props) => {
   const textColorSuccess = useThemeColor({}, 'textSuccess');
   const {slug, id, merkDagang, code} = route.params;
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const {
     overview,
@@ -126,7 +129,14 @@ const MarketDetail = ({route}: Props) => {
   const checkOrder = async (type: 'ask' | 'bid') => {
     setTransactionType(type);
     if (!marketStatus.isOpen) {
-      Alert.alert(marketStatus.message);
+      dispatch(
+        setAlert({
+          title: marketStatus.message,
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } else {
       const hasTransaction = await getTransactionStatus(type, id);
       if (hasTransaction) {
@@ -141,6 +151,7 @@ const MarketDetail = ({route}: Props) => {
             type,
             feeBuy: overview.feeBuy || 0,
             feeSell: overview.feeSell || 0,
+            defaultPrice: overview.closePrice || overview.fairValue || 0,
           },
         });
       }
@@ -157,246 +168,254 @@ const MarketDetail = ({route}: Props) => {
     <ScreenWrapper
       background
       backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}>
-        <Gap height={24} />
-
-        <Header title="Pasar Sekunder" />
-
-        <View style={{paddingHorizontal: 24, marginTop: 40}}>
-          {overviewLoading ? (
-            <>
-              <Skeleton aspectRatio={354 / 88} />
-              <Gap height={16} />
-              <Skeleton aspectRatio={354 / 132} />
-              <Gap height={16} />
-              <Skeleton aspectRatio={354 / 92} />
-            </>
-          ) : (
-            <>
-              <View
-                style={[
-                  styles.cardContainer,
-                  {
-                    backgroundColor: RGBAColors(0.6)[colorScheme].background,
-                  },
-                ]}>
-                <BlurOverlay />
-                <View style={{zIndex: 2, flexDirection: 'row'}}>
-                  <View style={{flex: 1}}>
-                    <Text style={styles.code}>{business.kode}</Text>
-                    <Text style={[styles.merkDagang, {color: textColor2}]}>
-                      {merkDagang}
-                    </Text>
-                  </View>
-                  <View style={{flex: 1, transform: [{translateY: 6}]}}>
-                    <Text style={styles.currentPriceLabel}>Current Price</Text>
-                    <View style={styles.currentPriceContainer}>
-                      <PriceArrow
-                        currentPrice={overview.currentPrice}
-                        comparisonPrice={overview.closePrice}
-                      />
-                      <Text
-                        style={[
-                          styles.currentPrice,
-                          {
-                            color: priceTextColor(
-                              overview.currentPrice,
-                              overview.closePrice,
-                            ),
-                          },
-                        ]}>
-                        {overview.currentPrice
-                          ? 'Rp' + numberFormat(overview.currentPrice)
-                          : '-'}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-
-              <Gap height={16} />
-
-              <View
-                style={[
-                  styles.cardContainer,
-                  {
-                    backgroundColor: RGBAColors(0.6)[colorScheme].background,
-                  },
-                ]}>
-                <BlurOverlay />
-                <View style={{zIndex: 2}}>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row', alignItems: 'center'}}
-                    onPress={() => setShowExplanation(true)}>
-                    <Text style={{fontSize: 16, fontWeight: '700'}}>
-                      Overview
-                    </Text>
-                    <Gap width={4} />
-                    <ICWarningRounded color={textColor} size={20} />
-                  </TouchableOpacity>
-                  <Gap height={16} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                      Buy Shares
-                    </Text>
-                    <Text style={styles.overviewValue}>
-                      {overview.buyShares
-                        ? numberFormat(overview.buyShares)
-                        : '-'}
-                    </Text>
-                  </View>
-                  <Gap height={16} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                      Sell Shares
-                    </Text>
-                    <Text style={styles.overviewValue}>
-                      {overview.sellShares
-                        ? numberFormat(overview.sellShares)
-                        : '-'}
-                    </Text>
-                  </View>
-                  <>
-                    <Gap height={16} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                        Fair Value
-                      </Text>
-                      <Text style={styles.overviewValue}>
-                        {overview.fairValue
-                          ? 'Rp' + numberFormat(overview.fairValue)
-                          : '-'}
-                      </Text>
-                    </View>
-                  </>
-                </View>
-              </View>
-
-              <Gap height={16} />
-
-              <View
-                style={[
-                  styles.cardContainer,
-                  {
-                    backgroundColor: RGBAColors(0.6)[colorScheme].background,
-                  },
-                ]}>
-                <BlurOverlay />
-                <View style={{zIndex: 2, flexDirection: 'row'}}>
-                  <View style={{flex: 1}}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                        Open
-                      </Text>
-                      <Text style={styles.overviewValue}>
-                        {overview?.openPrice
-                          ? numberFormat(overview.openPrice)
-                          : '-'}
-                      </Text>
-                    </View>
-                    <Gap height={16} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                        Low
-                      </Text>
-                      <Text style={styles.overviewValue}>
-                        {overview?.lowestPrice
-                          ? numberFormat(overview.lowestPrice)
-                          : '-'}
-                      </Text>
-                    </View>
-                  </View>
-                  <Gap width={32} />
-                  <View style={{flex: 1}}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                        Close
-                      </Text>
-                      <Text style={styles.overviewValue}>
-                        {overview?.closePrice
-                          ? numberFormat(overview.closePrice)
-                          : '-'}
-                      </Text>
-                    </View>
-                    <Gap height={16} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                        High
-                      </Text>
-                      <Text style={styles.overviewValue}>
-                        {overview?.highestPrice
-                          ? numberFormat(overview.highestPrice)
-                          : '-'}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </>
-          )}
-        </View>
-
-        <View style={{marginTop: 40}}>
-          <CategoryFilter
-            options={menuOption}
-            value={activeMenu}
-            setValue={setActiveMenu}
-            activeColor={textColor}
-          />
-        </View>
-
-        <View
-          style={[
-            styles.infoContainer,
-            {
-              backgroundColor: RGBAColors(colorScheme === 'dark' ? 0.6 : 0.7)[
-                colorScheme
-              ].background,
-            },
-          ]}>
-          <View style={{padding: 24}}>
-            {activeMenu === 'orderbook' ? (
-              <Orderbook id={id} />
-            ) : activeMenu === 'tradebook' ? (
-              <Tradebook id={id} />
-            ) : activeMenu === 'daily' ? (
-              <Daily id={id} />
+      <Gap height={24} />
+      <Header title="Pasar Sekunder" />
+      <Gap height={20} />
+      <View style={{flex: 1}}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}>
+          <View style={{paddingHorizontal: 24, marginTop: 20}}>
+            {overviewLoading ? (
+              <>
+                <Skeleton aspectRatio={354 / 88} />
+                <Gap height={16} />
+                <Skeleton aspectRatio={354 / 132} />
+                <Gap height={16} />
+                <Skeleton aspectRatio={354 / 92} />
+              </>
             ) : (
-              <MarketInformation merkDagang={merkDagang} />
+              <>
+                <View
+                  style={[
+                    styles.cardContainer,
+                    {
+                      backgroundColor: RGBAColors(0.6)[colorScheme].background,
+                    },
+                  ]}>
+                  <BlurOverlay />
+                  <View style={{zIndex: 2, flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                      <Text style={styles.code}>{business.kode}</Text>
+                      <Text style={[styles.merkDagang, {color: textColor2}]}>
+                        {merkDagang}
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, transform: [{translateY: 6}]}}>
+                      <Text style={styles.currentPriceLabel}>
+                        Current Price
+                      </Text>
+                      <View style={styles.currentPriceContainer}>
+                        <PriceArrow
+                          currentPrice={overview.currentPrice}
+                          comparisonPrice={overview.closePrice}
+                        />
+                        <Text
+                          style={[
+                            styles.currentPrice,
+                            {
+                              color: priceTextColor(
+                                overview.currentPrice,
+                                overview.closePrice,
+                              ),
+                            },
+                          ]}>
+                          {overview.currentPrice
+                            ? 'Rp' + numberFormat(overview.currentPrice)
+                            : '-'}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+
+                <Gap height={16} />
+
+                <View
+                  style={[
+                    styles.cardContainer,
+                    {
+                      backgroundColor: RGBAColors(0.6)[colorScheme].background,
+                    },
+                  ]}>
+                  <BlurOverlay />
+                  <View style={{zIndex: 2}}>
+                    <TouchableOpacity
+                      style={{flexDirection: 'row', alignItems: 'center'}}
+                      onPress={() => setShowExplanation(true)}>
+                      <Text style={{fontSize: 16, fontWeight: '700'}}>
+                        Overview
+                      </Text>
+                      <Gap width={4} />
+                      <ICWarningRounded color={textColor} size={20} />
+                    </TouchableOpacity>
+                    <Gap height={16} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
+                        Buy Shares
+                      </Text>
+                      <Text style={styles.overviewValue}>
+                        {overview.buyShares
+                          ? numberFormat(overview.buyShares)
+                          : '-'}
+                      </Text>
+                    </View>
+                    <Gap height={16} />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
+                        Sell Shares
+                      </Text>
+                      <Text style={styles.overviewValue}>
+                        {overview.sellShares
+                          ? numberFormat(overview.sellShares)
+                          : '-'}
+                      </Text>
+                    </View>
+                    <>
+                      <Gap height={16} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={[styles.overviewLabel, {color: textColor3}]}>
+                          Fair Value
+                        </Text>
+                        <Text style={styles.overviewValue}>
+                          {overview.fairValue
+                            ? 'Rp' + numberFormat(overview.fairValue)
+                            : '-'}
+                        </Text>
+                      </View>
+                    </>
+                  </View>
+                </View>
+
+                <Gap height={16} />
+
+                <View
+                  style={[
+                    styles.cardContainer,
+                    {
+                      backgroundColor: RGBAColors(0.6)[colorScheme].background,
+                    },
+                  ]}>
+                  <BlurOverlay />
+                  <View style={{zIndex: 2, flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={[styles.overviewLabel, {color: textColor3}]}>
+                          Open
+                        </Text>
+                        <Text style={styles.overviewValue}>
+                          {overview?.openPrice
+                            ? numberFormat(overview.openPrice)
+                            : '-'}
+                        </Text>
+                      </View>
+                      <Gap height={16} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={[styles.overviewLabel, {color: textColor3}]}>
+                          Low
+                        </Text>
+                        <Text style={styles.overviewValue}>
+                          {overview?.lowestPrice
+                            ? numberFormat(overview.lowestPrice)
+                            : '-'}
+                        </Text>
+                      </View>
+                    </View>
+                    <Gap width={32} />
+                    <View style={{flex: 1}}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={[styles.overviewLabel, {color: textColor3}]}>
+                          Close
+                        </Text>
+                        <Text style={styles.overviewValue}>
+                          {overview?.closePrice
+                            ? numberFormat(overview.closePrice)
+                            : '-'}
+                        </Text>
+                      </View>
+                      <Gap height={16} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={[styles.overviewLabel, {color: textColor3}]}>
+                          High
+                        </Text>
+                        <Text style={styles.overviewValue}>
+                          {overview?.highestPrice
+                            ? numberFormat(overview.highestPrice)
+                            : '-'}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </>
             )}
           </View>
-        </View>
-      </ScrollView>
+
+          <View style={{marginTop: 40}}>
+            <CategoryFilter
+              options={menuOption}
+              value={activeMenu}
+              setValue={setActiveMenu}
+              activeColor={textColor}
+            />
+          </View>
+
+          <View
+            style={[
+              styles.infoContainer,
+              {
+                backgroundColor: RGBAColors(colorScheme === 'dark' ? 0.6 : 0.7)[
+                  colorScheme
+                ].background,
+              },
+            ]}>
+            <View style={{padding: 24}}>
+              {activeMenu === 'orderbook' ? (
+                <Orderbook id={id} />
+              ) : activeMenu === 'tradebook' ? (
+                <Tradebook id={id} />
+              ) : activeMenu === 'daily' ? (
+                <Daily id={id} />
+              ) : (
+                <MarketInformation merkDagang={merkDagang} />
+              )}
+            </View>
+          </View>
+        </ScrollView>
+      </View>
       <View style={{backgroundColor: RGBAColors(0.6)[colorScheme].background}}>
         <BlurOverlay />
         <View style={styles.buttonContainer}>
@@ -517,6 +536,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 24,
     flexDirection: 'row',
+    zIndex: 2,
   },
   explTitle: {
     fontSize: 16,

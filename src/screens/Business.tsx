@@ -260,6 +260,7 @@ const Business = () => {
         </>
       )}
       <Gap maxHeight={120} flex={1} />
+      <Gap height={80} />
     </ScreenWrapper>
   );
 };

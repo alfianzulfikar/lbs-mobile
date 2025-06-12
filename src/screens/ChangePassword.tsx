@@ -7,8 +7,11 @@ import Gap from '../components/Gap';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import {useAPI} from '../services/api';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 const ChangePassword = () => {
+  const dispatch = useDispatch();
   const {apiRequest} = useAPI();
   const [form, setForm] = useState({
     password: '',
@@ -40,7 +43,14 @@ const ChangePassword = () => {
         newPassword: '',
         confirmNewPassword: '',
       });
-      Alert.alert('Password berhasil diubah');
+      dispatch(
+        setAlert({
+          title: 'Berhasil',
+          desc: 'Password berhasil diubah',
+          type: 'success',
+          showAlert: true,
+        }),
+      );
     } catch (error: any) {
       console.log('submit error', error);
       if (error.status === 422) {

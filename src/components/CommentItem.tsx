@@ -6,7 +6,7 @@ import ICLike from './icons/ICLike';
 import {CommentType} from '../constants/Types';
 import dateTimeFormat from '../utils/dateTimeFormat';
 import {useColorScheme} from '../hooks/useColorScheme';
-import ICOfficial from './icons/ICOfficial';
+import ICChecked from './icons/ICChecked';
 
 const CommentItem = ({
   data,
@@ -51,7 +51,7 @@ const CommentItem = ({
           {data.username}{' '}
           {data.isOfficial ? (
             <View style={{transform: [{translateY: 2}]}}>
-              <ICOfficial color={tint} />
+              <ICChecked color={tint} />
             </View>
           ) : null}
         </Text>

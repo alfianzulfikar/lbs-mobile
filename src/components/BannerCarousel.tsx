@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -36,7 +37,13 @@ const BannerCarousel = ({
           styles.itemContainer,
           {
             backgroundColor,
-            width: (width * 84) / 100,
+            width:
+              Platform.OS === 'android'
+                ? (width * 84) / 100
+                : (width * 84) / 100 > 340
+                ? 340
+                : (width * 84) / 100,
+            maxWidth: Platform.OS === 'android' ? 340 : undefined,
             marginLeft: index === 0 ? 24 : 16,
             marginRight: index !== banners.length - 1 ? 0 : 24,
           },
@@ -132,6 +139,7 @@ const BannerCarousel = ({
         </ScrollView>
       ) : (
         <FlatList
+          bounces={false}
           ref={flatListRef}
           horizontal
           data={banners}
@@ -155,6 +163,5 @@ const styles = StyleSheet.create({
     aspectRatio: 340 / 192,
     borderRadius: 24,
     overflow: 'hidden',
-    maxWidth: 340,
   },
 });

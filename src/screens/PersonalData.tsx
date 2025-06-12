@@ -37,10 +37,10 @@ const PersonalData = () => {
       backgroundType="gradient"
       scrollView
       statusBar
-      overlay>
-      <Gap height={24} />
-      <Header title="Data Pribadi" />
-      <View style={{paddingHorizontal: 24, marginTop: 40}}>
+      overlay
+      header
+      headerTitle="Data Pribadi">
+      <View style={{paddingHorizontal: 24, marginTop: 20}}>
         <ListItem
           field="Nama Lengkap"
           value={user.firstname + ' ' + user.lastname}

@@ -26,13 +26,13 @@ const DisclosureCard = ({name, file}: {name: string; file: string}) => {
         {
           backgroundColor:
             Platform.OS === 'ios'
-              ? RGBAColors(colorScheme === 'dark' ? 0.1 : 0.4)[colorScheme]
+              ? RGBAColors(colorScheme === 'dark' ? 0.1 : 0.4)['light']
                   .background
               : RGBAColors(0.2)['light'].background,
           width: (width * 84) / 100,
         },
       ]}>
-      <BlurOverlay blurType="regular" />
+      {/* <BlurOverlay blurAmount={80} blurType='light' /> */}
       <View style={styles.contentWrapper}>
         <Text style={styles.name} numberOfLines={3}>
           {name}

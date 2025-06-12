@@ -352,12 +352,13 @@ const MarketGuide = () => {
 
   return (
     <ScreenWrapper background backgroundType="gradient" overlay>
+      <Gap height={24} />
+      <Header title="Panduan" />
+      <Gap height={20} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}>
-        <Gap height={24} />
-        <Header title="Panduan" />
-        <Gap height={40} />
+        <Gap height={20} />
         <View style={{paddingHorizontal: 24}}>
           <View
             style={[

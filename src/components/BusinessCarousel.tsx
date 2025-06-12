@@ -69,6 +69,7 @@ const BusinessCarousel = ({
         </ScrollView>
       ) : type === 'article' ? (
         <FlatList
+          bounces={false}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={articles}
@@ -84,6 +85,7 @@ const BusinessCarousel = ({
         />
       ) : (
         <FlatList
+          bounces={false}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={businesses}

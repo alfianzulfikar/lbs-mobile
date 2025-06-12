@@ -7,8 +7,6 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import {Colors, RGBAColors} from '../constants/Colors';
 import Text from './Text';
 import BlurOverlay from './BlurOverlay';
-import {useSelector} from 'react-redux';
-import {RootState} from '../store';
 import {useColorScheme} from '../hooks/useColorScheme';
 
 const ActiveLine = () => {

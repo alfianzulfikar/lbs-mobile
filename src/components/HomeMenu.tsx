@@ -9,6 +9,7 @@ import {BlurView} from '@react-native-community/blur';
 import BlurOverlay from './BlurOverlay';
 import {HomeMenuScreenType} from '../constants/Types';
 import {useColorScheme} from '../hooks/useColorScheme';
+import LinearGradient from 'react-native-linear-gradient';
 
 const darkPortfolioIconSource = require('../assets/animations/dark-pie-chart.json');
 const lightPortfolioIconSource = require('../assets/animations/light-pie-chart.json');
@@ -58,18 +59,21 @@ const HomeMenu = ({
           Alert.alert('Maaf, fitur belum tersedia.');
         }
       }}>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: RGBAColors(Platform.OS === 'ios' ? 0.1 : 0.2)[
-              'light'
-            ].background,
-          },
-        ]}>
-        {Platform.OS === 'ios' && (
-          <BlurOverlay blurAmount={10} blurType="light" />
-        )}
+      <View style={[styles.container]}>
+        <LinearGradient
+          colors={
+            colorScheme === 'dark'
+              ? ['#rgba(64, 64, 64, 0.6)', 'rgba(237, 237, 237, 0)']
+              : ['rgba(255, 255, 255, 0.5)', 'rgba(255, 255, 255, 0)']
+          }
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+          }}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}></LinearGradient>
+        {/* <BlurOverlay blurAmount={24}/> */}
         <View style={styles.menuItem}>
           <LottieView
             autoPlay

@@ -18,7 +18,11 @@ import {RGBAColors} from '../constants/Colors';
 import CopyText from '../components/CopyText';
 import Accordion from '../components/Accordion';
 import {PAYMENT_METHODS} from '../constants/PaymentMethods';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  StackActions,
+  useNavigation,
+} from '@react-navigation/native';
 import {useAPI} from '../services/api';
 import {BankMethodType, OrderStackParamList} from '../constants/Types';
 import {Countdown} from '../components/Countdown';
@@ -29,6 +33,9 @@ import capitalize from '../utils/capitalize';
 import {useColorScheme} from '../hooks/useColorScheme';
 import LottieView from 'lottie-react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
+import {replace} from '../services/navigation';
 
 type InfoType = {
   label: string;
@@ -49,6 +56,7 @@ const WaitingPayment = ({route}: Props) => {
   const {apiRequest} = useAPI();
   const {code, type, feeBuy, feeSell} = route.params;
   const {paymentBankList, getPaymentBankList} = useBank();
+  const dispatch = useDispatch();
 
   const [informationContent, setInformationContent] = useState<InfoType[]>([]);
   const [shares, setShares] = useState<number>(0);
@@ -88,6 +96,7 @@ const WaitingPayment = ({route}: Props) => {
         endpoint: `/waiting-payment/${code}`,
         authorization: true,
       });
+      console.log('getPaymentDetail', res);
       const isMarket = res.status_transaksi.id == 8;
 
       let percentage = res.percentage;
@@ -204,7 +213,14 @@ const WaitingPayment = ({route}: Props) => {
         ]);
       }
     } catch (error) {
-      Alert.alert('Terjadi Kesalahan');
+      dispatch(
+        setAlert({
+          title: 'Terjadi Kesalahan',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } finally {
       setLoadingCancel(false);
     }
@@ -255,10 +271,14 @@ const WaitingPayment = ({route}: Props) => {
                               : RGBAColors(0.7)[colorScheme].text,
                           },
                         ]}>
-                        <Countdown
-                          value={countdownTime}
-                          setCountdownExpired={() => setCountdownExpired(true)}
-                        />
+                        {countdownTime && (
+                          <Countdown
+                            value={countdownTime}
+                            setCountdownExpired={() =>
+                              setCountdownExpired(true)
+                            }
+                          />
+                        )}
                       </Text>
                       <View style={styles.animationContainer}>
                         <LottieView
@@ -287,7 +307,9 @@ const WaitingPayment = ({route}: Props) => {
             ]}>
             <BlurOverlay />
             {loadingPage ? (
-              <ActivityIndicator color={tint} style={{marginTop: 46}} />
+              <View style={{zIndex: 2}}>
+                <ActivityIndicator color={tint} style={{marginTop: 46}} />
+              </View>
             ) : (
               <View style={{zIndex: 2, padding: 24}}>
                 {!countdownExpired && (
@@ -404,6 +426,27 @@ const WaitingPayment = ({route}: Props) => {
                     </View>
                   ))}
                 </View>
+                {form.status === 'Pending' && (
+                  <>
+                    <Gap height={24} />
+                    <Button
+                      title="Cek Status Transaksi"
+                      onPress={() =>
+                        navigation.dispatch(
+                          CommonActions.reset({
+                            index: 0,
+                            routes: [
+                              {
+                                name: 'MainTab',
+                                params: {screen: 'Transaction'},
+                              },
+                            ],
+                          }),
+                        )
+                      }
+                    />
+                  </>
+                )}
               </View>
             )}
           </View>

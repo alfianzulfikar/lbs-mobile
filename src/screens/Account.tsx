@@ -199,7 +199,7 @@ const Account = () => {
         style={[
           styles.profilePicture,
           {
-            top: notchHeight + 24,
+            top: 24,
             backgroundColor,
             width: (width * 39) / 100,
             height: (width * 39) / 100,
@@ -220,7 +220,13 @@ const Account = () => {
       <View
         style={[
           styles.container,
-          {backgroundColor: RGBAColors(0.8)[colorScheme].background},
+          {
+            backgroundColor:
+              Platform.OS === 'ios'
+                ? RGBAColors(colorScheme === 'dark' ? 0.1 : 0.8)[colorScheme]
+                    .background
+                : RGBAColors(0.8)[colorScheme].background,
+          },
         ]}>
         {Platform.OS === 'android' && colorScheme === 'dark' && (
           <ImageBackground
@@ -229,7 +235,7 @@ const Account = () => {
             style={{width: '100%', height: '100%', position: 'absolute'}}
           />
         )}
-        <BlurOverlay />
+        <BlurOverlay blurAmount={60} />
         <View
           style={{
             paddingTop: 16,

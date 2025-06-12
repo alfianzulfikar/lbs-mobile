@@ -22,6 +22,8 @@ import IconWrapper from '../components/IconWrapper';
 import ICShare from '../components/icons/ICShare';
 import {Colors, RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 type Props = StaticScreenProps<{
   slug: string;
@@ -35,6 +37,7 @@ const ArticleDetail = ({route}: Props) => {
   const textColor2 = useThemeColor({}, 'text2');
   const tint = useThemeColor({}, 'tint');
   let colorScheme = useColorScheme();
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
 
@@ -45,9 +48,14 @@ const ArticleDetail = ({route}: Props) => {
         title: 'LBS Urun Dana',
       });
     } catch (error) {
-      Alert.alert('Gagal', 'Silahkan coba lagi', [
-        {text: 'Tutup', onPress: () => {}},
-      ]);
+      dispatch(
+        setAlert({
+          title: 'Gagal',
+          desc: 'Silahkan coba lagi',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     }
   };
 
