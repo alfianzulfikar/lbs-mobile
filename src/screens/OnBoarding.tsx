@@ -80,14 +80,10 @@ const OnBoarding = () => {
 
   useEffect(() => {
     AsyncStorage.setItem('onboarding', 'true');
-    console.log('contentRef', contentRef.current);
   }, []);
 
   useEffect(() => {
-    console.log('contentHeight', contentHeight);
-    setMaxImageHeight(
-      Math.min(300, height - (contentHeight + 56 + 24)),
-    );
+    setMaxImageHeight(Math.min(300, height - (contentHeight + 56 + 24)));
   }, [contentHeight]);
 
   return (

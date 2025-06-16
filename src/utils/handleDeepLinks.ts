@@ -40,7 +40,6 @@ export const useDeepLinks = () => {
           : '';
       if (token) {
         const decode: {exp?: number} = jwtDecode(token, {header: true});
-        console.log('decode', decode);
         if ((decode.exp || 0) < Date.now() / 1000) {
           navigation.dispatch(
             StackActions.replace('Auth', {
@@ -62,11 +61,11 @@ export const useDeepLinks = () => {
           }),
         );
       }
-    } else if (splitUrl[3] == 'reset-password') {
+    } else if (splitUrl.length > 6 && splitUrl[5] == 'reset-password') {
       navigation.dispatch(
         StackActions.replace('Auth', {
           screen: 'ResetPassword',
-          params: {token: parsedHash.query.token},
+          params: {token: splitUrl[6]},
         }),
       );
     } else if (splitUrl[3] == 'detail') {

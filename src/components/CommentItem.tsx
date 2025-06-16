@@ -1,5 +1,11 @@
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useState} from 'react';
 import Text from './Text';
 import {useThemeColor} from '../hooks/useThemeColor';
 import ICLike from './icons/ICLike';
@@ -7,6 +13,8 @@ import {CommentType} from '../constants/Types';
 import dateTimeFormat from '../utils/dateTimeFormat';
 import {useColorScheme} from '../hooks/useColorScheme';
 import ICChecked from './icons/ICChecked';
+import {useComment} from '../api/comment';
+import ICLikeFill from './icons/ICLikeFill';
 
 const CommentItem = ({
   data,
@@ -22,12 +30,16 @@ const CommentItem = ({
     }>
   >;
 }) => {
+  const {likeComment, likeLoading} = useComment();
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const textColor4 = useThemeColor({}, 'text4');
   const tint = useThemeColor({}, 'tint');
+
+  const [isLiked, setIsLiked] = useState(data.isLiked || false);
+  const [totalOfLikes, setTotalOfLikes] = useState(data.numberOfLikes || 0);
 
   return (
     <View style={styles.container}>
@@ -65,8 +77,27 @@ const CommentItem = ({
         </Text>
 
         <View style={styles.infoContainer}>
-          <ICLike color={textColor2} size={16} />
-          <Text style={styles.numberOfLikes}>{String(data.numberOfLikes)}</Text>
+          <TouchableOpacity
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={() =>
+              likeComment(
+                data.id,
+                isLiked,
+                setIsLiked,
+                totalOfLikes,
+                setTotalOfLikes,
+              )
+            }>
+            {likeLoading ? (
+              <ActivityIndicator color={tint} size={16} />
+            ) : (
+              <>
+                <ICLike color={textColor2} size={16} />
+                {/* <ICLikeFill color={textColor2} size={16} /> */}
+                <Text style={styles.numberOfLikes}>{String(totalOfLikes)}</Text>
+              </>
+            )}
+          </TouchableOpacity>
           {!isReply && (
             <>
               <View style={[styles.dot, {backgroundColor: '#616161'}]}></View>

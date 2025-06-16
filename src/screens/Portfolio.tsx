@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Animated,
   FlatList,
   Image,
   ImageBackground,
@@ -60,6 +61,7 @@ const Portfolio = () => {
 
   const onEndReachedCalledDuringMomentum = useRef(false);
   const isFiltering = useRef(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const typeOption = [
     {name: 'Jenis', id: ''},
@@ -246,23 +248,36 @@ const Portfolio = () => {
   }, [portfolioList]);
 
   return (
-    <ScreenWrapper background backgroundType="gradient">
-      <Gap height={24} />
-      <Header
-        rightIcon={
-          <IconWrapper width={178} onPress={() => setShowLimit(prev => !prev)}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <ICWarning />
-              <Text style={[styles.limitButtonText, {color: textColor2}]}>
-                Limit Investasi
-              </Text>
-              <ICCaretArrowDown color={textColor2} />
-            </View>
-          </IconWrapper>
-        }
-      />
-      <Gap height={20} />
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      header
+      customHeader={
+        <>
+          <Header
+            rightIcon={
+              <IconWrapper
+                width={178}
+                onPress={() => setShowLimit(prev => !prev)}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <ICWarning />
+                  <Text style={[styles.limitButtonText, {color: textColor2}]}>
+                    Limit Investasi
+                  </Text>
+                  <ICCaretArrowDown color={textColor2} />
+                </View>
+              </IconWrapper>
+            }
+          />
+        </>
+      }
+      childScrollY={scrollY}>
       <FlatList
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}
         onRefresh={onRefresh}
         refreshing={refreshing}
         data={portfolioLoading ? [] : portfolioList}

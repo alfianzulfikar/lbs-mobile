@@ -16,10 +16,13 @@ const Disclosure = () => {
     getDisclosureList();
   }, []);
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
-      <Gap height={24} />
-      <Header title="Keterbukaan Informasi" />
-      <View style={{paddingHorizontal: 24, marginTop: 40}}>
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      scrollView
+      header
+      headerTitle="Keterbukaan Informasi">
+      <View style={{paddingHorizontal: 24, marginTop: 20}}>
         {disclosureListLoading ? (
           <ActivityIndicator color={tint} />
         ) : (

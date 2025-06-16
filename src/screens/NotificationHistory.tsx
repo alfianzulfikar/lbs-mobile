@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Animated,
   FlatList,
   Image,
   StyleSheet,
@@ -29,6 +30,7 @@ const NotificationHistory = () => {
   const navigation = useNavigation();
 
   const onEndReachedCalledDuringMomentum = useRef(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
   const [scrollEnabled, setScrollEnabled] = useState(false);
 
   const colorScheme = useColorScheme();
@@ -59,10 +61,12 @@ const NotificationHistory = () => {
   }, []);
 
   return (
-    <ScreenWrapper background backgroundType="gradient">
-      <Gap height={24} />
-      <Header title="Notifikasi" />
-      <Gap height={20} />
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      header
+      headerTitle="Notifikasi"
+      childScrollY={scrollY}>
       {notificationsLoading && <ActivityIndicator color={tint} />}
       {!notificationsLoading && notifications.length === 0 && (
         <View
@@ -93,6 +97,11 @@ const NotificationHistory = () => {
         </View>
       )}
       <FlatList
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}
         data={notificationsLoading ? [] : notifications}
         renderItem={({item, index}) => (
           <View

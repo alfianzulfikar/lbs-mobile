@@ -41,7 +41,7 @@ const IconWrapper = ({
   blur?: boolean;
 }) => {
   let colorScheme = useColorScheme();
-  let shadowColor = useThemeColor({}, 'tint');
+  let shadowColor = useThemeColor({}, colorScheme === 'dark' ? 'tint' : 'text');
   return (
     <Pressable
       style={[

@@ -37,15 +37,19 @@ const BannerCarousel = ({
           styles.itemContainer,
           {
             backgroundColor,
-            width:
-              Platform.OS === 'android'
-                ? (width * 84) / 100
-                : (width * 84) / 100 > 340
-                ? 340
-                : (width * 84) / 100,
-            maxWidth: Platform.OS === 'android' ? 340 : undefined,
-            marginLeft: index === 0 ? 24 : 16,
-            marginRight: index !== banners.length - 1 ? 0 : 24,
+            width: (width * 84) / 100,
+            ...(Platform.OS === 'ios'
+              ? {
+                  marginLeft:
+                    index === 0 ? (width * 4) / 100 : (width * 4) / 100,
+                  marginRight:
+                    index !== banners.length - 1 ? 0 : (width * 12) / 100,
+                  transform: [{translateX: (width * 4) / 100}],
+                }
+              : {
+                  marginLeft: index === 0 ? 24 : 16,
+                  marginRight: index !== banners.length - 1 ? 0 : 24,
+                }),
           },
         ]}
         onPress={() => {
@@ -147,7 +151,7 @@ const BannerCarousel = ({
           keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           pagingEnabled
-          snapToInterval={(width * 84) / 100 + 16}
+          snapToInterval={(width * 84) / 100 + (width * 4) / 100}
           onScrollBeginDrag={() => stopAutoScroll()}
           onScrollEndDrag={() => startAutoScroll()}
         />

@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   FlatList,
   Image,
   Platform,
@@ -210,7 +211,6 @@ const Transaction = () => {
         endpoint: `/waiting-payment/${paymentCode}`,
         authorization: true,
       });
-      console.log('res detail', res);
       const jenisTransaksi = type;
       const fee = res.total_nominal - res.nominal;
       let feeObject = {};
@@ -281,55 +281,11 @@ const Transaction = () => {
   const renderHeader = () => {
     return (
       <>
-        <Gap height={24} />
-        <View style={{paddingHorizontal: 24}}>
-          <View
-            style={[
-              styles.menuContainer,
-              {
-                backgroundColor: RGBAColors(0.2)[colorScheme].background,
-                borderColor: RGBAColors(0.1)[colorScheme].text,
-              },
-              Platform.OS && {
-                borderWidth: 1,
-              },
-            ]}>
-            <MenuItem
-              title="Transaksi"
-              name="transaksi"
-              value={activeMenu}
-              onPress={() => {
-                setTransactions([]);
-                setActiveMenu('transaksi');
-                setLoadingTransaction(true);
-                getTransaction(1, {}, 'transaksi');
-                setPage(1);
-                setIsLastPage(false);
-                setFilter({order: '', status: '', type: ''});
-              }}
-            />
-            <Gap width={8} />
-            <MenuItem
-              title="Dividen"
-              name="dividen"
-              value={activeMenu}
-              onPress={() => {
-                setTransactions([]);
-                setActiveMenu('dividen');
-                setLoadingTransaction(true);
-                getTransaction(1, {}, 'dividen');
-                setPage(1);
-                setIsLastPage(false);
-                setFilter({order: '', status: '', type: ''});
-              }}
-            />
-          </View>
-        </View>
         {activeMenu === 'transaksi' && (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={{marginTop: 32}}>
+            style={{marginTop: 12}}>
             <Gap width={24} />
             <DropdownInput
               value={filter.type}
@@ -370,7 +326,7 @@ const Transaction = () => {
             <Gap width={24} />
           </ScrollView>
         )}
-        <Gap height={40} />
+        <Gap height={20} />
         {loadingTransaction && <ActivityIndicator color={tint} />}
         {!loadingTransaction && transactions.length === 0 && (
           <View
@@ -459,11 +415,70 @@ const Transaction = () => {
     }, []),
   );
 
+  const scrollY = useRef(new Animated.Value(0)).current;
+
   return (
     <View style={{flex: 1}}>
-      <ScreenWrapper background backgroundType="gradient">
+      <ScreenWrapper
+        background
+        backgroundType="gradient"
+        header
+        customHeader={
+          <>
+            <View style={{paddingHorizontal: 24}}>
+              <View
+                style={[
+                  styles.menuContainer,
+                  {
+                    backgroundColor: RGBAColors(0.2)[colorScheme].background,
+                    borderColor: RGBAColors(0.1)[colorScheme].text,
+                  },
+                  Platform.OS && {
+                    borderWidth: 1,
+                  },
+                ]}>
+                <MenuItem
+                  title="Transaksi"
+                  name="transaksi"
+                  value={activeMenu}
+                  onPress={() => {
+                    setTransactions([]);
+                    setActiveMenu('transaksi');
+                    setLoadingTransaction(true);
+                    getTransaction(1, {}, 'transaksi');
+                    setPage(1);
+                    setIsLastPage(false);
+                    setFilter({order: '', status: '', type: ''});
+                  }}
+                />
+                <Gap width={8} />
+                <MenuItem
+                  title="Dividen"
+                  name="dividen"
+                  value={activeMenu}
+                  onPress={() => {
+                    setTransactions([]);
+                    setActiveMenu('dividen');
+                    setLoadingTransaction(true);
+                    getTransaction(1, {}, 'dividen');
+                    setPage(1);
+                    setIsLastPage(false);
+                    setFilter({order: '', status: '', type: ''});
+                  }}
+                />
+              </View>
+            </View>
+            {/*  */}
+          </>
+        }
+        childScrollY={scrollY}>
         <View style={styles.container}>
           <FlatList
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollY}}}],
+              {useNativeDriver: false},
+            )}
+            scrollEventThrottle={16}
             onRefresh={onRefresh}
             refreshing={refreshing}
             data={transactions}
@@ -533,7 +548,7 @@ const Transaction = () => {
             onMomentumScrollBegin={() => {
               onEndReachedCalledDuringMomentum.current = false;
             }}
-            scrollEnabled={scrollEnabled}
+            // scrollEnabled={scrollEnabled}
           />
 
           {/* {loadingTransaction ? (

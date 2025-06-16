@@ -119,10 +119,13 @@ export const useAPI = () => {
                   }),
                 );
               }
-            } else if (response.status === 500) {
+            } else if (
+              response.status &&
+              String(response.status).charAt(0) === '5'
+            ) {
               dispatch(
                 setAlert({
-                  title: 'Terjadi kesalan pada server',
+                  title: 'Terjadi kesalahan pada server',
                   desc: '',
                   type: 'danger',
                   showAlert: true,
@@ -138,6 +141,16 @@ export const useAPI = () => {
         }
         return data;
       } else {
+        if (response.status && String(response.status).charAt(0) === '5') {
+          dispatch(
+            setAlert({
+              title: 'Terjadi kesalahan pada server',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
+        }
         console.log('status', response?.status, method || 'get', response.url);
         throw {
           method: method || 'get',

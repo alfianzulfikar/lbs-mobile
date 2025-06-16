@@ -1,6 +1,8 @@
 import {
   ActivityIndicator,
+  Animated,
   FlatList,
+  Keyboard,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -57,9 +59,10 @@ const BusinessDiscussion = ({route}: Props) => {
   const [showSortingOption, setShowSortingOption] = useState(false);
   const [sort, setSort] = useState('populer');
   const [scrollEnabled, setScrollEnabled] = useState(false);
+  const [parent, setParrent] = useState({id: '', username: ''});
   const page = useRef(1);
   const isFetching = useRef(false);
-  const [parent, setParrent] = useState({id: '', username: ''});
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const shortingOption: InputDropdownOption[] = [
     {label: 'Terbaru', id: 'terbaru'},
@@ -82,16 +85,7 @@ const BusinessDiscussion = ({route}: Props) => {
   const renderHeader = () => {
     return (
       <>
-        <Gap height={24} />
-        <Header
-          title="Diskusi"
-          rightIcon={
-            <IconWrapper onPress={() => setShowSortingOption(true)}>
-              <ICSort color={textColor2} />
-            </IconWrapper>
-          }
-        />
-        <Gap height={40} />
+        <Gap height={20} />
         {commentLoading && <ActivityIndicator color={tint} />}
       </>
     );
@@ -133,8 +127,32 @@ const BusinessDiscussion = ({route}: Props) => {
   }, []);
 
   return (
-    <ScreenWrapper background backgroundType="gradient" overlay>
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      overlay
+      header
+      customHeader={
+        <Header
+          title="Diskusi"
+          rightIcon={
+            <IconWrapper
+              onPress={() => {
+                Keyboard.dismiss();
+                setShowSortingOption(true);
+              }}>
+              <ICSort color={textColor2} />
+            </IconWrapper>
+          }
+        />
+      }
+      childScrollY={scrollY}>
       <FlatList
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}
         data={comments}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

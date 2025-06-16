@@ -34,10 +34,10 @@ const KYCTerms = () => {
     useKYCTerms();
 
   return (
-    <ScreenWrapper background backgroundType="gradient" notch={false}>
+    <ScreenWrapper background backgroundType="gradient">
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={{paddingHorizontal: 24, flex: 1}}>
-          <Gap height={24 + notchHeight} />
+          <Gap height={24} />
           <KYCHeader
             title="Syarat & Ketentuan"
             instruction="Anda telah mencapai bagian akhir dari proses pengisian data KYC. Harap membaca dan menyetujui syarat dan ketentuan berikut."

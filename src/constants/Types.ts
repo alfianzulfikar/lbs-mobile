@@ -537,6 +537,7 @@ export type ReplyType = {
   numberOfLikes: number;
   isOfficial: boolean;
   canDelete: boolean;
+  isLiked: boolean;
 };
 
 export type CommentType = ReplyType & {

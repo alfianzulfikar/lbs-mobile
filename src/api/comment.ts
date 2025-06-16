@@ -9,6 +9,7 @@ export const useComment = () => {
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentMoreLoading, setCommentMoreLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
   const [comment, setComment] = useState('');
   const [error, setError] = useState<string[]>([]);
 
@@ -39,8 +40,8 @@ export const useComment = () => {
         endpoint: `/bisnis/detail/${slug}/comments?page=${page ? page : 1}${
           sortByTime ? '&' + sortByTime : ''
         }${sortByPopuler ? '&' + sortByPopuler : ''}`,
+        authorization: true,
       });
-      console.log('get comment res', res);
       if (res?.result) {
         let newComments: CommentType[] = [];
         res.result.map((comment: any) => {
@@ -58,6 +59,7 @@ export const useComment = () => {
                 isOfficial:
                   (reply?.fullname || '').includes('Official') ||
                   (reply?.fullname || '').includes('LBS Urun Dana'),
+                isLiked: reply.is_liked || false,
               });
             });
           }
@@ -71,9 +73,9 @@ export const useComment = () => {
             canDelete: comment.can_delete || false,
             isOfficial: (comment?.fullname || '').includes('Official'),
             replies: newReplies,
+            isLiked: comment.is_liked || false,
           });
         });
-        console.log('mapping res', newComments);
         if (res?.result && res?.result.length > 0) {
           if (page && page > 1) {
             setComments(prev => [...prev, ...newComments]);
@@ -112,7 +114,6 @@ export const useComment = () => {
           ...(parentId ? {parent_id: parentId} : {}),
         },
       });
-      console.log('submit res', res);
       if (parentId) {
         let newComments: CommentType[] = [];
         comments.map((item, index) => {
@@ -129,6 +130,7 @@ export const useComment = () => {
                   isOfficial: false,
                   canDelete: true,
                   username,
+                  isLiked: false,
                 },
                 ...(item?.replies || []),
               ],
@@ -150,6 +152,7 @@ export const useComment = () => {
             canDelete: true,
             username,
             replies: [],
+            isLiked: false,
           },
           ...prev,
         ]);
@@ -170,6 +173,43 @@ export const useComment = () => {
     }
   };
 
+  const likeComment = async (
+    id: string | number,
+    isLiked: boolean,
+    setIsLiked: (value: boolean) => void,
+    totalOfLikes: number,
+    setTotalOfLikes: (value: number) => void,
+  ) => {
+    if (!likeLoading) {
+      setLikeLoading(true);
+      try {
+        if (isLiked) {
+          const response = await apiRequest({
+            method: 'delete',
+            endpoint: `/comments/like/${id}`,
+            authorization: true,
+            body: {},
+          });
+
+          setIsLiked(false);
+          setTotalOfLikes(totalOfLikes - 1);
+        } else {
+          const response = await apiRequest({
+            method: 'get',
+            endpoint: `/comments/like/${id}`,
+            authorization: true,
+          });
+
+          setIsLiked(true);
+          setTotalOfLikes(totalOfLikes + 1);
+        }
+      } catch (error) {
+      } finally {
+        setLikeLoading(false);
+      }
+    }
+  };
+
   return {
     comments,
     commentLoading,
@@ -181,5 +221,7 @@ export const useComment = () => {
     comment,
     setComment,
     error,
+    likeComment,
+    likeLoading,
   };
 };

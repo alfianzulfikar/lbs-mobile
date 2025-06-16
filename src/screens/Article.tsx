@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Animated,
   FlatList,
   Image,
   StyleSheet,
@@ -10,12 +11,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Gap from '../components/Gap';
-import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
 import ArticleCard2 from '../components/ArticleCard2';
 import {useArticle} from '../api/article';
-import {ArticleType} from '../constants/Types';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
@@ -42,6 +41,7 @@ const Article = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onEndReachedCalledDuringMomentum = useRef(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const categoryOptions = [
     {id: '', label: 'Semua'},
@@ -145,13 +145,18 @@ const Article = () => {
   }, []);
 
   return (
-    <ScreenWrapper background backgroundType="gradient">
-      <Gap height={24} />
-      <View style={{paddingHorizontal: 24}}>
-        <Header title="Berita & Artikel" paddingHorizontal={0} />
-        <Gap height={24} />
-      </View>
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      header
+      headerTitle="Berita & Artikel"
+      childScrollY={scrollY}>
       <FlatList
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}
         onRefresh={onRefresh}
         refreshing={refreshing}
         data={articlesLoading ? [] : articles}

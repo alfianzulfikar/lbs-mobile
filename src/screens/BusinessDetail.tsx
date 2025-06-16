@@ -71,7 +71,7 @@ const BusinessDetail = ({route}: Props) => {
   const dispatch = useDispatch();
 
   const [loadingOrder, setLoadingOrder] = useState(false);
-  const [loadingPage, setLoadingPage] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
   const [showCalculator, setShowCalculator] = useState(false);
 
   const order = async () => {

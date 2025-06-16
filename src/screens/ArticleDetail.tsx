@@ -59,19 +59,15 @@ const ArticleDetail = ({route}: Props) => {
     }
   };
 
-  const handleGetArticle = () => {
+  const handleGetArticle = async () => {
     setLoading(true);
-    getArticle(route.params.slug, route.params.category);
+    await getArticle(route.params.slug, route.params.category);
     setLoading(false);
   };
 
   useEffect(() => {
     handleGetArticle();
   }, []);
-
-  useEffect(() => {
-    setLoading(false);
-  }, [article]);
 
   return (
     <ScreenWrapper

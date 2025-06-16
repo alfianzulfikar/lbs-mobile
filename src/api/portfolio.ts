@@ -97,7 +97,7 @@ export const usePortfolio = () => {
     }
     try {
       const res = await apiRequest({
-        endpoint: `/user/investasi?page=${page ? page : 1}&per_page=8${
+        endpoint: `/user/investasi?page=${page ? page : 1}&per_page=10${
           filter?.type ? '&jenis=' + filter?.type : ''
         }${filter?.status ? '&status=' + filter?.status : ''}${
           filter?.order ? '&order=' + filter?.order : ''

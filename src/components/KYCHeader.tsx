@@ -36,7 +36,7 @@ const KYCHeader = ({
         {backgroundColor: RGBAColors(0.6)[colorScheme].background},
       ]}>
       <BlurOverlay />
-      <View style={{zIndex: 2}}>
+      <View style={{zIndex: 2, padding: 16}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <TouchableOpacity
             onPress={() => {
@@ -84,7 +84,6 @@ export default KYCHeader;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
     borderRadius: 24,
     overflow: 'hidden',
   },

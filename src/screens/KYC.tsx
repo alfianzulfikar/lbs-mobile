@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import React from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Gap from '../components/Gap';
@@ -11,56 +11,59 @@ import {StackActions, useNavigation} from '@react-navigation/native';
 
 const KYC = () => {
   const textColor = useThemeColor({}, 'text');
-  const textColor3 = useThemeColor({}, 'text3');
   const navigation = useNavigation();
+  const {height} = useWindowDimensions();
 
   return (
-    <ScreenWrapper background backgroundType="gradient" scrollView>
+    <ScreenWrapper background backgroundType="gradient">
       <Gap height={24} />
       <View style={{paddingHorizontal: 24, flex: 1}}>
-        <View style={styles.imageWrapper}>
+        <View
+          style={[styles.imageWrapper, {height: height / 3, maxHeight: 180}]}>
           <LottieView
             autoPlay
             style={{
-              width: 280,
-              height: 280,
+              width: '100%',
+              height: '100%',
               backgroundColor: 'transparent',
             }}
             source={require('../assets/animations/kyc.json')}
             loop={true}
           />
         </View>
-        <Text style={styles.heading}>Siapkan Identitas Anda</Text>
-        <Text style={styles.desc}>
-          Sebelum memulai pengisian KYC, harap menyiapkan dokumen berikut:
-        </Text>
-        <Gap height={40} />
-        <View style={{flexDirection: 'row'}}>
-          <ICKTP color={textColor} />
-          <View style={{marginLeft: 8, flex: 1}}>
-            <Text style={styles.listTitle}>Kartu Tanda Penduduk</Text>
+        <View style={{flex: 1}}>
+          <Text style={styles.heading}>Siapkan Identitas Anda</Text>
+          <Text style={styles.desc}>
+            Sebelum memulai pengisian KYC, harap menyiapkan dokumen berikut:
+          </Text>
+          <Gap height={40} />
+          <View style={{flexDirection: 'row'}}>
+            <ICKTP color={textColor} />
+            <View style={{marginLeft: 8, flex: 1}}>
+              <Text style={styles.listTitle}>Kartu Tanda Penduduk</Text>
+            </View>
           </View>
-        </View>
-        <Gap height={24} />
-        <View style={{flexDirection: 'row'}}>
-          <ICKTP color={textColor} />
-          <View style={{marginLeft: 8, flex: 1}}>
-            <Text style={styles.listTitle}>
-              Single Investor Identification (Jika Ada)
-            </Text>
+          <Gap height={24} />
+          <View style={{flexDirection: 'row'}}>
+            <ICKTP color={textColor} />
+            <View style={{marginLeft: 8, flex: 1}}>
+              <Text style={styles.listTitle}>
+                Single Investor Identification (Jika Ada)
+              </Text>
+            </View>
           </View>
+          <Gap flex={1} />
+          <Gap height={24} />
+          <Button
+            title="Mulai isi KYC"
+            onPress={() =>
+              navigation.dispatch(
+                StackActions.replace('KYC', {screen: 'KYCPersonal'}),
+              )
+            }
+          />
+          <Gap height={24} />
         </View>
-        <Gap flex={1} />
-        <Gap height={24} />
-        <Button
-          title="Mulai isi KYC"
-          onPress={() =>
-            navigation.dispatch(
-              StackActions.replace('KYC', {screen: 'KYCPersonal'}),
-            )
-          }
-        />
-        <Gap height={24} />
       </View>
     </ScreenWrapper>
   );
@@ -70,9 +73,9 @@ export default KYC;
 
 const styles = StyleSheet.create({
   imageWrapper: {
-    width: 280,
-    height: 280,
-    alignSelf: 'center',
+    width: '100%',
+    overflow: 'hidden',
+    alignItems: 'center',
   },
   heading: {
     fontSize: 24,

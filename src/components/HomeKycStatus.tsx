@@ -49,16 +49,17 @@ const HomeKycStatus = ({
         </View>
         <TouchableOpacity
           style={{width: 80, alignItems: 'center'}}
-          onPress={() =>
-            status === null
-              ? navigation.navigate('KYC', {
-                  screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
-                })
-              : null
+          onPress={
+            () =>
+              status === null
+                ? navigation.navigate('KYC', {
+                    screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
+                  })
+                : null
+            // navigation.navigate('KYC', {
+            //   screen: 'KYCScreen',
+            // })
           }>
-          {/* navigation.navigate('KYC', {
-                  screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
-                }) */}
           <ICUser color={tint} type="outline" />
           <Text style={[styles.desc, {color: tint}]}>Isi Data KYC</Text>
         </TouchableOpacity>

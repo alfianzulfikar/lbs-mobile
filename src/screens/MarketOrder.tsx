@@ -100,13 +100,31 @@ const MarketOrder = ({route}: Props) => {
   return (
     <ScreenWrapper
       background
-      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
-      <Gap height={24} />
-      <Header title="Detail Order" />
-      <Gap height={20} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}>
+      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
+      scrollView
+      header
+      headerTitle="Detail Order"
+      footer={
+        <View
+          style={{backgroundColor: RGBAColors(0.6)[colorScheme].background}}>
+          <BlurOverlay />
+          <View style={styles.buttonContainer}>
+            <Button
+              title={`${type === 'ask' ? 'Jual' : 'Beli'} Saham`}
+              onPress={() => {
+                if (type === 'ask') {
+                  Keyboard.dismiss();
+                  setShowConfirmOrderDialog(true);
+                } else {
+                  order(type, id, {price, volume, bank, otpMethod: method});
+                }
+              }}
+              loading={orderLoading}
+            />
+          </View>
+        </View>
+      }>
+      <View style={{flex: 1}}>
         <View style={{paddingHorizontal: 24}}>
           <Gap height={12} />
           <View
@@ -117,7 +135,8 @@ const MarketOrder = ({route}: Props) => {
               },
             ]}>
             <BlurOverlay />
-            <View style={{zIndex: 2}}>
+            <View
+              style={{zIndex: 2, paddingVertical: 18, paddingHorizontal: 24}}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -201,7 +220,8 @@ const MarketOrder = ({route}: Props) => {
                 },
               ]}>
               <BlurOverlay />
-              <View style={{zIndex: 2}}>
+              <View
+                style={{zIndex: 2, paddingVertical: 18, paddingHorizontal: 24}}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -324,24 +344,6 @@ const MarketOrder = ({route}: Props) => {
             )}
           </View>
         </View>
-      </ScrollView>
-
-      <View style={{backgroundColor: RGBAColors(0.6)[colorScheme].background}}>
-        <BlurOverlay />
-        <View style={styles.buttonContainer}>
-          <Button
-            title={`${type === 'ask' ? 'Jual' : 'Beli'} Saham`}
-            onPress={() => {
-              if (type === 'ask') {
-                Keyboard.dismiss();
-                setShowConfirmOrderDialog(true);
-              } else {
-                order(type, id, {price, volume, bank, otpMethod: method});
-              }
-            }}
-            loading={orderLoading}
-          />
-        </View>
       </View>
 
       {showConfirmOrderDialog && (
@@ -394,8 +396,6 @@ export default MarketOrder;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    paddingVertical: 18,
-    paddingHorizontal: 24,
     borderRadius: 24,
     overflow: 'hidden',
   },

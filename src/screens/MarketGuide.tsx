@@ -1,5 +1,11 @@
-import {ImageBackground, ScrollView, StyleSheet, View} from 'react-native';
-import React from 'react';
+import {
+  Animated,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import React, {useRef} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
 import Gap from '../components/Gap';
@@ -17,6 +23,7 @@ const MarketGuide = () => {
   const colorScheme = useColorScheme();
   const textColor2 = useThemeColor({}, 'text2');
   const navigation = useNavigation();
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const businessList = [
     {
@@ -351,11 +358,19 @@ const MarketGuide = () => {
   ];
 
   return (
-    <ScreenWrapper background backgroundType="gradient" overlay>
-      <Gap height={24} />
-      <Header title="Panduan" />
-      <Gap height={20} />
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      overlay
+      header
+      headerTitle="Panduan"
+      childScrollY={scrollY}>
       <ScrollView
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}>
         <Gap height={20} />

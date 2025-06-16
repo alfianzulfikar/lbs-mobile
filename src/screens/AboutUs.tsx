@@ -159,9 +159,12 @@ const AboutUs = () => {
     },
   ];
 
-  const crew = [
+  const founderAndCommissioner = [
     {name: 'Ustadz Dr. Erwandi Tarmizi, MA', position: 'Founder', image: ''},
     {name: "Ir. Solachudin Al'af Ghoni", position: 'Commissioner', image: ''},
+  ];
+
+  const bod = [
     {
       name: 'Rezza Zulkasi, MAppFin',
       position: 'Chief Executive Officer',
@@ -169,26 +172,38 @@ const AboutUs = () => {
     },
     {name: 'Murdani Aji, S.Kom', position: 'Chief Business Officer', image: ''},
     {name: 'Bemby Oktora, ST', position: 'Chief Technology Officer', image: ''},
-    {
-      name: 'Muhamad Anjas Tanjung',
-      position: 'Head of Business Acquisition',
-      image: '',
-    },
-    {name: 'Yuddy Iskandar', position: 'Head of Operation', image: ''},
-    {
-      name: 'Fandrey Nanda Afindra',
-      position: 'Head of Marketing & Branding',
-      image: '',
-    },
-    {name: 'Arief Firmanto', position: 'Head of Research & Analyst', image: ''},
-    {name: 'I Made Adi Saputra', position: 'Head of Post Listing', image: ''},
-    {
-      name: 'Andri Agustaman',
-      position: 'Head of Investor Relations',
-      image: '',
-    },
-    {name: 'Prasetyo Hendirasmoyo', position: 'Head of IT', image: ''},
   ];
+
+  // const crew = [
+  //   {name: 'Ustadz Dr. Erwandi Tarmizi, MA', position: 'Founder', image: ''},
+  //   {name: "Ir. Solachudin Al'af Ghoni", position: 'Commissioner', image: ''},
+  //   {
+  //     name: 'Rezza Zulkasi, MAppFin',
+  //     position: 'Chief Executive Officer',
+  //     image: '',
+  //   },
+  //   {name: 'Murdani Aji, S.Kom', position: 'Chief Business Officer', image: ''},
+  //   {name: 'Bemby Oktora, ST', position: 'Chief Technology Officer', image: ''},
+  //   {
+  //     name: 'Muhamad Anjas Tanjung',
+  //     position: 'Head of Business Acquisition',
+  //     image: '',
+  //   },
+  //   {name: 'Yuddy Iskandar', position: 'Head of Operation', image: ''},
+  //   {
+  //     name: 'Fandrey Nanda Afindra',
+  //     position: 'Head of Marketing & Branding',
+  //     image: '',
+  //   },
+  //   {name: 'Arief Firmanto', position: 'Head of Research & Analyst', image: ''},
+  //   {name: 'I Made Adi Saputra', position: 'Head of Post Listing', image: ''},
+  //   {
+  //     name: 'Andri Agustaman',
+  //     position: 'Head of Investor Relations',
+  //     image: '',
+  //   },
+  //   {name: 'Prasetyo Hendirasmoyo', position: 'Head of IT', image: ''},
+  // ];
 
   return (
     <ScreenWrapper
@@ -389,6 +404,8 @@ const AboutUs = () => {
         </View>
 
         <Text style={styles.heading2}>Tim LBS Urun Dana</Text>
+        <Gap height={24} />
+        <Text style={styles.heading3}>Founder & Commissioner</Text>
         <View
           style={{
             marginTop: 24,
@@ -396,13 +413,54 @@ const AboutUs = () => {
             flexWrap: 'wrap',
             justifyContent: 'space-between',
           }}>
-          {crew.map((item, index) => (
+          {founderAndCommissioner.map((item, index) => (
             <View
               style={[
                 styles.crewContainer,
                 {
                   width: (width - 48) / 2 - 14,
-                  marginBottom: ![crew.length - 1, crew.length - 2].includes(
+                  marginBottom: ![
+                    founderAndCommissioner.length - 1,
+                    founderAndCommissioner.length - 2,
+                  ].includes(index)
+                    ? 40
+                    : 0,
+                },
+              ]}
+              key={index}>
+              <View style={styles.crewImageContainer}>
+                <Image
+                  source={
+                    colorScheme === 'dark'
+                      ? require('../assets/images/profile-picture-dark.png')
+                      : require('../assets/images/profile-picture-light.png')
+                  }
+                  style={{width: '100%', height: '100%'}}
+                />
+              </View>
+              <Text style={styles.crewName}>{item.name}</Text>
+              <Text style={[styles.crewPosition, {color: textColor2}]}>
+                {item.position}
+              </Text>
+            </View>
+          ))}
+        </View>
+        <Gap height={40} />
+        <Text style={styles.heading3}>Board of Directors</Text>
+        <View
+          style={{
+            marginTop: 24,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+          }}>
+          {bod.map((item, index) => (
+            <View
+              style={[
+                styles.crewContainer,
+                {
+                  width: (width - 48) / 2 - 14,
+                  marginBottom: ![bod.length - 1, bod.length - 2].includes(
                     index,
                   )
                     ? 40
@@ -472,6 +530,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 40,
   },
+  heading3: {
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 24,
+    textAlign: 'center',
+  },
   iconWrapper: {
     width: 40,
     height: 40,
@@ -503,12 +567,17 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   crewContainer: {
-    //
+    // alignItems: 'center',
   },
   crewImageContainer: {
     width: '100%',
+    maxWidth: 160,
+    maxHeight: 160,
     aspectRatio: 1 / 1,
     borderRadius: 99,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   crewName: {
     fontSize: 14,

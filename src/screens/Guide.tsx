@@ -259,22 +259,22 @@ const Guide = () => {
     },
   ];
   return (
-    <ScreenWrapper background backgroundType="gradient">
-      <Gap height={24} />
-      <Header title="Panduan Investasi" />
-      <Gap height={20} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{paddingHorizontal: 24, marginTop: 20}}>
-          <Text style={styles.heading}>Langkah Pertama: Membuat Akun</Text>
-          <GuideList guides={register} />
-          <Gap height={40} />
-          <Text style={styles.heading}>Langkah Kedua: Mengisi Data KYC</Text>
-          <GuideList guides={kyc} />
-          <Gap height={40} />
-          <Text style={styles.heading}>Langkah Ketiga: Mulai Investasi</Text>
-          <GuideList guides={investment} />
-        </View>
-      </ScrollView>
+    <ScreenWrapper
+      background
+      backgroundType="gradient"
+      scrollView
+      header
+      headerTitle="Panduan Investasi">
+      <View style={{paddingHorizontal: 24, marginTop: 20}}>
+        <Text style={styles.heading}>Langkah Pertama: Membuat Akun</Text>
+        <GuideList guides={register} />
+        <Gap height={40} />
+        <Text style={styles.heading}>Langkah Kedua: Mengisi Data KYC</Text>
+        <GuideList guides={kyc} />
+        <Gap height={40} />
+        <Text style={styles.heading}>Langkah Ketiga: Mulai Investasi</Text>
+        <GuideList guides={investment} />
+      </View>
     </ScreenWrapper>
   );
 };

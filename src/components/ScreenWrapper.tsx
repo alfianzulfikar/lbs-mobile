@@ -37,6 +37,9 @@ const ScreenWrapper = ({
   onRefresh,
   header,
   headerTitle,
+  customHeader,
+  childScrollY,
+  footer,
 }: {
   children: ReactNode;
   background?: boolean;
@@ -51,6 +54,9 @@ const ScreenWrapper = ({
   onRefresh?: () => void;
   header?: ReactNode;
   headerTitle?: string;
+  customHeader?: ReactNode;
+  childScrollY?: Animated.Value;
+  footer?: ReactNode;
 }) => {
   const {notchHeight} = useInsets();
   const {height} = useWindowDimensions();
@@ -61,19 +67,19 @@ const ScreenWrapper = ({
 
   const unsubscribeTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = childScrollY || useRef(new Animated.Value(0)).current;
 
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, 20],
-    outputRange: ['transparent', backgroundColor],
+    outputRange: [RGBAColors(0)[colorScheme].background, backgroundColor],
     extrapolate: 'clamp',
   });
 
-  // const borderBottomWidth = scrollY.interpolate({
-  //   inputRange: [0, 20],
-  //   outputRange: [0, 1],
-  //   extrapolate: 'clamp',
-  // });
+  const borderBottomWidth = scrollY.interpolate({
+    inputRange: [0, 20],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
 
   // const headerTextColor = scrollY.interpolate({
   //   inputRange: [0, 20],
@@ -112,7 +118,8 @@ const ScreenWrapper = ({
         <StatusBar
           barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
           translucent
-          backgroundColor={RGBAColors(0.8)[colorScheme].background}
+          backgroundColor="transparent"
+          // backgroundColor={RGBAColors(0.8)[colorScheme].background}
         />
       )}
       {background &&
@@ -150,19 +157,24 @@ const ScreenWrapper = ({
           }}>
           {scrollView ? (
             <>
-              {notch !== false && <Gap height={notchHeight} />}
+              {!header && notch !== false && <Gap height={notchHeight} />}
               {header && (
-                // <Animated.View style={{backgroundColor: headerBackgroundColor}}>
-                // </Animated.View>
-                <>
-                  <Gap height={24} />
-                  <Header title={headerTitle || ''} />
-                  <Gap height={20} />
-                </>
+                <Animated.View
+                  style={{
+                    backgroundColor: headerBackgroundColor,
+                    borderBottomWidth,
+                    borderColor: RGBAColors(0.05)[colorScheme].text,
+                  }}>
+                  {notch !== false && <Gap height={notchHeight} />}
+                  <>
+                    <Gap height={24} />
+                    {customHeader || <Header title={headerTitle || ''} />}
+                    <Gap height={20} />
+                  </>
+                </Animated.View>
               )}
               <View style={{flex: 1}}>
                 <ScrollView
-                  // bounces={false}
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{flexGrow: 1}}
                   style={{zIndex: 3}}
@@ -182,17 +194,30 @@ const ScreenWrapper = ({
                   scrollEventThrottle={16}>
                   {/* {notch !== false && !header && <Gap height={notchHeight} />} */}
                   {children}
-                  {/* {notch !== false && <Gap height={bottomHeight} />} */}
                 </ScrollView>
               </View>
+
+              {footer}
             </>
           ) : (
-            // <View style={{flexGrow: 1}}>
-            // </View>
             <View style={{flex: 1, zIndex: 3}}>
-              {notch !== false && <Gap height={notchHeight} />}
+              {!header && notch !== false && <Gap height={notchHeight} />}
+              {header && (
+                <Animated.View
+                  style={{
+                    backgroundColor: headerBackgroundColor,
+                    borderBottomWidth,
+                    borderColor: RGBAColors(0.05)[colorScheme].text,
+                  }}>
+                  {notch !== false && <Gap height={notchHeight} />}
+                  <>
+                    <Gap height={24} />
+                    {customHeader || <Header title={headerTitle || ''} />}
+                    <Gap height={20} />
+                  </>
+                </Animated.View>
+              )}
               {children}
-              {/* {notch !== false && <Gap height={bottomHeight} />} */}
             </View>
           )}
         </View>
