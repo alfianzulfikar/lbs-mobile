@@ -55,10 +55,12 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
               backgroundColor: RGBAColors(0.2)[colorScheme].background,
             },
           ]}>
-          <Image
-            source={{uri: data.image}}
-            style={{resizeMode: 'cover', width: '100%', height: '100%'}}
-          />
+          {data.image && (
+            <Image
+              source={{uri: data.image}}
+              style={{resizeMode: 'cover', width: '100%', height: '100%'}}
+            />
+          )}
         </View>
         <View
           style={[
@@ -74,7 +76,11 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
           {/* <BlurOverlay blurType="regular" blurAmount={60} /> */}
           <View style={styles.information}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // marginBottom: 16,
+              }}>
               <View style={{flexDirection: 'row'}}>
                 <Badge text={capitalize(data.tipeBisnis)} transparent />
                 <Gap width={8} />
@@ -96,12 +102,14 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
                   }
                 />
               </View>
-              <RoundedProgressIndicator
-                target={data.target}
-                current={data.terpenuhi}
-              />
+              {capitalize(data.status) !== 'Pre-listing' && (
+                <RoundedProgressIndicator
+                  target={data.target}
+                  current={data.terpenuhi}
+                />
+              )}
             </View>
-            <Gap height={8} />
+            <Gap height={capitalize(data.status) === 'Pre-listing' ? 24 : 8} />
             <Text style={styles.merkDagang} numberOfLines={2}>
               {data.merkDagang}
             </Text>

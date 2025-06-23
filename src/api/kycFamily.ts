@@ -4,6 +4,7 @@ import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {heirRelationshipOption} from '../constants/KYC';
 import trimStringInObject from '../utils/trimStringInObject';
+import {Keyboard} from 'react-native';
 
 export const useKYCFamily = () => {
   const {apiRequest} = useAPI();
@@ -61,6 +62,7 @@ export const useKYCFamily = () => {
   };
 
   const submitFamily = async () => {
+    Keyboard.dismiss();
     setFamilySubmitLoading(true);
     try {
       const body = trimStringInObject({

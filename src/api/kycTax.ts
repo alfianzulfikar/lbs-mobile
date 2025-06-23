@@ -8,6 +8,7 @@ import {
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
+import {Keyboard} from 'react-native';
 
 export const useKYCTax = () => {
   const {apiRequest} = useAPI();
@@ -55,7 +56,9 @@ export const useKYCTax = () => {
       setTax2({
         rekeningSid: res?.pajak?.rekening_sid || '',
         tglRegistrasiSid: res?.pajak?.tgl_registrasi_sid || '',
-        fotoRekeningSid: res?.pajak?.foto_rekening_sid || '',
+        fotoRekeningSid: res?.pajak?.rekening_sid
+          ? res?.pajak?.foto_rekening_sid || ''
+          : '',
       });
     } catch {
     } finally {
@@ -64,14 +67,39 @@ export const useKYCTax = () => {
   };
 
   const submitTax = async () => {
+    Keyboard.dismiss();
     setTaxSubmitLoading(true);
     try {
+      setTaxError(prev => ({
+        ...prev,
+        hasSID: [],
+      }));
+      setTax2Error(prev => ({
+        ...prev,
+        fotoRekeningSid: [],
+        tglRegistrasiSid: [],
+      }));
       if (tax.hasSID === null || tax.hasSID === undefined) {
         setTaxError(prev => ({
           ...prev,
           hasSID: ['Wajib diisi'],
         }));
         return;
+      } else if (tax.hasSID) {
+        if (tax2.rekeningSid) {
+          if (!(tax2.fotoRekeningSid && tax2.tglRegistrasiSid)) {
+            setTax2Error(prev => ({
+              ...prev,
+              fotoRekeningSid: !tax2.fotoRekeningSid
+                ? ['Sertakan foto SID']
+                : [],
+              tglRegistrasiSid: !tax2.tglRegistrasiSid
+                ? ['Sertakan tanggal registrasi SID']
+                : [],
+            }));
+            return;
+          }
+        }
       }
       const body = trimStringInObject({
         foto_rekening_sid: tax2.fotoRekeningSid,
@@ -109,7 +137,6 @@ export const useKYCTax = () => {
           status: number;
           data?: any;
         };
-        console.log('tax error', error);
         if (error?.status === 422) {
           setTaxError(prev => ({
             kodePajakId: error?.data?.errors?.kode_pajak_id || [],

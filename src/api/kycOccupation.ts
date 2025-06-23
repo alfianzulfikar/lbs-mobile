@@ -3,6 +3,7 @@ import {KYCOccupationErrorType, KYCOccupationType} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
+import {Keyboard} from 'react-native';
 
 export const useKYCOccupation = () => {
   const {apiRequest} = useAPI();
@@ -61,6 +62,7 @@ export const useKYCOccupation = () => {
   };
 
   const submitOccupation = async () => {
+    Keyboard.dismiss();
     setOccupationSubmitLoading(true);
     try {
       const body = trimStringInObject({

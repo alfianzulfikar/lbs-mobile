@@ -41,7 +41,7 @@ const NetworkErrorBottomSheet = () => {
       <Gap flex={1} />
       <Gap height={24} />
       <Button
-        title="Coba Lagi"
+        title="Tutup"
         onPress={() => dispatch(setShowNetworkError({showNetworkError: false}))}
       />
     </CustomBottomSheet>

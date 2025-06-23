@@ -9,6 +9,24 @@ import {Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useNotification} from './services/notification';
 import NetworkErrorBottomSheet from './components/NetworkErrorBottomSheet';
+import * as Sentry from '@sentry/react-native';
+import {useThemeColor} from './hooks/useThemeColor';
+
+Sentry.init({
+  dsn: 'https://ade466671fc7475582ade181ffa91d3c@o1258244.ingest.us.sentry.io/6432180',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Configure Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  integrations: [Sentry.mobileReplayIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 const App = () => {
   const {
@@ -59,19 +77,11 @@ const App = () => {
     <Provider store={store}>
       <GestureHandlerRootView style={{flex: 1}}>
         <BottomSheetModalProvider>
-          <SafeAreaProvider>
-            {Platform.OS === 'ios' ? (
-              <Router />
-            ) : (
-              <SafeAreaView style={{flex: 1}} edges={['bottom']}>
-                <Router />
-              </SafeAreaView>
-            )}
-          </SafeAreaProvider>
+          <Router />
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </Provider>
   );
 };
 
-export default App;
+export default Sentry.wrap(App);

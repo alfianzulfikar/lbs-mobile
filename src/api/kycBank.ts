@@ -3,6 +3,7 @@ import {KYCBankErrorType, KYCBankType} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
+import {Keyboard} from 'react-native';
 
 export const useKYCBank = () => {
   const {apiRequest} = useAPI();
@@ -39,6 +40,7 @@ export const useKYCBank = () => {
   };
 
   const submitBank = async () => {
+    Keyboard.dismiss();
     setBankSubmitLoading(true);
     try {
       const body = trimStringInObject({

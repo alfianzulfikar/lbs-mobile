@@ -1,12 +1,8 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {View, Text} from 'react-native';
-import {
-  createStaticNavigation,
-  NavigationContainer,
-  StaticParamList,
-} from '@react-navigation/native';
+import {KeyboardAvoidingView, Platform} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './screens/Home';
 import Business from './screens/Business';
@@ -76,11 +72,12 @@ import {navigationRef, tryFlushPendingNavigation} from './services/navigation';
 import NotificationDetail from './screens/NotificationDetail';
 import AccountVerificationExpired from './screens/AccountVerificationExpired';
 import {useInitTheme} from './hooks/useInitTheme';
-import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from './store';
 import NetworkErrorBottomSheet from './components/NetworkErrorBottomSheet';
-import CustomAlert from './components/CustomAlert';
-import {setShowAlert} from './slices/globalError';
+import CropImage from './screens/CropImage';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
+import {useThemeColor} from './hooks/useThemeColor';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -276,6 +273,7 @@ function RootStack() {
         component={NotificationHistory}
       />
       <Stack.Screen name="NotificationDetail" component={NotificationDetail} />
+      <Stack.Screen name="CropImage" component={CropImage} />
     </Stack.Navigator>
   );
 }
@@ -441,18 +439,7 @@ declare global {
 // export default function App() {
 //   return <Navigation />;
 
-export default function App() {
-  const {initTheme} = useInitTheme();
-  const {showNetworkError, showAlert} = useSelector(
-    (item: RootState) => item.globalError,
-  );
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    initTheme();
-    console.log('render router');
-  }, []);
-
+const RouterComponent = () => {
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -461,7 +448,30 @@ export default function App() {
         tryFlushPendingNavigation();
       }}>
       <RootStack />
-      {showNetworkError && <NetworkErrorBottomSheet />}
     </NavigationContainer>
+  );
+};
+
+export default function App() {
+  const {initTheme} = useInitTheme();
+  const backgroundColor = useThemeColor({}, 'background');
+  const {showNetworkError} = useSelector((item: RootState) => item.globalError);
+
+  React.useEffect(() => {
+    initTheme();
+    console.log('render router');
+  }, []);
+
+  return (
+    <SafeAreaProvider>
+      {Platform.OS === 'ios' ? (
+        <RouterComponent />
+      ) : (
+        <SafeAreaView style={{flex: 1, backgroundColor}}>
+          <RouterComponent />
+        </SafeAreaView>
+      )}
+      {showNetworkError && <NetworkErrorBottomSheet />}
+    </SafeAreaProvider>
   );
 }

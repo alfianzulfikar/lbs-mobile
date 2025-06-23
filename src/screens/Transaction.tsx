@@ -374,15 +374,7 @@ const Transaction = () => {
 
   const asyncFunc = async () => {
     setLoadingTransaction(true);
-    await getTransaction(
-      1,
-      {
-        type: '',
-        order: '',
-        status: '',
-      },
-      activeMenu,
-    );
+    await getTransaction(1, filter, activeMenu);
     setTimeout(() => {
       setScrollEnabled(true);
     }, 2000);

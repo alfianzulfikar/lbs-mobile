@@ -1,4 +1,5 @@
 import {
+  Platform,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
@@ -10,20 +11,20 @@ import {Colors} from '../constants/Colors';
 import ICInfo from './icons/ICInfo';
 import Gap from './Gap';
 import ICCancel from './icons/ICCancel';
-import {useInsets} from '../hooks/useInsets';
 import {useDispatch, useSelector} from 'react-redux';
 import {setShowAlert} from '../slices/globalError';
 import {RootState} from '../store';
-import {useFocusEffect} from '@react-navigation/native';
 import ICWarning from './icons/ICWarning';
 import ICChecked from './icons/ICChecked';
+import usePicture from '../hooks/usePicture';
+import {useInsets} from '../hooks/useInsets';
 
 const CustomAlert = ({onClose}: {onClose: () => void}) => {
+  const {notchHeight} = useInsets();
   const dispatch = useDispatch();
-  const {title, desc, type} = useSelector(
+  const {title, desc, type, alertButtonText, alertButtonAction} = useSelector(
     (item: RootState) => item.globalError,
   );
-  const {notchHeight} = useInsets();
   const {width} = useWindowDimensions();
   const textColor = Colors.light.text;
   const textColor2 = Colors.light.text2;
@@ -63,6 +64,8 @@ const CustomAlert = ({onClose}: {onClose: () => void}) => {
       ? textColorWarning
       : textColorInfo;
 
+  const picture = usePicture();
+
   // const unsubscribeTimeout = useRef(
   //   setTimeout(() => {
   //     if (onClose) {
@@ -87,7 +90,7 @@ const CustomAlert = ({onClose}: {onClose: () => void}) => {
         alignItems: 'center',
         width: '100%',
       }}>
-      <Gap height={notchHeight + 24} />
+      <Gap height={Platform.OS === 'android' ? 24 : 24 + notchHeight} />
       <View
         style={[
           styles.container,
@@ -110,6 +113,22 @@ const CustomAlert = ({onClose}: {onClose: () => void}) => {
               <Text style={[styles.desc, {color: textColor2, flex: 1}]}>
                 {desc}
               </Text>
+            )}
+            {alertButtonAction && (
+              <TouchableOpacity
+                style={{marginTop: 4, alignSelf: 'flex-end'}}
+                onPress={() => {
+                  if (alertButtonAction === 'open-settings') {
+                    picture.openAppSettings();
+                  }
+                  dispatch(setShowAlert(false));
+                }}>
+                <Text style={styles.buttonText}>
+                  {alertButtonAction === 'open-settings'
+                    ? alertButtonText || 'Buka pengaturan'
+                    : ''}
+                </Text>
+              </TouchableOpacity>
             )}
             <Gap height={3} />
           </View>
@@ -146,5 +165,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     marginTop: 4,
+  },
+  buttonText: {
+    fontSize: 12,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
   },
 });

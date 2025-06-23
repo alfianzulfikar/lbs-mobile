@@ -8,6 +8,7 @@ import {
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
+import {Keyboard} from 'react-native';
 
 export const useKYCAddress = () => {
   const {apiRequest} = useAPI();
@@ -76,6 +77,7 @@ export const useKYCAddress = () => {
   };
 
   const submitAddress = async () => {
+    Keyboard.dismiss();
     setAddressSubmitLoading(true);
     try {
       if (addressKTP.isAddressSame === null) {

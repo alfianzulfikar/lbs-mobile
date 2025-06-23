@@ -8,20 +8,31 @@ import ICCaretArrowDown from './icons/ICCaretArrowDown';
 import Markdown from 'react-native-markdown-display';
 import {useColorScheme} from '../hooks/useColorScheme';
 import Gap from './Gap';
+import Button from './Button';
+import {useNavigation} from '@react-navigation/native';
 
 const AccordionItem = ({
   question,
   answer,
   markdown,
+  aboutUs,
+  show,
+  setShow,
+  itemIndex,
 }: {
   question: string;
   answer: string;
   markdown?: string;
+  aboutUs?: boolean;
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<number | null>>;
+  itemIndex: number;
 }) => {
   let colorScheme = useColorScheme();
   const textColor2 = useThemeColor({}, 'text2');
   const iconColor = useThemeColor({}, 'icon');
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
+  const navigation = useNavigation();
 
   return (
     <View
@@ -36,7 +47,7 @@ const AccordionItem = ({
       <View style={styles.contentContainer}>
         <Pressable
           style={styles.titleContainer}
-          onPress={() => setShow(prev => !prev)}>
+          onPress={() => setShow(show ? null : itemIndex)}>
           <Text style={styles.title}>{question}</Text>
           <Gap width={8} />
           <ICCaretArrowDown color={iconColor} />
@@ -51,6 +62,21 @@ const AccordionItem = ({
               }>
               {answer}
             </Markdown>
+            {aboutUs && (
+              <>
+                <Gap height={16} />
+                <Text style={[styles.methodText, {color: textColor2}]}>
+                  Lebih lanjut tentang LBS Urun Dana, klik tombol berikut ini.
+                </Text>
+                <Gap height={16} />
+                <Button
+                  title="Tentang kami"
+                  onPress={() =>
+                    navigation.navigate('Account', {screen: 'AboutUs'})
+                  }
+                />
+              </>
+            )}
             {/* {list.map((item, id) => (
             <View key={id} style={{flexDirection: 'row'}}>
               <Text style={[styles.methodText, {color: textColor2, width: 20}]}>
@@ -104,12 +130,16 @@ const styles = StyleSheet.create({
 
 const markdownStylesLight = StyleSheet.create({
   body: {
+    fontSize: 16,
+    lineHeight: 24,
     color: '#404040',
   },
 });
 
 const markdownStylesDark = StyleSheet.create({
   body: {
+    fontSize: 16,
+    lineHeight: 24,
     color: '#E0E0E0',
   },
 });

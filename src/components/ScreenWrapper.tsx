@@ -1,6 +1,8 @@
 import {
+  ActivityIndicator,
   Animated,
   ImageBackground,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   RefreshControl,
@@ -10,7 +12,13 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import React, {ReactNode, useCallback, useEffect, useRef} from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import Gap from './Gap';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {RGBAColors} from '../constants/Colors';
@@ -40,6 +48,7 @@ const ScreenWrapper = ({
   customHeader,
   childScrollY,
   footer,
+  bounces,
 }: {
   children: ReactNode;
   background?: boolean;
@@ -57,16 +66,19 @@ const ScreenWrapper = ({
   customHeader?: ReactNode;
   childScrollY?: Animated.Value;
   footer?: ReactNode;
+  bounces?: boolean;
 }) => {
   const {notchHeight} = useInsets();
   const {height} = useWindowDimensions();
   const colorScheme = useColorScheme();
+  const tint = useThemeColor({}, 'tint');
   const backgroundColor = useThemeColor({}, 'background');
   const {showAlert} = useSelector((item: RootState) => item.globalError);
   const dispatch = useDispatch();
 
-  const unsubscribeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+  const unsubscribeTimeout = useRef<NodeJS.Timeout | null>(null);
   const scrollY = childScrollY || useRef(new Animated.Value(0)).current;
 
   const headerBackgroundColor = scrollY.interpolate({
@@ -112,14 +124,30 @@ const ScreenWrapper = ({
   //   }
   // }, [showAlert]);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true),
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false),
+    );
+
+    // cleanup listener on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor}}>
       {statusBar !== false && (
         <StatusBar
-          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+          barStyle={colorScheme === 'light' ? 'dark-content' : 'light-content'}
           translucent
           backgroundColor="transparent"
-          // backgroundColor={RGBAColors(0.8)[colorScheme].background}
         />
       )}
       {background &&
@@ -157,7 +185,9 @@ const ScreenWrapper = ({
           }}>
           {scrollView ? (
             <>
-              {!header && notch !== false && <Gap height={notchHeight} />}
+              {!header && notch !== false && Platform.OS === 'ios' && (
+                <Gap height={notchHeight} />
+              )}
               {header && (
                 <Animated.View
                   style={{
@@ -165,7 +195,9 @@ const ScreenWrapper = ({
                     borderBottomWidth,
                     borderColor: RGBAColors(0.05)[colorScheme].text,
                   }}>
-                  {notch !== false && <Gap height={notchHeight} />}
+                  {notch !== false && Platform.OS === 'ios' && (
+                    <Gap height={notchHeight} />
+                  )}
                   <>
                     <Gap height={24} />
                     {customHeader || <Header title={headerTitle || ''} />}
@@ -175,6 +207,7 @@ const ScreenWrapper = ({
               )}
               <View style={{flex: 1}}>
                 <ScrollView
+                  bounces={bounces === false ? false : true}
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{flexGrow: 1}}
                   style={{zIndex: 3}}
@@ -184,6 +217,7 @@ const ScreenWrapper = ({
                       <RefreshControl
                         refreshing={refreshing || false}
                         onRefresh={onRefresh}
+                        tintColor={tint}
                       />
                     ) : undefined
                   }
@@ -192,7 +226,12 @@ const ScreenWrapper = ({
                     {useNativeDriver: false},
                   )}
                   scrollEventThrottle={16}>
-                  {/* {notch !== false && !header && <Gap height={notchHeight} />} */}
+                  {/* {notch !== false && !header && Platform.OS === 'ios' && (
+                    <Gap height={notchHeight} />
+                  )} */}
+                  {/* {refreshing && Platform.OS == 'ios' && (
+                    <ActivityIndicator color={tint} />
+                  )} */}
                   {children}
                 </ScrollView>
               </View>
@@ -209,7 +248,9 @@ const ScreenWrapper = ({
                     borderBottomWidth,
                     borderColor: RGBAColors(0.05)[colorScheme].text,
                   }}>
-                  {notch !== false && <Gap height={notchHeight} />}
+                  {notch !== false && Platform.OS === 'ios' && (
+                    <Gap height={notchHeight} />
+                  )}
                   <>
                     <Gap height={24} />
                     {customHeader || <Header title={headerTitle || ''} />}
@@ -219,6 +260,9 @@ const ScreenWrapper = ({
               )}
               {children}
             </View>
+          )}
+          {isKeyboardVisible && Platform.OS === 'android' && (
+            <Gap height={24} />
           )}
         </View>
       </KeyboardAvoidingView>

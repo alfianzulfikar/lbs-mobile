@@ -75,7 +75,8 @@ const ArticleDetail = ({route}: Props) => {
       backgroundType="gradient"
       scrollView
       statusBarBackground={backgroundColor}
-      overlay={colorScheme === 'dark'}>
+      overlay={colorScheme === 'dark'}
+      bounces={false}>
       {loading ? (
         <ActivityIndicator color={tint} />
       ) : (

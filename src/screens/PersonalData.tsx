@@ -73,7 +73,7 @@ const PersonalData = () => {
           </>
         )}
         <Text style={styles.question}>Ada data yang tidak sesuai?</Text>
-        <Gap height={24} />
+        <Gap height={16} />
         <Button
           title="Ajukan Perubahan Data"
           onPress={() =>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   question: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 20,
     textAlign: 'center',
     marginTop: 40,

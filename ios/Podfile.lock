@@ -2117,6 +2117,29 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (6.15.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.52.1)
+    - Yoga
   - RNSVG (15.12.0):
     - DoubleConversion
     - glog
@@ -2160,6 +2183,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - Sentry/HybridSDK (8.52.1)
   - SocketRocket (0.7.1)
   - TOCropViewController (2.7.4)
   - Yoga (0.0.0)
@@ -2251,6 +2275,7 @@ DEPENDENCIES:
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2267,6 +2292,7 @@ SPEC REPOS:
     - lottie-ios
     - nanopb
     - PromisesObjC
+    - Sentry
     - SocketRocket
     - TOCropViewController
 
@@ -2440,6 +2466,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -2541,7 +2569,9 @@ SPEC CHECKSUMS:
   RNNotifee: 4a6ee5c7deaf00e005050052d73ee6315dff7ec9
   RNReanimated: 54fbd14d2d88e242e8f8ad46376db0c78ae88bd1
   RNScreens: 39b2b81ef7e0d93386810ac7c1860b6248bb1e15
+  RNSentry: 5a32004807e39059b0b1efd3423c3776b1fafda1
   RNSVG: 5d7992749922ef29078dcadcbac0d3546dc0a31d
+  Sentry: 2cbbe3592f30050c60e916c63c7f5a2fa584005e
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: d89d04d86b5af18317f481166dccc48213d26927

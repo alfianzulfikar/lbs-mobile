@@ -29,7 +29,9 @@ const InputWrapper = ({
             RGBAColors(colorScheme === 'dark' ? 0.3 : 0.1)[colorScheme].text,
         },
       ]}>
-      <BlurOverlay />
+      <View style={styles.blurOverlayWrapper}>
+        <BlurOverlay />
+      </View>
       <View style={{zIndex: 2}}>{children}</View>
     </View>
   );
@@ -42,5 +44,12 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     overflow: 'hidden',
     borderWidth: 1,
+  },
+  blurOverlayWrapper: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 40,
+    overflow: 'hidden',
   },
 });

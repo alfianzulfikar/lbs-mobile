@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ListRenderItem,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   View,
@@ -147,9 +148,10 @@ const Business = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    setIsLastPage(false);
-    setPage(1);
-    await asyncFunc();
+    // setIsLastPage(false);
+    // setPage(1);
+    // await asyncFunc();
+    await handleSearch();
     setRefreshing(false);
   };
 
@@ -161,14 +163,19 @@ const Business = () => {
         setKeyword('');
         setIsLastPage(false);
         setPage(1);
-        setBusinesses([]);
+        // setBusinesses([]);
         setFilter({order: '', progress: ''});
       };
     }, []),
   );
 
   return (
-    <ScreenWrapper background backgroundType="pattern" scrollView>
+    <ScreenWrapper
+      background
+      backgroundType="pattern"
+      scrollView
+      refreshing={refreshing}
+      onRefresh={onRefresh}>
       <View style={{paddingHorizontal: 24}}>
         <Gap height={24} />
         <SearchBar
@@ -232,8 +239,8 @@ const Business = () => {
           <View style={{flexDirection: 'row'}}>
             <FlatList
               bounces={false}
-              onRefresh={onRefresh}
-              refreshing={refreshing}
+              // onRefresh={onRefresh}
+              // refreshing={refreshing}
               ref={businessFlatlistRef}
               horizontal
               data={businesses}

@@ -1,4 +1,4 @@
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {HomeMenuScreenType} from '../constants/Types';
@@ -21,6 +21,7 @@ import {useColorScheme} from '../hooks/useColorScheme';
 import BannerCarousel from '../components/BannerCarousel';
 import {useBannerCarousel} from '../api/bannerCarousel';
 import HomeKycStatus from '../components/HomeKycStatus';
+import BannerCarousel2 from '../components/BannerCarousel2';
 
 const Home = () => {
   const colorScheme = useColorScheme();
@@ -115,7 +116,11 @@ const Home = () => {
             </View>
           )}
           {(bannersLoading || banners.length > 0) && <Gap height={40} />}
-          <BannerCarousel banners={banners} loading={bannersLoading} />
+          {Platform.OS === 'android' ? (
+            <BannerCarousel banners={banners} loading={bannersLoading} />
+          ) : (
+            <BannerCarousel2 banners={banners} loading={bannersLoading} />
+          )}
           <Gap height={40} />
           <View style={styles.menuContainer}>
             {menu.map((menuItem, index) => (

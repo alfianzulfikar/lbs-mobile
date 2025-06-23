@@ -91,25 +91,16 @@ const OnBoarding = () => {
       background
       backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
       <Gap height={56} />
-      <View
-        style={{
-          width: '100%',
-          // maxWidth: (width * 74) / 100 <= 300 ? (width * 74) / 100 : 300,
-          // maxHeight: (width * 74) / 100 <= 300 ? (width * 74) / 100 : 300,
-          maxHeight: maxImageHeight,
-          aspectRatio: 1 / 1,
-          alignSelf: 'center',
-          overflow: 'hidden',
-        }}>
-        <Image
-          source={require('../assets/images/onboarding-img.png')}
-          resizeMode="cover"
-          style={styles.illustration}
-        />
+      <View style={{flex: 1}}>
+        <View style={[styles.imageWrapper, {maxHeight: 300}]}>
+          <Image
+            source={require('../assets/images/onboarding-img.png')}
+            resizeMode="contain"
+            style={styles.illustration}
+          />
+        </View>
       </View>
-      <Gap flex={1} />
-      <View style={{}}>
-        {/* <Gap height={24} /> */}
+      <View>
         <View
           style={[
             styles.descContainer,
@@ -123,10 +114,7 @@ const OnBoarding = () => {
           <BlurOverlay />
           <View
             onLayout={handleContentLayout}
-            style={[
-              styles.descContentContainer,
-              {paddingTop: 24, paddingBottom: 24},
-            ]}>
+            style={[styles.descContentContainer]}>
             <FlatList
               ref={flatlistRef}
               data={slides}
@@ -282,6 +270,11 @@ const OnBoarding = () => {
 export default OnBoarding;
 
 const styles = StyleSheet.create({
+  imageWrapper: {
+    width: '100%',
+    overflow: 'hidden',
+    alignItems: 'center',
+  },
   illustration: {
     width: '100%',
     height: '100%',
@@ -294,9 +287,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
   },
   descContentContainer: {
-    // flex: 1,
-    // paddingVertical: 24,
     zIndex: 2,
+    // flex: 1,
+    paddingTop: 24,
+    paddingBottom: 24,
   },
   title: {
     fontSize: 24,

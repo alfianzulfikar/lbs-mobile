@@ -7,6 +7,8 @@ export interface GlobalErrorType {
   title?: string;
   desc?: string;
   type?: string;
+  alertButtonText?: string;
+  alertButtonAction?: 'open-settings';
 }
 
 const initialState: GlobalErrorType = {
@@ -15,6 +17,8 @@ const initialState: GlobalErrorType = {
   title: '',
   desc: '',
   type: 'info',
+  alertButtonText: '',
+  alertButtonAction: undefined,
 };
 
 export const globalError = createSlice({
@@ -29,6 +33,8 @@ export const globalError = createSlice({
       state.desc = action.payload.desc;
       state.type = action.payload.type;
       state.showAlert = action.payload.showAlert;
+      state.alertButtonText = action.payload.alertButtonText;
+      state.alertButtonAction = action.payload.alertButtonAction;
     },
     setShowAlert: (state, action: PayloadAction<boolean>) => {
       state.showAlert = action.payload;

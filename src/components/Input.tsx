@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
+  PermissionsAndroid,
   Pressable,
   StyleSheet,
   TextInput,
@@ -37,6 +38,12 @@ import Gap from './Gap';
 import {checkNonNumeric} from '../utils/checkNonNumeric';
 import CheckBox from './CheckBox';
 import {useColorScheme} from '../hooks/useColorScheme';
+import IconWrapper2 from './IconWrapper2';
+import ICCamera from './icons/ICCamera';
+import ICPicture from './icons/ICPicture';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
+import usePicture from '../hooks/usePicture';
 
 const Input = ({
   label,
@@ -55,6 +62,7 @@ const Input = ({
   loading,
   subLabel,
   subLabelIcon,
+  pictureType,
 }: {
   label?: string;
   type?: InputType;
@@ -72,6 +80,7 @@ const Input = ({
   loading?: boolean;
   subLabel?: string;
   subLabelIcon?: ReactNode;
+  pictureType?: 'camera' | 'galery' | 'option';
 }) => {
   let colorScheme = useColorScheme();
   const iconColor = useThemeColor({}, 'icon');
@@ -83,11 +92,14 @@ const Input = ({
   const textColorDisable = useThemeColor({}, 'textDisable');
   const tint = useThemeColor({}, 'tint');
   const dropdownHighlight = useThemeColor({}, 'dropdownHighlight');
+  const dispatch = useDispatch();
+  const pictureHooks = usePicture();
 
   const [showPassword, setShowPassword] = useState(true);
   const [showOption, setShowOption] = useState(false);
   const [picture, setPicture] = useState(value);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showPictureOption, setShowPictureOption] = useState(false);
 
   const handleImageRes = (res: any) => {
     if (!res?.didCancel) {
@@ -112,8 +124,25 @@ const Input = ({
       if (type === 'galery') {
         await launchImageLibrary(options, res => handleImageRes(res));
       } else {
-        await launchCamera(options, res => handleImageRes(res));
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          await launchCamera(options, res => handleImageRes(res));
+        } else {
+          dispatch(
+            setAlert({
+              title: 'Tidak ada akses ke kamera',
+              desc: 'Izinkan aplikasi LBS Urun Dana untuk mengakses kamera melalui pengaturan perangkat Anda.',
+              type: 'danger',
+              showAlert: true,
+              alertButtonAction: 'open-settings',
+            }),
+          );
+          setShowPictureOption(false);
+        }
       }
+      setShowPictureOption(false);
     } catch (error) {
       console.log('take picture error', error);
     }
@@ -214,6 +243,7 @@ const Input = ({
                 value.includes(optionItem.id)
               }
               onChange={() => {
+                Keyboard.dismiss();
                 if (Array.isArray(value) && typeof optionItem.id === 'number') {
                   let newArray = [];
                   if (value.includes(optionItem.id)) {
@@ -246,8 +276,12 @@ const Input = ({
                   setShowOption(prev => !prev);
                 } else if (type === 'date') {
                   setShowDatePicker(true);
-                } else {
-                  takePicture({type: 'camera'});
+                } else if (type === 'picture') {
+                  if (pictureType === 'option') {
+                    setShowPictureOption(true);
+                  } else {
+                    takePicture({type: pictureType || 'camera'});
+                  }
                 }
                 Keyboard.dismiss();
               }}>
@@ -457,6 +491,33 @@ const Input = ({
           cancelText="Batal"
         />
       )}
+
+      {showPictureOption && (
+        <BottomSheet
+          setShow={() => setShowPictureOption(false)}
+          snapPoints={['40%']}>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={{alignItems: 'center', width: 100}}
+              onPress={() => takePicture({type: 'camera'})}>
+              <IconWrapper2>
+                <ICCamera color={tint} />
+              </IconWrapper2>
+              <Text style={styles.photoOptionText}>Ambil dengan Kamera</Text>
+            </TouchableOpacity>
+            <Gap width={16} />
+            <TouchableOpacity
+              style={{alignItems: 'center', width: 100}}
+              onPress={() => takePicture({type: 'galery'})}>
+              <IconWrapper2>
+                <ICPicture color={tint} />
+              </IconWrapper2>
+              <Text style={styles.photoOptionText}>Ambil dari Galeri</Text>
+            </TouchableOpacity>
+          </View>
+          <Gap height={40} />
+        </BottomSheet>
+      )}
     </View>
   );
 };
@@ -540,5 +601,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 16,
     flex: 1,
+  },
+  photoOptionText: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

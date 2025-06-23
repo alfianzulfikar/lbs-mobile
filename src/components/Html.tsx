@@ -11,28 +11,32 @@ const Html = ({source}: {source: string}) => {
 
   const tagsStyles = {
     p: {
-      marginBottom: 12,
+      marginBottom: 8,
       color: textColor2,
       fontSize: 16,
       lineHeight: 24,
+      textAlign: 'justify',
     },
     h1: {
+      fontSize: 28,
+      fontWeight: '700',
+      marginBottom: 16,
+      color: textColor2,
+      lineHeight: 36,
+    },
+    h2: {
       fontSize: 24,
       fontWeight: '700',
       marginBottom: 16,
       color: textColor2,
-    },
-    h2: {
-      fontSize: 18,
-      fontWeight: '700',
-      marginBottom: 16,
-      color: textColor2,
+      lineHeight: 32,
     },
     h3: {
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: '700',
       marginBottom: 16,
       color: textColor2,
+      lineHeight: 30,
     },
     strong: {
       fontWeight: '700',
@@ -59,13 +63,13 @@ const Html = ({source}: {source: string}) => {
       color: textColor2,
     },
     ol: {
-      marginBottom: 12,
+      marginBottom: 16,
       color: textColor2,
       fontSize: 16,
       lineHeight: 24,
     },
     ul: {
-      marginBottom: 12,
+      marginBottom: 16,
       color: textColor2,
       fontSize: 16,
       lineHeight: 24,

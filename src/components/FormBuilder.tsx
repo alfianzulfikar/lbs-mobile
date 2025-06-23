@@ -70,7 +70,7 @@ const FormBuilder = ({
                 </View>
               </View>
               <Gap height={4} />
-              <ErrorText error={error ? error[item.name] : []} />
+              <ErrorText error={error ? error[item.name] || [] : []} />
             </>
           ) : (
             <Input
@@ -92,6 +92,7 @@ const FormBuilder = ({
               loading={item.loading}
               subLabel={item.subLabel}
               subLabelIcon={item.subLabelIcon}
+              pictureType={item.pictureType}
             />
           )}
         </View>

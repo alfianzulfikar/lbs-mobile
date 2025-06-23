@@ -109,6 +109,7 @@ const KYCTax = () => {
       name: 'fotoRekeningSid',
       label: 'Foto Kepemilikan SID',
       type: 'picture',
+      pictureType: 'option',
     },
   ];
 

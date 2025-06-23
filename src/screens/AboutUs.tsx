@@ -20,6 +20,12 @@ import ICAmanah from '../components/icons/ICAmanah';
 import ICCommitment from '../components/icons/ICCommitment';
 import {useColorScheme} from '../hooks/useColorScheme';
 
+const imgUstadErwandi = require('../assets/images/ustad-erwandi.png');
+const imgPakSolach = require('../assets/images/pak-solach.png');
+const imgPakReza = require('../assets/images/pak-reza.png');
+const imgPakDani = require('../assets/images/pak-dani.png');
+const imgPakBemby = require('../assets/images/pak-bemby.png');
+
 const AboutUs = () => {
   const colorScheme = useColorScheme();
   const {width} = useWindowDimensions();
@@ -160,50 +166,35 @@ const AboutUs = () => {
   ];
 
   const founderAndCommissioner = [
-    {name: 'Ustadz Dr. Erwandi Tarmizi, MA', position: 'Founder', image: ''},
-    {name: "Ir. Solachudin Al'af Ghoni", position: 'Commissioner', image: ''},
+    {
+      name: 'Ustadz Dr. Erwandi Tarmizi, MA',
+      position: 'Founder',
+      image: imgUstadErwandi,
+    },
+    {
+      name: "Ir. Solachudin Al'af Ghoni",
+      position: 'Commissioner',
+      image: imgPakSolach,
+    },
   ];
 
   const bod = [
     {
       name: 'Rezza Zulkasi, MAppFin',
       position: 'Chief Executive Officer',
-      image: '',
+      image: imgPakReza,
     },
-    {name: 'Murdani Aji, S.Kom', position: 'Chief Business Officer', image: ''},
-    {name: 'Bemby Oktora, ST', position: 'Chief Technology Officer', image: ''},
+    {
+      name: 'Murdani Aji, S.Kom',
+      position: 'Chief Business Officer',
+      image: imgPakDani,
+    },
+    {
+      name: 'Bemby Oktora, ST',
+      position: 'Chief Technology Officer',
+      image: imgPakBemby,
+    },
   ];
-
-  // const crew = [
-  //   {name: 'Ustadz Dr. Erwandi Tarmizi, MA', position: 'Founder', image: ''},
-  //   {name: "Ir. Solachudin Al'af Ghoni", position: 'Commissioner', image: ''},
-  //   {
-  //     name: 'Rezza Zulkasi, MAppFin',
-  //     position: 'Chief Executive Officer',
-  //     image: '',
-  //   },
-  //   {name: 'Murdani Aji, S.Kom', position: 'Chief Business Officer', image: ''},
-  //   {name: 'Bemby Oktora, ST', position: 'Chief Technology Officer', image: ''},
-  //   {
-  //     name: 'Muhamad Anjas Tanjung',
-  //     position: 'Head of Business Acquisition',
-  //     image: '',
-  //   },
-  //   {name: 'Yuddy Iskandar', position: 'Head of Operation', image: ''},
-  //   {
-  //     name: 'Fandrey Nanda Afindra',
-  //     position: 'Head of Marketing & Branding',
-  //     image: '',
-  //   },
-  //   {name: 'Arief Firmanto', position: 'Head of Research & Analyst', image: ''},
-  //   {name: 'I Made Adi Saputra', position: 'Head of Post Listing', image: ''},
-  //   {
-  //     name: 'Andri Agustaman',
-  //     position: 'Head of Investor Relations',
-  //     image: '',
-  //   },
-  //   {name: 'Prasetyo Hendirasmoyo', position: 'Head of IT', image: ''},
-  // ];
 
   return (
     <ScreenWrapper
@@ -428,14 +419,21 @@ const AboutUs = () => {
                 },
               ]}
               key={index}>
-              <View style={styles.crewImageContainer}>
+              <View
+                style={[
+                  styles.crewImageContainer,
+                  {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+                ]}>
                 <Image
                   source={
-                    colorScheme === 'dark'
+                    item.image
+                      ? item.image
+                      : colorScheme === 'dark'
                       ? require('../assets/images/profile-picture-dark.png')
                       : require('../assets/images/profile-picture-light.png')
                   }
                   style={{width: '100%', height: '100%'}}
+                  resizeMode="contain"
                 />
               </View>
               <Text style={styles.crewName}>{item.name}</Text>
@@ -468,14 +466,21 @@ const AboutUs = () => {
                 },
               ]}
               key={index}>
-              <View style={styles.crewImageContainer}>
+              <View
+                style={[
+                  styles.crewImageContainer,
+                  {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+                ]}>
                 <Image
                   source={
-                    colorScheme === 'dark'
+                    item.image
+                      ? item.image
+                      : colorScheme === 'dark'
                       ? require('../assets/images/profile-picture-dark.png')
                       : require('../assets/images/profile-picture-light.png')
                   }
-                  style={{width: 160}}
+                  style={{width: '100%', height: '100%'}}
+                  resizeMode="contain"
                 />
               </View>
               <Text style={styles.crewName}>{item.name}</Text>
@@ -578,6 +583,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    overflow: 'hidden',
   },
   crewName: {
     fontSize: 14,

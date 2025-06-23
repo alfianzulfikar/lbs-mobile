@@ -125,7 +125,12 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
               </View>
             )}
           </View>
-          <View style={{flexDirection: 'row', marginTop: 24}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 24,
+              opacity: capitalize(business.status) !== 'Pre-listing' ? 1 : 0,
+            }}>
             <RoundedProgressIndicator
               current={business.terpenuhi}
               target={business.target}

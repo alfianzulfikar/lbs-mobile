@@ -164,6 +164,9 @@ export type RootStackParamList = {
     slug?: string;
     code?: string;
   };
+  CropImage: {
+    uri: string;
+  };
 };
 
 export interface SvgIconType {
@@ -508,6 +511,7 @@ export type KYCFormFieldType<
   loading?: boolean;
   onChangeAdditionalValue?: any;
   customInput?: 'phone';
+  pictureType?: 'camera' | 'galery' | 'option';
 };
 
 export type KYCBackScreen =

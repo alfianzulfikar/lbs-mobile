@@ -163,7 +163,7 @@ const Prospectus = ({route}: Props) => {
               {downloadLoading ? (
                 <ActivityIndicator color={tint} />
               ) : (
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <ICDownload color={textColor} />
                   <Text style={styles.downloadText}>Unduh Prospektus</Text>
                 </View>

@@ -15,7 +15,7 @@ import {BannerType} from '../constants/Types';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {RGBAColors} from '../constants/Colors';
 
-const BannerCarousel = ({
+const BannerCarousel2 = ({
   banners,
   loading,
 }: {
@@ -25,13 +25,24 @@ const BannerCarousel = ({
   const {width} = useWindowDimensions();
   const backgroundColor = useThemeColor({}, 'background');
   const navigation = useNavigation();
+  const visibleSlide = useRef(1);
+  const autoScroll = useRef<NodeJS.Timeout | number | null>(null);
+
+  const flatListRef = useRef<FlatList>(null);
 
   const ITEM_WIDTH = width * 0.84; // Lebar item 70% dari layar
   const SPACING = 10; // Jarak antar item
+  const AUTO_SCROLL_INTERVAL = 3000;
 
-  const visibleSlide = useRef<number>(1);
-  const autoScroll = useRef<NodeJS.Timeout | number | null>(null);
-  const flatListRef = useRef<FlatList>(null);
+  const listRef = useRef<FlatList>(null);
+  const currentIndex = useRef<number | null>(0);
+  const autoScrollInterval = useRef<NodeJS.Timeout>(null);
+
+  const loopData = [...banners, ...banners, ...banners];
+  const middleIndex = banners.length; // Mulai dari index tengah agar bisa scroll bolak-balik
+  currentIndex.current = middleIndex;
+
+  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
 
   const onViewableItemsChanged = useRef(
     ({
@@ -41,10 +52,43 @@ const BannerCarousel = ({
       changed: ViewToken<BannerType>[];
     }) => {
       if (viewableItems.length > 0) {
-        visibleSlide.current = viewableItems[0].index || 0;
+        currentIndex.current = viewableItems[0].index;
       }
     },
   ).current;
+
+  const handleScrollEnd = () => {
+    let index = currentIndex.current;
+    if (index >= banners.length * 2) {
+      // Jika di akhir, reset ke tengah
+      index = banners.length;
+      listRef.current.scrollToIndex({index, animated: false});
+    } else if (index < banners.length) {
+      // Jika di awal, reset ke tengah
+      index = banners.length + (index % banners.length);
+      listRef.current.scrollToIndex({index, animated: false});
+    }
+  };
+
+  // Auto slide ke kanan setiap interval
+  const startAutoScroll = () => {
+    stopAutoScroll(); // clear sebelumnya
+    autoScrollInterval.current = setInterval(() => {
+      if (currentIndex.current !== null && listRef.current) {
+        let nextIndex = currentIndex.current + 1;
+        listRef.current.scrollToIndex({
+          index: nextIndex,
+          animated: true,
+        });
+      }
+    }, AUTO_SCROLL_INTERVAL);
+  };
+
+  const stopAutoScroll = () => {
+    if (autoScrollInterval.current) {
+      clearInterval(autoScrollInterval.current);
+    }
+  };
 
   const renderItem = ({item, index}: {item: BannerType; index: number}) => {
     return (
@@ -55,7 +99,6 @@ const BannerCarousel = ({
             backgroundColor,
             width: ITEM_WIDTH,
             marginHorizontal: SPACING / 2,
-            // width: (width * 84) / 100,
             // ...(Platform.OS === 'ios'
             //   ? {
             //       marginLeft:
@@ -97,34 +140,11 @@ const BannerCarousel = ({
     );
   };
 
-  const startAutoScroll = () => {
-    if (banners.length > 0) {
-      autoScroll.current = setInterval(() => {
-        if (visibleSlide.current <= banners.length - 1) {
-          if (flatListRef.current && banners.length > 0) {
-            flatListRef.current.scrollToIndex({
-              index: visibleSlide.current,
-              animated: true,
-            });
-            visibleSlide.current =
-              visibleSlide.current + 1 <= banners.length - 1
-                ? visibleSlide.current + 1
-                : 0;
-          }
-        }
-      }, 3000);
-    }
-  };
-
-  const stopAutoScroll = () => {
-    clearInterval(autoScroll?.current || undefined);
-    autoScroll.current = null;
-  };
-
   // useEffect(() => {
-  //   console.log('visible slide changed', visibleSlide.current);
   //   startAutoScroll();
-  // }, [visibleSlide, banners]);
+
+  //   return () => stopAutoScroll();
+  // }, []);
 
   useEffect(() => {
     if (banners.length > 0) {
@@ -162,34 +182,39 @@ const BannerCarousel = ({
       ) : (
         <FlatList
           bounces={false}
-          ref={flatListRef}
+          ref={listRef}
           horizontal
-          data={banners}
+          data={loopData}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           pagingEnabled
-          // snapToInterval={(width * 84) / 100 + (width * 4) / 100}
-          onScrollBeginDrag={() => stopAutoScroll()}
-          onScrollEndDrag={() => startAutoScroll()}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewConfigRef.current}
           snapToInterval={ITEM_WIDTH + SPACING} // snap ke posisi center item
           decelerationRate="fast" // scroll berhenti lebih cepat
           contentContainerStyle={{
             paddingHorizontal: (width - ITEM_WIDTH) / 2.3,
           }}
+          initialScrollIndex={middleIndex}
           getItemLayout={(data, index) => ({
             length: ITEM_WIDTH + SPACING,
             offset: (ITEM_WIDTH + SPACING) * index,
             index,
           })}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onMomentumScrollBegin={stopAutoScroll} // User mulai geser -> stop auto scroll
+          onMomentumScrollEnd={e => {
+            // User selesai geser -> resume auto scroll + cek infinite
+            handleScrollEnd();
+            startAutoScroll();
+          }}
         />
       )}
     </View>
   );
 };
 
-export default BannerCarousel;
+export default BannerCarousel2;
 
 const styles = StyleSheet.create({
   itemContainer: {

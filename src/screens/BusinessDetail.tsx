@@ -164,8 +164,11 @@ const BusinessDetail = ({route}: Props) => {
                 resizeMode="cover"
               />
             )}
-            <View style={{zIndex: 2, paddingTop: 0}}>
-              <Gap height={24 + notchHeight} />
+            <View
+              style={{
+                zIndex: 2,
+              }}>
+              <Gap height={(Platform.OS === 'ios' ? notchHeight : 0) + 24} />
               <Header
                 rightIcon={
                   <IconWrapper onPress={() => handleShare()}>

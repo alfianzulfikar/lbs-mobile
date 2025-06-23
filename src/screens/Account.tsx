@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  PermissionsAndroid,
   Platform,
   Pressable,
   StyleSheet,
@@ -12,7 +13,7 @@ import React, {ReactNode, useCallback, useState} from 'react';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
-import {RGBAColors} from '../constants/Colors';
+import {Colors, RGBAColors} from '../constants/Colors';
 import ICCheckedShield from '../components/icons/ICCheckedShield';
 import Button from '../components/Button';
 import ICTakePicture from '../components/icons/ICTakePicture';
@@ -48,6 +49,12 @@ import {setColorScheme} from '../slices/colorScheme';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {useInsets} from '../hooks/useInsets';
 import ImagePicker, {Options} from 'react-native-image-crop-picker';
+import {
+  CameraOptions,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+import {setAlert} from '../slices/globalError';
 
 const MenuItem = ({
   title,
@@ -162,6 +169,8 @@ const Account = () => {
         height: 500,
         cropping: true,
         includeBase64: true,
+        hideBottomControls: true,
+        cropperToolbarTitle: 'Sesuaikan gambar',
       };
       if (type === 'galery') {
         ImagePicker.openPicker(options).then(image => {
@@ -178,6 +187,56 @@ const Account = () => {
       setShowChangePhoto(false);
     }
   };
+
+  // const handleImageRes = (res: any) => {
+  //   if (!res?.didCancel) {
+  //     const assets = res?.assets
+  //       ? res.assets.length > 0
+  //         ? res.assets[0]
+  //         : {}
+  //       : {};
+  //     // navigation.navigate('CropImage', {uri: assets.uri});
+  //     navigation.navigate('ImagePreview', {
+  //       base64: assets.base64 || '',
+  //       path: assets.uri || '',
+  //     });
+  //   }
+  // };
+
+  // const takePicture = async ({type}: {type: 'camera' | 'galery'}) => {
+  //   try {
+  //     const options: CameraOptions = {
+  //       mediaType: 'photo',
+  //       includeBase64: true,
+  //       maxHeight: 1000,
+  //       maxWidth: 1000,
+  //     };
+  //     if (type === 'galery') {
+  //       await launchImageLibrary(options, res => handleImageRes(res));
+  //     } else {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.CAMERA,
+  //       );
+  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //         await launchCamera(options, res => handleImageRes(res));
+  //       } else {
+  //         dispatch(
+  //           setAlert({
+  //             title: 'Tidak ada akses ke kamera',
+  //             desc: 'Izinkan aplikasi LBS Urun Dana untuk mengakses kamera melalui pengaturan perangkat Anda.',
+  //             type: 'danger',
+  //             showAlert: true,
+  //             alertButtonAction: 'open-settings',
+  //           }),
+  //         );
+  //         setShowChangePhoto(false);
+  //       }
+  //     }
+  //     setShowChangePhoto(false);
+  //   } catch (error) {
+  //     console.log('take picture error', error);
+  //   }
+  // };
 
   useFocusEffect(
     useCallback(() => {
