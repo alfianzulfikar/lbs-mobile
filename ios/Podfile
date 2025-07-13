@@ -16,6 +16,7 @@ end
 
 target 'LBSUrunDana' do
   config = use_native_modules!
+  pod 'TrustKit'
 
   use_frameworks! :linkage => :static
   $RNFirebaseAsStaticFramework = true

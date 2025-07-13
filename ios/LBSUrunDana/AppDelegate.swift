@@ -1,3 +1,4 @@
+import TrustKit
 import UIKit
 import React
 import React_RCTAppDelegate
@@ -13,6 +14,19 @@ class AppDelegate: RCTAppDelegate {
     // You can add your custom initial props in the dictionary below.
     // They will be passed down to the ViewController used by React Native.
     self.initialProps = [:]
+
+    let trustKitConfig = [
+      kTSKSwizzleNetworkDelegates: true,
+      kTSKPinnedDomains: [
+        "uda-api.lbs.id": [
+          kTSKIncludeSubdomains: true,
+          kTSKEnforcePinning: true,
+          kTSKPublicKeyHashes: [
+            "LP3efNXqHS5/DY+m00YV2NffEJNbUVh8CElNv83oAKI=",
+            "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
+    ],]]] as [String : Any]
+
+    // TrustKit.initSharedInstance(withConfiguration:trustKitConfig)
 
     FirebaseApp.configure()
 

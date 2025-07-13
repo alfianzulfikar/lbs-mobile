@@ -2186,6 +2186,7 @@ PODS:
   - Sentry/HybridSDK (8.52.1)
   - SocketRocket (0.7.1)
   - TOCropViewController (2.7.4)
+  - TrustKit (3.0.7)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2277,6 +2278,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
+  - TrustKit
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -2295,6 +2297,7 @@ SPEC REPOS:
     - Sentry
     - SocketRocket
     - TOCropViewController
+    - TrustKit
 
 EXTERNAL SOURCES:
   boost:
@@ -2574,8 +2577,9 @@ SPEC CHECKSUMS:
   Sentry: 2cbbe3592f30050c60e916c63c7f5a2fa584005e
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
+  TrustKit: 1050f3ce0595f8ed775f1237b7f590e3a4f93e91
   Yoga: d89d04d86b5af18317f481166dccc48213d26927
 
-PODFILE CHECKSUM: 1e096e20dddfab1997a5531cb394b8343989fb7d
+PODFILE CHECKSUM: 048f74500380a1e907bcac1a9e314afe73831e21
 
 COCOAPODS: 1.15.2
