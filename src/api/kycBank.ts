@@ -4,10 +4,13 @@ import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useKYCBank = () => {
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [bank, setBank] = useState<KYCBankType>({
     bankId: '',
     namaPemilikRekeningBank: '',
@@ -68,6 +71,14 @@ export const useKYCBank = () => {
             rekeningBank: error?.data?.errors?.rekening || [],
             namaPemilikRekeningBank: error?.data?.errors?.nama_pemilik || [],
           });
+          dispatch(
+            setAlert({
+              title: 'Terdapat kesalahan. Periksa kembali.',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         }
       }
     } finally {

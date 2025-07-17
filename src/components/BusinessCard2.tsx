@@ -29,7 +29,13 @@ import ICBerjalan from './icons/ICBerjalan';
 import ICSelesai from './icons/ICSelesai';
 import BlurOverlay from './BlurOverlay';
 
-const BusinessCard2 = ({business}: {business: BusinessType}) => {
+const BusinessCard2 = ({
+  business,
+  orientation,
+}: {
+  business: BusinessType;
+  orientation?: 'vertical' | 'horizontal';
+}) => {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
@@ -38,7 +44,16 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
   const {width} = useWindowDimensions();
   return (
     <Pressable
-      style={[styles.container, {width: (width * 76) / 100}]}
+      style={[
+        styles.container,
+        {
+          width:
+            orientation === 'horizontal'
+              ? ((width - 72) * 50) / 100
+              : (width * 76) / 100,
+        },
+        ...(orientation !== 'horizontal' ? [{maxWidth: 308}] : []),
+      ]}
       onPress={() =>
         navigation.navigate('Order', {
           screen: 'BusinessDetail',
@@ -46,11 +61,13 @@ const BusinessCard2 = ({business}: {business: BusinessType}) => {
         })
       }>
       <View style={[styles.imageContainer, {backgroundColor}]}>
-        <Image
-          source={{uri: business.image}}
-          style={{width: '100%', aspectRatio: 308 / 172}}
-          resizeMode="cover"
-        />
+        {business.image && (
+          <Image
+            source={{uri: business.image}}
+            style={{width: '100%', aspectRatio: 308 / 172}}
+            resizeMode="cover"
+          />
+        )}
       </View>
       <View
         style={[
@@ -155,13 +172,11 @@ export default BusinessCard2;
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth: 308,
     minHeight: 508,
-    // borderRadius: 40,
-    // overflow: 'hidden',
   },
   imageContainer: {
     width: '100%',
+    aspectRatio: 308 / 172,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',

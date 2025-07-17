@@ -119,11 +119,12 @@ const OnBoarding = () => {
               ref={flatlistRef}
               data={slides}
               renderItem={({item}) => (
-                <View>
+                <View style={{width, alignItems: 'center'}}>
                   <View
                     style={{
-                      width: width,
+                      width,
                       paddingHorizontal: 24,
+                      maxWidth: width > 450 ? 450 : 'auto',
                     }}>
                     <Text style={styles.title}>{item.title}</Text>
                     <Text style={[styles.desc, {color: textColor2}]}>
@@ -158,22 +159,27 @@ const OnBoarding = () => {
               ))}
             </View>
             <Gap height={24} />
-            <View style={{paddingHorizontal: 24}}>
-              <Button
-                title={visibleSlide !== '4' ? 'Selanjutnya' : 'Mulai Investasi'}
-                onPress={() => {
-                  if (visibleSlide !== '4') {
-                    if (flatlistRef.current) {
-                      flatlistRef.current.scrollToIndex({
-                        index: Number(visibleSlide),
-                        animated: true,
-                      });
-                    }
-                  } else {
-                    navigation.dispatch(StackActions.replace('Auth'));
+            <View style={{paddingHorizontal: 24, alignItems: 'center'}}>
+              <View
+                style={{width: '100%', maxWidth: width > 450 ? 450 : 'auto'}}>
+                <Button
+                  title={
+                    visibleSlide !== '4' ? 'Selanjutnya' : 'Mulai Investasi'
                   }
-                }}
-              />
+                  onPress={() => {
+                    if (visibleSlide !== '4') {
+                      if (flatlistRef.current) {
+                        flatlistRef.current.scrollToIndex({
+                          index: Number(visibleSlide),
+                          animated: true,
+                        });
+                      }
+                    } else {
+                      navigation.dispatch(StackActions.replace('Auth'));
+                    }
+                  }}
+                />
+              </View>
             </View>
           </View>
         </View>

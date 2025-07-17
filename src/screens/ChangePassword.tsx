@@ -43,6 +43,11 @@ const ChangePassword = () => {
         newPassword: '',
         confirmNewPassword: '',
       });
+      setError({
+        password: [],
+        newPassword: [],
+        confirmNewPassword: [],
+      });
       dispatch(
         setAlert({
           title: 'Berhasil',
@@ -93,7 +98,7 @@ const ChangePassword = () => {
           />
           <Gap height={16} />
           <Input
-            label="Ubangi Kata Sandi Baru"
+            label="Ulangi Kata Sandi Baru"
             type="password"
             placeholder="Ulangi kata sandi baru"
             value={form.confirmNewPassword}

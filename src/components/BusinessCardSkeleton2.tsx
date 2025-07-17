@@ -1,6 +1,7 @@
 import {Animated, Easing, StyleSheet, useWindowDimensions} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {RGBAColors} from '../constants/Colors';
+import {maxScreenWidth} from '../constants/Screen';
 
 const BusinessCardSkeleton2 = () => {
   const {width} = useWindowDimensions();
@@ -36,7 +37,7 @@ const BusinessCardSkeleton2 = () => {
         styles.container,
         {
           backgroundColor: RGBAColors(0.4).light.background,
-          width: (width * 76) / 100,
+          width: width > maxScreenWidth ? 308 : (width * 76) / 100,
           opacity: fadeAnimation,
         },
       ]}></Animated.View>
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 40,
     aspectRatio: 308 / 508,
+    maxWidth: 308,
     alignItems: 'center',
     justifyContent: 'center',
   },

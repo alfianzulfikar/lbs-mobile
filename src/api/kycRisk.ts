@@ -2,10 +2,13 @@ import {useState} from 'react';
 import {KYCFormFieldType, KYCRiskType} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useKYCRisk = () => {
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [risk, setRisk] = useState<KYCRiskType>({
     risk1: null,
     risk2: null,
@@ -93,6 +96,14 @@ export const useKYCRisk = () => {
         if (error?.status === 422) {
           setIdError(
             error?.data?.errors?.id ? ['Harap isi minimal 1 pertanyaan'] : [],
+          );
+          dispatch(
+            setAlert({
+              title: 'Terdapat kesalahan. Periksa kembali.',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
           );
         }
       }

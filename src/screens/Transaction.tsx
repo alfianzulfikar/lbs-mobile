@@ -151,7 +151,7 @@ const Transaction = () => {
       const res = await apiRequest({
         endpoint: `/user/${
           type === 'dividen' ? 'deviden' : 'transaksi'
-        }?${query}`,
+        }?per_page=15&${query}`,
         authorization: true,
       });
       if (res?.transactions && res?.transactions.length > 0) {

@@ -136,7 +136,7 @@ const KYCTax = () => {
           title="Informasi Pajak"
           instruction="Kami membutuhkan informasi pajak untuk memastikan kepatuhan. Jangan khawatir, kami menjaga privasi Anda."
           percentage={50}
-          backScreen="KYCFamily"
+          backScreen="KYCOccupation"
         />
         <Gap height={40} />
         {taxLoading ? (

@@ -96,6 +96,18 @@ export const useNotification = () => {
   ) => {
     // const currentRoute = navigation.getId();
     console.log('handleForgroundNotification', message);
+    // await notifee.displayNotification({
+    //   title: message.notification?.title || 'LBS Urun Dana',
+    //   body: message.notification?.body || 'Notifikasi baru dari LBS Urun Dana',
+    //   android: {
+    //     channelId: 'main-channel',
+    //     // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+    //     // pressAction is needed if you want the notification to open the app when pressed
+    //     pressAction: {
+    //       id: 'default',
+    //     },
+    //   },
+    // });
     // const route = currentRoute();
     // console.log('current route', route);
     // let accessToken = await AsyncStorage.getItem('access_token');

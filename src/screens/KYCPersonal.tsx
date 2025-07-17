@@ -19,8 +19,11 @@ import {useAPI} from '../services/api';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 const KYCPersonal = () => {
+  const dispatch = useDispatch();
   const {apiRequest} = useAPI();
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
@@ -351,6 +354,14 @@ const KYCPersonal = () => {
             agama: error?.data?.errors?.agama_id || [],
             pendidikan: error?.data?.errors?.pendidikan_id || [],
           }));
+          dispatch(
+            setAlert({
+              title: 'Terdapat kesalahan. Periksa kembali.',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         }
       }
     } finally {

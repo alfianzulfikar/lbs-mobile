@@ -6,6 +6,7 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
@@ -21,8 +22,10 @@ import DropdownInput from '../components/DropdownInput';
 import {BusinessType} from '../constants/Types';
 import BusinessCardSkeleton2 from '../components/BusinessCardSkeleton2';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {maxScreenWidth} from '../constants/Screen';
 
 const Business = () => {
+  const {width} = useWindowDimensions();
   const colorScheme = useColorScheme();
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
@@ -78,7 +81,11 @@ const Business = () => {
 
   const renderHeader = () => {
     return (
-      <View style={{height: 508, justifyContent: 'center'}}>
+      <View
+        style={{
+          height: width > maxScreenWidth ? 'auto' : 508,
+          justifyContent: 'center',
+        }}>
         {businessesLoading ? (
           <>
             <Gap width={24} />
@@ -93,7 +100,7 @@ const Business = () => {
     return (
       <View
         style={{
-          height: 508,
+          height: width > maxScreenWidth ? 50 : 508,
           justifyContent: 'center',
           marginRight: 24,
         }}>
@@ -173,7 +180,7 @@ const Business = () => {
     <ScreenWrapper
       background
       backgroundType="pattern"
-      scrollView
+      scrollView={width < maxScreenWidth}
       refreshing={refreshing}
       onRefresh={onRefresh}>
       <View style={{paddingHorizontal: 24}}>
@@ -234,13 +241,39 @@ const Business = () => {
             dengan kata kunci yang berbeda.
           </Text>
         </View>
+      ) : width > maxScreenWidth ? (
+        <FlatList
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          bounces={false}
+          ref={businessFlatlistRef}
+          data={businesses}
+          renderItem={({item, index}) => (
+            <View
+              style={{
+                marginBottom: 24,
+                marginLeft: 24,
+                overflow: 'hidden',
+              }}>
+              <BusinessCard2 business={item} orientation="horizontal" />
+            </View>
+          )}
+          numColumns={2}
+          ListHeaderComponent={renderHeader()}
+          ListFooterComponent={renderFooter()}
+          keyExtractor={(item, id) => id.toString()}
+          showsHorizontalScrollIndicator={false}
+          onEndReachedThreshold={0.1}
+          onEndReached={() => handlePagination(page + 1)}
+          scrollEnabled={flatlistScrollEnabled}
+        />
       ) : (
+        // <View style={{backgroundColor: 'green'}}>
+        // </View>
         <>
           <View style={{flexDirection: 'row'}}>
             <FlatList
               bounces={false}
-              // onRefresh={onRefresh}
-              // refreshing={refreshing}
               ref={businessFlatlistRef}
               horizontal
               data={businesses}

@@ -159,16 +159,20 @@ const Prospectus = ({route}: Props) => {
       customHeader={
         <Header
           rightIcon={
-            <IconWrapper width={182} onPress={handleDownload}>
-              {downloadLoading ? (
-                <ActivityIndicator color={tint} />
-              ) : (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <ICDownload color={textColor} />
-                  <Text style={styles.downloadText}>Unduh Prospektus</Text>
-                </View>
-              )}
-            </IconWrapper>
+            file ? (
+              <IconWrapper width={182} onPress={handleDownload}>
+                {downloadLoading ? (
+                  <ActivityIndicator color={tint} />
+                ) : (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <ICDownload color={textColor} />
+                    <Text style={styles.downloadText}>Unduh Prospektus</Text>
+                  </View>
+                )}
+              </IconWrapper>
+            ) : (
+              <></>
+            )
           }
         />
       }>

@@ -21,6 +21,7 @@ import {BusinessType} from '../constants/Types';
 import numberFormat from '../utils/numberFormat';
 import ScreenWrapper from './ScreenWrapper';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {maxScreenWidth} from '../constants/Screen';
 
 const Calculator = ({
   business,
@@ -34,6 +35,7 @@ const Calculator = ({
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const backgroundColor = useThemeColor({}, 'background');
+  const {width} = useWindowDimensions();
 
   const {height} = useWindowDimensions();
   const translateYAnim = useAnimatedValue(height);
@@ -194,6 +196,9 @@ const Calculator = ({
                       Platform.OS === 'ios'
                         ? RGBAColors(0.2).light.background
                         : backgroundColor,
+                    width: width > maxScreenWidth ? '100%' : 640,
+                    borderTopLeftRadius: width > maxScreenWidth ? 120 : 320,
+                    borderTopRightRadius: width > maxScreenWidth ? 120 : 320,
                   },
                 ]}>
                 {Platform.OS === 'ios' && <BlurOverlay blurAmount={40} />}
@@ -434,15 +439,10 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     position: 'absolute',
-    // flexGrow: 1,
-    // flex: 1,
     height: '100%',
-    borderTopLeftRadius: 320,
-    borderTopRightRadius: 320,
     overflow: 'hidden',
-    width: 640,
+    // width: '100%',
     left: '50%',
-    // top: -68,
     transform: [{translateX: '-50%'}],
   },
   total: {

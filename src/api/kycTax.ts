@@ -9,10 +9,13 @@ import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useKYCTax = () => {
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [tax, setTax] = useState<KYCTaxType>({
     kodePajakId: null,
     npwp: '',
@@ -84,6 +87,14 @@ export const useKYCTax = () => {
           ...prev,
           hasSID: ['Wajib diisi'],
         }));
+        dispatch(
+          setAlert({
+            title: 'Terdapat kesalahan. Periksa kembali.',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
         return;
       } else if (tax.hasSID) {
         if (tax2.rekeningSid) {
@@ -150,6 +161,14 @@ export const useKYCTax = () => {
             fotoRekeningSid: error?.data?.errors?.foto_rekening_sid || [],
             tglRegistrasiSid: error?.data?.errors?.tgl_registrasi_sid || [],
           }));
+          dispatch(
+            setAlert({
+              title: 'Terdapat kesalahan. Periksa kembali.',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         }
       }
     } finally {

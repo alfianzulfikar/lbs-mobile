@@ -158,10 +158,12 @@ export const useAPI = () => {
           message: 'Http response is invalid',
         };
       }
-    } catch (error: any) {
-      console.log('fetch error', error);
+    } catch (error) {
       if (error instanceof TypeError) {
         dispatch(setShowNetworkError({showNetworkError: true}));
+        console.log('fetch error', String(error));
+      } else {
+        console.log('fetch error', error);
       }
       throw error;
     }

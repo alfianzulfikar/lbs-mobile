@@ -166,7 +166,10 @@ const BusinessDetail = ({route}: Props) => {
             )}
             <View
               style={{
+                width: '100%',
+                aspectRatio: 16 / 10,
                 zIndex: 2,
+                backgroundColor: RGBAColors(0.2).dark.background,
               }}>
               <Gap height={(Platform.OS === 'ios' ? notchHeight : 0) + 24} />
               <Header
@@ -177,7 +180,8 @@ const BusinessDetail = ({route}: Props) => {
                 }
               />
 
-              <Gap height={136} />
+              {/* <Gap height={136} /> */}
+              <Gap flex={1} />
 
               <View style={styles.optionContainer}>
                 <IconWrapper
@@ -204,30 +208,31 @@ const BusinessDetail = ({route}: Props) => {
                     <ICChat color={iconColor} size={24} />
                   </IconWrapper>
                 )}
-                {['PRE-LISTING', 'LISTING'].includes(business.status) && (
-                  <>
-                    <Gap width={16} />
-                    <IconWrapper
-                      onPress={() => {
-                        if (
-                          ['PRE-LISTING', 'LISTING'].includes(business.status)
-                        ) {
-                          setShowCalculator(true);
-                        }
-                      }}
-                      width={204}>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <ICCalculator color={iconColor} size={24} />
-                        <Gap width={4} />
-                        <Text
-                          style={[styles.calculatorText, {color: textColor}]}>
-                          Kalkulator Investasi
-                        </Text>
-                      </View>
-                    </IconWrapper>
-                  </>
-                )}
+                {business.tipeBisnis === 'SUKUK' &&
+                  ['PRE-LISTING', 'LISTING'].includes(business.status) && (
+                    <>
+                      <Gap width={16} />
+                      <IconWrapper
+                        onPress={() => {
+                          if (
+                            ['PRE-LISTING', 'LISTING'].includes(business.status)
+                          ) {
+                            setShowCalculator(true);
+                          }
+                        }}
+                        width={204}>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <ICCalculator color={iconColor} size={24} />
+                          <Gap width={4} />
+                          <Text
+                            style={[styles.calculatorText, {color: textColor}]}>
+                            Kalkulator Investasi
+                          </Text>
+                        </View>
+                      </IconWrapper>
+                    </>
+                  )}
               </View>
 
               <Gap height={16} />
@@ -258,101 +263,107 @@ const BusinessDetail = ({route}: Props) => {
                   style={[
                     styles.main,
                     {
+                      alignItems: 'center',
                       backgroundColor:
                         Platform.OS === 'ios'
                           ? 'transparent'
                           : RGBAColors(0.4)[colorScheme].background,
                     },
                   ]}>
-                  <View style={styles.mainSection1}>
-                    <Badge text={capitalize(business.tipeBisnis)} />
-                    <Gap width={16} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                        transform: [{translateY: 6}],
-                      }}>
-                      <ICLocation color={iconColor} />
-                      <Gap width={4} />
-                      <Text
-                        style={[styles.location, {color: textColor, flex: 1}]}>
-                        {business.kota}, {business.provinsi}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <Text style={[styles.title, {color: textColor}]}>
-                    {business.merkDagang}
-                  </Text>
-
-                  <Gap height={24} />
-
-                  {businessStatus.length > 0 && business.status && (
-                    <BusinessStatus
-                      status={
-                        businessStatus.filter(
-                          item => item.name === business.status,
-                        )[0].id
-                        // 2
-                      }
-                      list={businessStatus}
-                      businessType={business.tipeBisnis}
-                    />
-                  )}
-
-                  <Gap height={24} />
-
-                  <View style={{flexDirection: 'row', paddingHorizontal: 24}}>
-                    <View style={{flex: 1}}>
-                      <RoundedProgressIndicator
-                        target={business.target}
-                        current={business.terpenuhi}
-                        type="large"
-                        transparent
-                        color="#FFFFFF"
-                        shadow
-                      />
-                    </View>
-                    <Gap width={24} />
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                      <View style={{flexDirection: 'row'}}>
-                        <View
+                  <View style={{width: '100%', maxWidth: 450}}>
+                    <View style={styles.mainSection1}>
+                      <Badge text={capitalize(business.tipeBisnis)} />
+                      <Gap width={16} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          flex: 1,
+                          transform: [{translateY: 6}],
+                        }}>
+                        <ICLocation color={iconColor} />
+                        <Gap width={4} />
+                        <Text
                           style={[
-                            styles.dot,
-                            styles.shadow,
-                            {backgroundColor: 'white'},
-                          ]}
-                        />
-                        <View style={{marginLeft: 8}}>
-                          <Text
-                            style={[styles.fundingTitle, {color: iconColor}]}>
-                            Dana Terkumpul
-                          </Text>
-                          <Text
-                            style={[styles.fundingValue, {color: textColor}]}>
-                            Rp{numberFormat(Number(business.terpenuhi))}
-                          </Text>
-                        </View>
+                            styles.location,
+                            {color: textColor, flex: 1},
+                          ]}>
+                          {business.kota}, {business.provinsi}
+                        </Text>
                       </View>
-                      <Gap height={33} />
-                      <View style={{flexDirection: 'row'}}>
-                        <View
-                          style={[
-                            styles.dot,
-                            styles.shadow,
-                            {backgroundColor: 'rgba(64, 64, 64, 0.2)'},
-                          ]}
+                    </View>
+
+                    <Text style={[styles.title, {color: textColor}]}>
+                      {business.merkDagang}
+                    </Text>
+
+                    <Gap height={24} />
+
+                    {businessStatus.length > 0 && business.status && (
+                      <BusinessStatus
+                        status={
+                          businessStatus.filter(
+                            item => item.name === business.status,
+                          )[0].id
+                          // 2
+                        }
+                        list={businessStatus}
+                        businessType={business.tipeBisnis}
+                      />
+                    )}
+
+                    <Gap height={24} />
+
+                    <View style={{flexDirection: 'row', paddingHorizontal: 24}}>
+                      <View style={{flex: 1}}>
+                        <RoundedProgressIndicator
+                          target={business.target}
+                          current={business.terpenuhi}
+                          type="large"
+                          transparent
+                          color="#FFFFFF"
+                          shadow
                         />
-                        <View style={{marginLeft: 8}}>
-                          <Text
-                            style={[styles.fundingTitle, {color: iconColor}]}>
-                            Target Investasi
-                          </Text>
-                          <Text
-                            style={[styles.fundingValue, {color: textColor}]}>
-                            Rp{numberFormat(Number(business.target))}
-                          </Text>
+                      </View>
+                      <Gap width={24} />
+                      <View style={{flex: 1, justifyContent: 'center'}}>
+                        <View style={{flexDirection: 'row'}}>
+                          <View
+                            style={[
+                              styles.dot,
+                              styles.shadow,
+                              {backgroundColor: 'white'},
+                            ]}
+                          />
+                          <View style={{marginLeft: 8}}>
+                            <Text
+                              style={[styles.fundingTitle, {color: iconColor}]}>
+                              Dana Terkumpul
+                            </Text>
+                            <Text
+                              style={[styles.fundingValue, {color: textColor}]}>
+                              Rp{numberFormat(Number(business.terpenuhi))}
+                            </Text>
+                          </View>
+                        </View>
+                        <Gap height={33} />
+                        <View style={{flexDirection: 'row'}}>
+                          <View
+                            style={[
+                              styles.dot,
+                              styles.shadow,
+                              {backgroundColor: 'rgba(64, 64, 64, 0.2)'},
+                            ]}
+                          />
+                          <View style={{marginLeft: 8}}>
+                            <Text
+                              style={[styles.fundingTitle, {color: iconColor}]}>
+                              Target Investasi
+                            </Text>
+                            <Text
+                              style={[styles.fundingValue, {color: textColor}]}>
+                              Rp{numberFormat(Number(business.target))}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                     </View>
@@ -477,13 +488,14 @@ const styles = StyleSheet.create({
     transform: [{translateY: -36}],
     // top: -36,
     marginBottom: -36,
+    zIndex: 2,
   },
   main: {
     flex: 1,
     paddingVertical: 24,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    position: 'relative',
+    // borderTopLeftRadius: 40,
+    // borderTopRightRadius: 40,
+    // position: 'relative',
     zIndex: 2,
   },
   mainSection1: {

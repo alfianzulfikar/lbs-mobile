@@ -5,10 +5,13 @@ import {StackActions, useNavigation} from '@react-navigation/native';
 import {heirRelationshipOption} from '../constants/KYC';
 import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useKYCFamily = () => {
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [family, setFamily] = useState<KYCFamilyType>({
     statusPernikahanId: null,
     namaPasangan: '',
@@ -109,6 +112,14 @@ export const useKYCFamily = () => {
               error?.data?.errors?.hubungan_dengan_ahli_waris || [],
             tlpAhliWaris: error?.data?.errors?.tlp_ahli_waris || [],
           }));
+          dispatch(
+            setAlert({
+              title: 'Terdapat kesalahan. Periksa kembali.',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         }
       }
     } finally {

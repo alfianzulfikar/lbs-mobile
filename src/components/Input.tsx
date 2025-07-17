@@ -210,7 +210,7 @@ const Input = ({
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                marginBottom: optionId !== option.length - 1 ? 16 : 0,
+                marginBottom: option && optionId !== option.length - 1 ? 16 : 0,
               }}
               key={optionId}
               onPress={() => onChange(item.id)}>
@@ -233,7 +233,9 @@ const Input = ({
         option?.map((optionItem, optionId) => (
           <View
             key={optionId}
-            style={{marginBottom: optionId !== option.length - 1 ? 16 : 0}}>
+            style={{
+              marginBottom: option && optionId !== option.length - 1 ? 16 : 0,
+            }}>
             <CheckBox
               color={textColor2}
               label={optionItem.label}

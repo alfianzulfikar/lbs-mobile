@@ -8,6 +8,7 @@ import ICDownload from './icons/ICDownload';
 import {useDownload} from '../utils/downloadFile';
 import BlurOverlay from './BlurOverlay';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {maxScreenWidth} from '../constants/Screen';
 
 const DisclosureCard = ({name, file}: {name: string; file: string}) => {
   const {downloadFile} = useDownload();
@@ -29,7 +30,7 @@ const DisclosureCard = ({name, file}: {name: string; file: string}) => {
               ? RGBAColors(colorScheme === 'dark' ? 0.1 : 0.4)['light']
                   .background
               : RGBAColors(0.2)['light'].background,
-          width: (width * 84) / 100,
+          width: width > maxScreenWidth ? 340 : (width * 84) / 100,
         },
       ]}>
       {/* <BlurOverlay blurAmount={80} blurType='light' /> */}
@@ -59,7 +60,6 @@ export default DisclosureCard;
 const styles = StyleSheet.create({
   container: {
     borderRadius: 24,
-    // elevation: 1,
     maxWidth: 340,
     aspectRatio: 340 / 192,
     overflow: 'hidden',

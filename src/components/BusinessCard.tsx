@@ -51,14 +51,18 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
           style={[
             styles.imageContainer,
             {
-              width: (width * 84) / 100,
+              width: '100%',
               backgroundColor: RGBAColors(0.2)[colorScheme].background,
             },
           ]}>
           {data.image && (
             <Image
               source={{uri: data.image}}
-              style={{resizeMode: 'cover', width: '100%', height: '100%'}}
+              style={{
+                resizeMode: 'cover',
+                width: '100%',
+                aspectRatio: 340 / 190,
+              }}
             />
           )}
         </View>

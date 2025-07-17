@@ -76,9 +76,21 @@ const DigitalSignature = ({route}: Props) => {
           otp: Object.values(otpValue).join(''),
         },
       });
-      navigation.dispatch(
-        StackActions.replace('Order', {screen: 'DigitalSignatureSuccess'}),
-      );
+      console.log('submit res', res);
+      if (res.statusCode === 401) {
+        dispatch(
+          setAlert({
+            title: res.message || 'Gagal',
+            desc: '',
+            type: 'danger',
+            showAlert: true,
+          }),
+        );
+      } else {
+        navigation.dispatch(
+          StackActions.replace('Order', {screen: 'DigitalSignatureSuccess'}),
+        );
+      }
     } catch (error: any) {
       if (error?.status === 422) {
         console.log('resend otp', error?.data?.errors);

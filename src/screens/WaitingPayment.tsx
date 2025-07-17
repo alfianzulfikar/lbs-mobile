@@ -1,11 +1,4 @@
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Alert, Image, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -35,7 +28,8 @@ import LottieView from 'lottie-react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
-import {replace} from '../services/navigation';
+import CustomBottomSheet from '../components/BottomSheet';
+import ICCancel from '../components/icons/ICCancel';
 
 type InfoType = {
   label: string;
@@ -50,18 +44,15 @@ const WaitingPayment = ({route}: Props) => {
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const textColor3 = useThemeColor({}, 'text3');
-  const iconColor = useThemeColor({}, 'icon');
   const textColorDanger = useThemeColor({}, 'textDanger');
+  const dangerSurface = useThemeColor({}, 'dangerSurface');
   const navigation = useNavigation();
   const {apiRequest} = useAPI();
-  const {code, type, feeBuy, feeSell} = route.params;
+  const {code} = route.params;
   const {paymentBankList, getPaymentBankList} = useBank();
   const dispatch = useDispatch();
 
   const [informationContent, setInformationContent] = useState<InfoType[]>([]);
-  const [shares, setShares] = useState<number>(0);
-  const [isRead, setIsRead] = useState<boolean>(false);
-  const [total, setTotal] = useState(100000 * shares);
   const [loadingPage, setLoadingPage] = useState(false);
   const [form, setForm] = useState({
     type_bisnis: '',
@@ -82,6 +73,7 @@ const WaitingPayment = ({route}: Props) => {
   const [countdownExpired, setCountdownExpired] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState<BankMethodType[]>([]);
   const [loadingCancel, setLoadingCancel] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const cautionList = [
     'Mohon untuk segera melakukan transfer atas pemesanan efek',
@@ -100,21 +92,20 @@ const WaitingPayment = ({route}: Props) => {
       const isMarket = res.status_transaksi.id == 8;
 
       let percentage = res.percentage;
-      let price = 0;
-      let volume = 0;
       let biayaPlatform = 0;
       if (isMarket) {
-        price =
-          res.nominal && res.jumlah_lembar
-            ? Math.round(Number(res.nominal / res.jumlah_lembar))
-            : 0;
-        volume = res.jumlah_lembar || 0;
         biayaPlatform = isMarket
           ? Math.round((res.nominal * percentage) / 100)
           : res.fee || '0';
       }
 
-      if (
+      if (res.status_transaksi?.name === 'Success') {
+        navigation.dispatch(
+          StackActions.replace('PaymentSuccess', {
+            paymentCode: code,
+          }),
+        );
+      } else if (
         res.status_transaksi?.name === 'Pending' ||
         res.status_transaksi?.name === 'Hold'
       ) {
@@ -144,6 +135,7 @@ const WaitingPayment = ({route}: Props) => {
         }
       } else {
         setCountdownExpired(true);
+        setForm({...form, status: res.status_transaksi?.name || ''});
       }
 
       const tipeBisnis = capitalize(res.bisnis_transaksi[0]?.type_bisnis || '');
@@ -226,6 +218,12 @@ const WaitingPayment = ({route}: Props) => {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getPaymentDetail();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     const asyncFunc = async () => {
       await getPaymentBankList();
@@ -237,221 +235,264 @@ const WaitingPayment = ({route}: Props) => {
   return (
     <ScreenWrapper
       background
-      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}>
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={{flexGrow: 1}}
-        showsVerticalScrollIndicator={false}>
-        <View style={[styles.container, {paddingTop: 24}]}>
-          <View style={{paddingHorizontal: 24}}>
-            <View
-              style={[
-                styles.informationCard,
-                {backgroundColor: RGBAColors(0.4)[colorScheme].background},
-              ]}>
-              <BlurOverlay />
-              <View style={styles.informationContentWrapper}>
-                <Header title="Pembayaran" paddingHorizontal={0} />
-                {loadingPage ? (
-                  <ActivityIndicator color={tint} style={{marginTop: 46}} />
-                ) : (
-                  !countdownExpired && (
-                    <>
-                      <Gap height={24} />
-                      <Text style={styles.paymentTimerInstruction}>
-                        Segera selesaikan pembayaranmu, sebelum{' '}
-                        {dateTimeFormat(countdownTime)}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.timer,
-                          {
-                            color: countdownExpired
-                              ? textColorDanger
-                              : RGBAColors(0.7)[colorScheme].text,
-                          },
-                        ]}>
-                        {countdownTime && (
-                          <Countdown
-                            value={countdownTime}
-                            setCountdownExpired={() =>
-                              setCountdownExpired(true)
-                            }
-                          />
-                        )}
-                      </Text>
-                      <View style={styles.animationContainer}>
-                        <LottieView
-                          autoPlay
-                          style={{
-                            width: 280,
-                            height: 280,
-                            backgroundColor: 'transparent',
-                            alignSelf: 'center',
-                          }}
-                          source={require('../assets/animations/calculator.json')}
-                          loop={true}
-                        />
-                      </View>
-                    </>
-                  )
-                )}
-              </View>
-            </View>
-          </View>
-
+      backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
+      scrollView
+      refreshing={refreshing}
+      onRefresh={onRefresh}>
+      <View style={[styles.container, {paddingTop: 24}]}>
+        <View style={{paddingHorizontal: 24}}>
           <View
             style={[
-              styles.section2,
+              styles.informationCard,
               {backgroundColor: RGBAColors(0.4)[colorScheme].background},
             ]}>
             <BlurOverlay />
-            {loadingPage ? (
-              <View style={{zIndex: 2}}>
+            <View style={styles.informationContentWrapper}>
+              <Header title="Pembayaran" paddingHorizontal={0} />
+              {loadingPage ? (
                 <ActivityIndicator color={tint} style={{marginTop: 46}} />
-              </View>
-            ) : (
-              <View style={{zIndex: 2, padding: 24}}>
-                {!countdownExpired && (
+              ) : (
+                !countdownExpired && (
                   <>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <View style={styles.bankLogoContainer}>
-                        {paymentBankList.length > 0 && form.bank_name ? (
-                          <Image
-                            source={{
-                              uri: paymentBankList.find(
-                                item => item.name === form.bank_name,
-                              )?.image,
-                            }}
-                            style={{width: 30, height: 30}}
-                            resizeMode="contain"
-                          />
-                        ) : null}
-                      </View>
-                      <View>
-                        <Text
-                          style={{
-                            fontSize: 12,
-                            lineHeight: 16,
-                            color: textColor3,
-                          }}>
-                          Metode Pembayaran
-                        </Text>
-                        <Text style={[styles.bank, {color: textColor}]}>
-                          {form.bank_name}
-                        </Text>
-                      </View>
-                    </View>
                     <Gap height={24} />
-                    <View>
-                      <Text style={[styles.copyLabel, {color: textColor2}]}>
-                        Jumlah yang Harus Dibayarkan
-                      </Text>
-                      <Gap height={8} />
-                      <CopyText
-                        text={'Rp' + numberFormat(form.total_nominal)}
-                        value={form.total_nominal}
-                      />
-                    </View>
-                    <Gap height={16} />
-                    <View>
-                      <Text style={[styles.copyLabel, {color: textColor2}]}>
-                        Nomor Akun Virtual
-                      </Text>
-                      <Gap height={8} />
-                      <CopyText
-                        text={form.account_va}
-                        value={form.account_va}
-                      />
-                    </View>
-                    <Gap height={24} />
-                    <Button
-                      title="Batalkan Pembayaran"
-                      type="danger"
-                      loading={loadingCancel}
-                      onPress={cancelPayment}
-                    />
-                    <Gap height={40} />
+                    <Text style={styles.paymentTimerInstruction}>
+                      Segera selesaikan pembayaranmu, sebelum{' '}
+                      {dateTimeFormat(countdownTime)}
+                    </Text>
                     <Text
                       style={[
-                        styles.paymentInstructionTitle,
-                        {color: textColor},
+                        styles.timer,
+                        {
+                          color: countdownExpired
+                            ? textColorDanger
+                            : RGBAColors(0.7)[colorScheme].text,
+                        },
                       ]}>
-                      Petunjuk Pembayaran
-                    </Text>
-                    <Gap height={16} />
-                    <Accordion list={paymentMethods} />
-                    <Gap height={40} />
-                    <Text
-                      style={[
-                        styles.paymentInstructionTitle,
-                        {color: textColor},
-                      ]}>
-                      PERHATIAN!
-                    </Text>
-                    <Gap height={16} />
-                    {cautionList.map((cautionItem, cautionId) => (
-                      <View key={cautionId} style={{flexDirection: 'row'}}>
-                        <Text
-                          style={[
-                            styles.cautionText,
-                            {color: textColor2, width: 20},
-                          ]}>
-                          {cautionId + 1}.
-                        </Text>
-                        <Text
-                          style={[
-                            styles.cautionText,
-                            {color: textColor2, flex: 1},
-                          ]}>
-                          {cautionItem}
-                        </Text>
-                      </View>
-                    ))}
-                    <Gap height={40} />
-                  </>
-                )}
-                <View style={{paddingHorizontal: 24, paddingVertical: 18}}>
-                  {informationContent.map((infoItem, infoId) => (
-                    <View key={infoId}>
-                      <Text style={[styles.infoLabel, {color: textColor2}]}>
-                        {infoItem.label}
-                      </Text>
-                      <Text style={[styles.infoValue, {color: textColor}]}>
-                        {infoItem.value}
-                      </Text>
-                      {infoId !== informationContent.length - 1 && (
-                        <Gap height={16} />
+                      {countdownTime && (
+                        <Countdown
+                          value={countdownTime}
+                          setCountdownExpired={() => setCountdownExpired(true)}
+                        />
                       )}
+                    </Text>
+                    <View style={styles.animationContainer}>
+                      <LottieView
+                        autoPlay
+                        style={{
+                          width: 280,
+                          height: 280,
+                          backgroundColor: 'transparent',
+                          alignSelf: 'center',
+                        }}
+                        source={require('../assets/animations/calculator.json')}
+                        loop={true}
+                      />
                     </View>
-                  ))}
-                </View>
-                {form.status === 'Pending' && (
-                  <>
-                    <Gap height={24} />
-                    <Button
-                      title="Cek Status Transaksi"
-                      onPress={() =>
-                        navigation.dispatch(
-                          CommonActions.reset({
-                            index: 0,
-                            routes: [
-                              {
-                                name: 'MainTab',
-                                params: {screen: 'Transaction'},
-                              },
-                            ],
-                          }),
-                        )
-                      }
-                    />
                   </>
-                )}
-              </View>
-            )}
+                )
+              )}
+            </View>
           </View>
         </View>
-      </ScrollView>
+
+        <View
+          style={[
+            styles.section2,
+            {backgroundColor: RGBAColors(0.4)[colorScheme].background},
+          ]}>
+          <BlurOverlay />
+          {loadingPage ? (
+            <View style={{zIndex: 2}}>
+              <ActivityIndicator color={tint} style={{marginTop: 46}} />
+            </View>
+          ) : (
+            <View style={{zIndex: 2, padding: 24}}>
+              {!countdownExpired && (
+                <>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={styles.bankLogoContainer}>
+                      {paymentBankList.length > 0 && form.bank_name ? (
+                        <Image
+                          source={{
+                            uri: paymentBankList.find(
+                              item => item.name === form.bank_name,
+                            )?.image,
+                          }}
+                          style={{width: 30, height: 30}}
+                          resizeMode="contain"
+                        />
+                      ) : null}
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          lineHeight: 16,
+                          color: textColor3,
+                        }}>
+                        Metode Pembayaran
+                      </Text>
+                      <Text style={[styles.bank, {color: textColor}]}>
+                        {form.bank_name}
+                      </Text>
+                    </View>
+                  </View>
+                  <Gap height={24} />
+                  <View>
+                    <Text style={[styles.copyLabel, {color: textColor2}]}>
+                      Jumlah yang Harus Dibayarkan
+                    </Text>
+                    <Gap height={8} />
+                    <CopyText
+                      text={'Rp' + numberFormat(form.total_nominal)}
+                      value={form.total_nominal}
+                    />
+                  </View>
+                  <Gap height={16} />
+                  <View>
+                    <Text style={[styles.copyLabel, {color: textColor2}]}>
+                      Nomor Akun Virtual
+                    </Text>
+                    <Gap height={8} />
+                    <CopyText text={form.account_va} value={form.account_va} />
+                  </View>
+                  <Gap height={24} />
+                  <Button
+                    title="Batalkan Pembayaran"
+                    type="danger"
+                    loading={loadingCancel}
+                    onPress={cancelPayment}
+                  />
+                  <Gap height={40} />
+                  <Text
+                    style={[
+                      styles.paymentInstructionTitle,
+                      {color: textColor},
+                    ]}>
+                    Petunjuk Pembayaran
+                  </Text>
+                  <Gap height={16} />
+                  <Accordion list={paymentMethods} />
+                  <Gap height={40} />
+                  <Text
+                    style={[
+                      styles.paymentInstructionTitle,
+                      {color: textColor},
+                    ]}>
+                    PERHATIAN!
+                  </Text>
+                  <Gap height={16} />
+                  {cautionList.map((cautionItem, cautionId) => (
+                    <View key={cautionId} style={{flexDirection: 'row'}}>
+                      <Text
+                        style={[
+                          styles.cautionText,
+                          {color: textColor2, width: 20},
+                        ]}>
+                        {cautionId + 1}.
+                      </Text>
+                      <Text
+                        style={[
+                          styles.cautionText,
+                          {color: textColor2, flex: 1},
+                        ]}>
+                        {cautionItem}
+                      </Text>
+                    </View>
+                  ))}
+                  <Gap height={40} />
+                </>
+              )}
+              <View style={{paddingHorizontal: 24, paddingVertical: 18}}>
+                {informationContent.map((infoItem, infoId) => (
+                  <View key={infoId}>
+                    <Text style={[styles.infoLabel, {color: textColor2}]}>
+                      {infoItem.label}
+                    </Text>
+                    <Text style={[styles.infoValue, {color: textColor}]}>
+                      {infoItem.value}
+                    </Text>
+                    {infoId !== informationContent.length - 1 && (
+                      <Gap height={16} />
+                    )}
+                  </View>
+                ))}
+              </View>
+              {form.status === 'Pending' && (
+                <>
+                  <Gap height={24} />
+                  <Button
+                    title="Cek Status Transaksi"
+                    onPress={() =>
+                      navigation.dispatch(
+                        CommonActions.reset({
+                          index: 0,
+                          routes: [
+                            {
+                              name: 'MainTab',
+                              params: {screen: 'Transaction'},
+                            },
+                          ],
+                        }),
+                      )
+                    }
+                  />
+                </>
+              )}
+            </View>
+          )}
+        </View>
+      </View>
+
+      {(form.status === 'Failure' || form.status === 'Expired') && (
+        <CustomBottomSheet
+          snapPoints={['50%']}
+          onDismiss={() => {
+            if (navigation.canGoBack()) navigation.goBack();
+          }}>
+          <View>
+            <View
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: 30,
+                backgroundColor: dangerSurface,
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}>
+              <ICCancel color={textColorDanger} size={48} />
+            </View>
+            <Gap height={8} />
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '700',
+                textAlign: 'center',
+                color: textColorDanger,
+              }}>
+              Transaksi Gagal
+            </Text>
+            <Gap height={40} />
+            <Button
+              title="Cek Daftar Transaksi"
+              onPress={() =>
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'MainTab',
+                        params: {screen: 'Transaction'},
+                      },
+                    ],
+                  }),
+                )
+              }
+            />
+          </View>
+        </CustomBottomSheet>
+      )}
     </ScreenWrapper>
   );
 };

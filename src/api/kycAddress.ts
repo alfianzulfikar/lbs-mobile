@@ -9,10 +9,13 @@ import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useKYCAddress = () => {
   const {apiRequest} = useAPI();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [addressKTP, setAddressKTP] = useState<KYCAddressKTPType>({
     provinsiKTP: null,
     kotaKTP: null,
@@ -139,6 +142,14 @@ export const useKYCAddress = () => {
               kodePos: error?.data?.errors?.kodepos || [],
             }));
           }
+          dispatch(
+            setAlert({
+              title: 'Terdapat kesalahan. Periksa kembali.',
+              desc: '',
+              type: 'danger',
+              showAlert: true,
+            }),
+          );
         }
       }
     } finally {
