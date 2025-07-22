@@ -434,6 +434,7 @@ const Input = ({
                 key={id}
                 style={{
                   marginVertical: 4,
+                  paddingHorizontal: 24,
                   backgroundColor:
                     item.id === value ? dropdownHighlight : 'transparent',
                 }}
@@ -445,9 +446,8 @@ const Input = ({
                   style={{
                     flexDirection: 'row',
                     paddingVertical: 20,
-                    paddingHorizontal: 24,
-                    // borderBottomWidth: 1,
-                    // borderColor: RGBAColors(0.05)[colorScheme].text,
+                    borderBottomWidth: 1,
+                    borderColor: RGBAColors(0.1)[colorScheme].text,
                   }}>
                   {item?.image && (
                     <Image

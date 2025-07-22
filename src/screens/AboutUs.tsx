@@ -432,8 +432,8 @@ const AboutUs = () => {
                       ? require('../assets/images/profile-picture-dark.png')
                       : require('../assets/images/profile-picture-light.png')
                   }
-                  style={{width: '100%', height: '100%'}}
-                  resizeMode="contain"
+                  style={{width: '95%', height: '95%'}}
+                  resizeMode="cover"
                 />
               </View>
               <Text style={styles.crewName}>{item.name}</Text>
@@ -479,8 +479,8 @@ const AboutUs = () => {
                       ? require('../assets/images/profile-picture-dark.png')
                       : require('../assets/images/profile-picture-light.png')
                   }
-                  style={{width: '100%', height: '100%'}}
-                  resizeMode="contain"
+                  style={{width: '95%', height: '95%'}}
+                  resizeMode="cover"
                 />
               </View>
               <Text style={styles.crewName}>{item.name}</Text>
@@ -581,7 +581,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
     borderRadius: 99,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignSelf: 'center',
     overflow: 'hidden',
   },

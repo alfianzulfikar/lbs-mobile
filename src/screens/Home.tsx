@@ -81,7 +81,12 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <VideoBackground />
-      <ScreenWrapper scrollView onRefresh={onRefresh} refreshing={refreshing}>
+      <ScreenWrapper
+        scrollView
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        helpButton
+        bottomTab>
         <View
           style={[
             styles.main,
@@ -172,12 +177,9 @@ const Home = () => {
             disclosures={disclosureList}
             loading={disclosureListLoading}
           />
-          <Gap height={136} />
+          <Gap height={104} />
         </View>
       </ScreenWrapper>
-      <View style={styles.helpButtonContainer}>
-        <HelpButton />
-      </View>
     </View>
   );
 };

@@ -41,11 +41,15 @@ const DropdownInput = ({
       </Pressable>
 
       {showOption && (
-        <BottomSheet setShow={setShowOption} snapPoints={['50%']}>
+        <BottomSheet setShow={setShowOption}>
           {option.map((item, id) => (
             <Pressable
               key={id}
-              style={{marginVertical: 4}}
+              style={{
+                paddingVertical: 20,
+                borderBottomWidth: id !== option.length - 1 ? 1 : 0,
+                borderColor: RGBAColors(0.1)[colorScheme].text,
+              }}
               onPress={() => {
                 setValue(item.id);
                 setShowOption(false);

@@ -65,10 +65,11 @@ export const useAPI = () => {
     try {
       const response = await fetch(composedUrl, options);
       const contentType = response.headers.get('content-type');
+      console.log(response, contentType);
       if (
         contentType &&
         (contentType.includes('application/json') ||
-          contentType.includes('application/blob'))
+          contentType.includes('application/pdf'))
       ) {
         let data;
         if (responseType === 'blob') {

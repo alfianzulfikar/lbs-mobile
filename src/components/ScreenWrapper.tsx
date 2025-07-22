@@ -30,6 +30,7 @@ import {setShowAlert} from '../slices/globalError';
 import CustomAlert from './CustomAlert';
 import {useFocusEffect} from '@react-navigation/native';
 import Header from './Header';
+import HelpButton from './HelpButton';
 
 const ScreenWrapper = ({
   children,
@@ -49,6 +50,8 @@ const ScreenWrapper = ({
   childScrollY,
   footer,
   bounces,
+  helpButton,
+  bottomTab,
 }: {
   children: ReactNode;
   background?: boolean;
@@ -67,6 +70,8 @@ const ScreenWrapper = ({
   childScrollY?: Animated.Value;
   footer?: ReactNode;
   bounces?: boolean;
+  helpButton?: boolean;
+  bottomTab?: boolean;
 }) => {
   const {notchHeight} = useInsets();
   const {height} = useWindowDimensions();
@@ -92,6 +97,10 @@ const ScreenWrapper = ({
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
+
+  const buttonAnim = useRef(new Animated.Value(-24)).current; // opacity (1: visible, 0: hidden)
+  const lastScrollY = useRef(0);
+  const isButtonVisible = useRef(true);
 
   // const headerTextColor = scrollY.interpolate({
   //   inputRange: [0, 20],
@@ -223,7 +232,36 @@ const ScreenWrapper = ({
                   }
                   onScroll={Animated.event(
                     [{nativeEvent: {contentOffset: {y: scrollY}}}],
-                    {useNativeDriver: false},
+                    {
+                      useNativeDriver: false,
+                      listener: event => {
+                        const currentY = event.nativeEvent?.contentOffset.y;
+
+                        if (
+                          currentY > lastScrollY.current + 5 &&
+                          isButtonVisible.current
+                        ) {
+                          Animated.timing(buttonAnim, {
+                            toValue: 56,
+                            duration: 200,
+                            useNativeDriver: true,
+                          }).start();
+                          isButtonVisible.current = false;
+                        } else if (
+                          currentY < lastScrollY.current - 5 &&
+                          !isButtonVisible.current
+                        ) {
+                          Animated.timing(buttonAnim, {
+                            toValue: -24,
+                            duration: 200,
+                            useNativeDriver: true,
+                          }).start();
+                          isButtonVisible.current = true;
+                        }
+
+                        lastScrollY.current = currentY;
+                      },
+                    },
                   )}
                   scrollEventThrottle={16}>
                   {/* {notch !== false && !header && Platform.OS === 'ios' && (
@@ -237,6 +275,19 @@ const ScreenWrapper = ({
               </View>
 
               {footer}
+
+              {helpButton && (
+                <Animated.View
+                  style={[
+                    styles.helpButtonContainer,
+                    {
+                      transform: [{translateX: buttonAnim}],
+                      bottom: bottomTab ? 104 : 24,
+                    },
+                  ]}>
+                  <HelpButton />
+                </Animated.View>
+              )}
             </>
           ) : (
             <View style={{flex: 1, zIndex: 3}}>
@@ -282,5 +333,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
+  },
+  helpButtonContainer: {
+    position: 'absolute',
+    right: 0,
+    zIndex: 3,
   },
 });
