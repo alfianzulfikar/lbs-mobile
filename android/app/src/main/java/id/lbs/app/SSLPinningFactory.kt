@@ -9,7 +9,7 @@ class SSLPinningFactory : OkHttpClientFactory {
     companion object {
         private const val hostname = "uda-api.lbs.id"
         private val sha256Keys = listOf(
-            "sha256/LP3efNXqHS5/DY+m00YV2NffEJNbUVh8CElNv83oAKI=",
+            "sha256/mQK88kSM/3W4WdnF0hJPvdfTF6N1+aLQJfD9O6hHh0o=",
             "sha256/bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
         )
     }

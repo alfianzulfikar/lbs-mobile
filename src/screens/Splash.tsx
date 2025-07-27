@@ -1,18 +1,15 @@
 import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import Video, {VideoRef} from 'react-native-video';
-import {StackActions, useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
-import {setColorScheme} from '../slices/colorScheme';
 import {useDeepLinks} from '../utils/handleDeepLinks';
+import useSecurityCheck from '../hooks/useSecurityCheck';
 
 const Splash = () => {
-  const navigation = useNavigation();
   const colorScheme = useColorScheme() ?? 'light';
   const videoRef = useRef<VideoRef>(null);
   const background = require('../assets/videos/splash.mp4');
   const {handleDeepLinks} = useDeepLinks();
+  const {checkDeviceSecurity} = useSecurityCheck();
 
   return (
     <View style={styles.container}>
@@ -27,7 +24,10 @@ const Splash = () => {
         style={styles.backgroundVideo}
         resizeMode="cover"
         onEnd={async () => {
-          await handleDeepLinks();
+          const safe = await checkDeviceSecurity();
+          if (safe) {
+            await handleDeepLinks();
+          }
         }}
         muted={true}
         disableFocus={true}

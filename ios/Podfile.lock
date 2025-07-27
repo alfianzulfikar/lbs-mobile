@@ -64,6 +64,8 @@ PODS:
   - hermes-engine (0.78.0):
     - hermes-engine/Pre-built (= 0.78.0)
   - hermes-engine/Pre-built (0.78.0)
+  - jail-monkey (2.8.4):
+    - React-Core
   - lottie-ios (4.5.0)
   - lottie-react-native (7.2.2):
     - DoubleConversion
@@ -1871,6 +1873,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNDeviceInfo (14.0.4):
+    - React-Core
   - RNFBApp (22.2.0):
     - Firebase/CoreOnly (= 11.12.0)
     - React-Core
@@ -2198,6 +2202,7 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - jail-monkey (from `../node_modules/jail-monkey`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -2269,6 +2274,7 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -2317,6 +2323,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2025-01-13-RNv0.78.0-a942ef374897d85da38e9c8904574f8376555388
+  jail-monkey:
+    :path: "../node_modules/jail-monkey"
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
   RCT-Folly:
@@ -2455,6 +2463,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -2493,6 +2503,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   hermes-engine: b417d2b2aee3b89b58e63e23a51e02be91dc876d
+  jail-monkey: 425f5ea33b17a1ce5763d40614df66245421bf00
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: 57ffc63285c1e5dcad6743dca0d3e1ed34cac598
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
@@ -2565,6 +2576,7 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCAsyncStorage: 320c8b9217695928a64d8ae993653425c8605368
   RNCClipboard: de1561c12ba8a15f143347993a382c6474c0d2d6
+  RNDeviceInfo: feea80a690d2bde1fe51461cf548039258bd03f2
   RNFBApp: 4110e3d5c109de1f81454247e5d0f83ee9408c8c
   RNFBMessaging: 97193911e8858103ff7305477d40e116ae30f240
   RNGestureHandler: 3ca128bc8b8f15f04ba00dbbd05b90df34404b05

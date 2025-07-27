@@ -3,6 +3,7 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 
 export interface GlobalErrorType {
   showNetworkError?: boolean;
+  showRootError?: boolean;
   showAlert?: boolean;
   title?: string;
   desc?: string;
@@ -13,6 +14,7 @@ export interface GlobalErrorType {
 
 const initialState: GlobalErrorType = {
   showNetworkError: false,
+  showRootError: false,
   showAlert: false,
   title: '',
   desc: '',
@@ -28,6 +30,9 @@ export const globalError = createSlice({
     setShowNetworkError: (state, action: PayloadAction<GlobalErrorType>) => {
       state.showNetworkError = action.payload.showNetworkError;
     },
+    setShowRootError: (state, action: PayloadAction<GlobalErrorType>) => {
+      state.showRootError = action.payload.showRootError;
+    },
     setAlert: (state, action: PayloadAction<GlobalErrorType>) => {
       state.title = action.payload.title;
       state.desc = action.payload.desc;
@@ -42,7 +47,7 @@ export const globalError = createSlice({
   },
 });
 
-export const {setShowNetworkError, setAlert, setShowAlert} =
+export const {setShowNetworkError, setShowRootError, setAlert, setShowAlert} =
   globalError.actions;
 
 export default globalError.reducer;

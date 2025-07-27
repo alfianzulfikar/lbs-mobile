@@ -65,7 +65,6 @@ export const useAPI = () => {
     try {
       const response = await fetch(composedUrl, options);
       const contentType = response.headers.get('content-type');
-      console.log(response, contentType);
       if (
         contentType &&
         (contentType.includes('application/json') ||
@@ -95,7 +94,6 @@ export const useAPI = () => {
                 responseType,
                 url,
               };
-              console.log('callback is executed', params);
               return await apiRequest(params);
             });
           } else {

@@ -4,13 +4,9 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {store} from './store';
 import {Provider} from 'react-redux';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import {Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useNotification} from './services/notification';
-import NetworkErrorBottomSheet from './components/NetworkErrorBottomSheet';
 import * as Sentry from '@sentry/react-native';
-import {useThemeColor} from './hooks/useThemeColor';
 
 Sentry.init({
   dsn: 'https://ade466671fc7475582ade181ffa91d3c@o1258244.ingest.us.sentry.io/6432180',

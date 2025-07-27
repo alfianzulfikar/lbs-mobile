@@ -1,6 +1,6 @@
 // In App.js in a new project
 
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -78,6 +78,7 @@ import CropImage from './screens/CropImage';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {useThemeColor} from './hooks/useThemeColor';
+import RootErrorBottomSheet from './components/RootErrorBottomSheet';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -455,9 +456,11 @@ const RouterComponent = () => {
 export default function App() {
   const {initTheme} = useInitTheme();
   const backgroundColor = useThemeColor({}, 'background');
-  const {showNetworkError} = useSelector((item: RootState) => item.globalError);
+  const {showNetworkError, showRootError} = useSelector(
+    (item: RootState) => item.globalError,
+  );
 
-  React.useEffect(() => {
+  useEffect(() => {
     initTheme();
     console.log('render router');
   }, []);
@@ -472,6 +475,7 @@ export default function App() {
         </SafeAreaView>
       )}
       {showNetworkError && <NetworkErrorBottomSheet />}
+      {showRootError && <RootErrorBottomSheet />}
     </SafeAreaProvider>
   );
 }
