@@ -9,10 +9,9 @@ const useSecurityCheck = () => {
   const dispatch = useDispatch();
 
   const {
-    // JailbreakDetector,
+    JailbreakDetector,
     RootCheckModule,
     FileCheckModule,
-    AppExitModule,
   } = NativeModules;
 
   const ROOT_DETECTION_PATH = [
@@ -102,7 +101,7 @@ const useSecurityCheck = () => {
       // Platform-specific root/jailbreak detection
       const isCustomJailBroken =
         Platform.OS === 'ios'
-          ? false // await JailbreakDetector.isJailbroken()
+          ? await JailbreakDetector.isJailbroken()
           : await RootCheckModule.isDeviceRooted();
 
       // Cross-platform JailMonkey checks
@@ -125,9 +124,9 @@ const useSecurityCheck = () => {
       const deviceCompromised = isJailBroken || zygiskDetected || emulatorCheck;
       const message = `Device Compromised: ${deviceCompromised}\nIs JailBroken: ${isJailBroken}\nZygisk Detected: ${zygiskDetected}\nIs Debugged Mode: ${isDebuggedMode}\nCan Mock Location: ${JailMonkey.canMockLocation()}\nTrust Fall: ${JailMonkey.trustFall()}\nIs JailBroken (JailMonkey): ${JailMonkey.isJailBroken()}\nIs On External Storage: ${JailMonkey.isOnExternalStorage()}\nNative Module Jailbreak: ${isCustomJailBroken}\nIs Emulator: ${emulatorCheck}`;
       // alert(message);
+      // console.log(message, __DEV__)
 
       if (!__DEV__ && deviceCompromised) {
-        // console.log(message)
         dispatch(setShowRootError({showRootError: true}));
         return false;
       } else {

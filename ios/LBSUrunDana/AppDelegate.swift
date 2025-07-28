@@ -22,11 +22,11 @@ class AppDelegate: RCTAppDelegate {
           kTSKIncludeSubdomains: true,
           kTSKEnforcePinning: true,
           kTSKPublicKeyHashes: [
-            "LP3efNXqHS5/DY+m00YV2NffEJNbUVh8CElNv83oAKI=",
+            "mQK88kSM/3W4WdnF0hJPvdfTF6N1+aLQJfD9O6hHh0o=",
             "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
     ],]]] as [String : Any]
 
-    // TrustKit.initSharedInstance(withConfiguration:trustKitConfig)
+    TrustKit.initSharedInstance(withConfiguration:trustKitConfig)
 
     FirebaseApp.configure()
 

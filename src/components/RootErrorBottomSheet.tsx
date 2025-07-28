@@ -29,6 +29,8 @@ const RootErrorBottomSheet = () => {
       onDismiss={() => {
         if (Platform.OS === 'android') {
           AppExitModule.exitApp();
+        } else {
+          dispatch(setShowRootError({showRootError: false}));
         }
       }}>
       <View style={styles.emptyContainer}>
@@ -60,6 +62,8 @@ const RootErrorBottomSheet = () => {
         onPress={() => {
           if (Platform.OS === 'android') {
             AppExitModule.exitApp();
+          } else {
+            dispatch(setShowRootError({showRootError: false}));
           }
         }}
       />

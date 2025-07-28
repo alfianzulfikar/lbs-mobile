@@ -14,6 +14,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		98E0D5D7D955C10A842E349B /* Pods_LBSUrunDana.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E97612E5A891999008A540CC /* Pods_LBSUrunDana.framework */; };
 		A0AF00AEE671486EBEC9C160 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 164B1FAF93604CA395350CB1 /* Inter-Medium.ttf */; };
+		AA3A75022E36F91D00DF3E0B /* JailbreakDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3A75012E36F91800DF3E0B /* JailbreakDetector.swift */; };
+		AA3A75062E36FC0D00DF3E0B /* JailbreakDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3A75052E36FC0900DF3E0B /* JailbreakDetector.m */; };
 		AA7CFED52DF1999100D520AF /* lbs.wav in Resources */ = {isa = PBXBuildFile; fileRef = AA7CFED42DF1999100D520AF /* lbs.wav */; };
 		AAB7015E2DF023BA001E3D7C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AAB7015D2DF023BA001E3D7C /* GoogleService-Info.plist */; };
 		DCDE0F147BC746F2A0E32460 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0FBAF74B9CD46D9B866118C /* Inter-Bold.ttf */; };
@@ -32,6 +34,9 @@
 		727FBDB669A1467380ADBC52 /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = LBSUrunDana/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LBSUrunDana/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AA3A75012E36F91800DF3E0B /* JailbreakDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JailbreakDetector.swift; sourceTree = "<group>"; };
+		AA3A75052E36FC0900DF3E0B /* JailbreakDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JailbreakDetector.m; sourceTree = "<group>"; };
+		AA3A75072E36FC0F00DF3E0B /* LBSUrunDana-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LBSUrunDana-Bridging-Header.h"; sourceTree = "<group>"; };
 		AA7CFED42DF1999100D520AF /* lbs.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lbs.wav; sourceTree = "<group>"; };
 		AAB7015D2DF023BA001E3D7C /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AAB7015F2DF024CD001E3D7C /* LBSUrunDana.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = LBSUrunDana.entitlements; path = LBSUrunDana/LBSUrunDana.entitlements; sourceTree = "<group>"; };
@@ -55,6 +60,7 @@
 		13B07FAE1A68108700A75B9A /* LBSUrunDana */ = {
 			isa = PBXGroup;
 			children = (
+				AA3A75002E36F8E700DF3E0B /* JailbreakDetection */,
 				AAB7015F2DF024CD001E3D7C /* LBSUrunDana.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
@@ -117,6 +123,16 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		AA3A75002E36F8E700DF3E0B /* JailbreakDetection */ = {
+			isa = PBXGroup;
+			children = (
+				AA3A75052E36FC0900DF3E0B /* JailbreakDetector.m */,
+				AA3A75012E36F91800DF3E0B /* JailbreakDetector.swift */,
+				AA3A75072E36FC0F00DF3E0B /* LBSUrunDana-Bridging-Header.h */,
+			);
+			path = JailbreakDetection;
+			sourceTree = "<group>";
+		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,7 +177,7 @@
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1610;
 					};
 				};
 			};
@@ -309,7 +325,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA3A75062E36FC0D00DF3E0B /* JailbreakDetector.m in Sources */,
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				AA3A75022E36F91D00DF3E0B /* JailbreakDetector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +360,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = id.lbs.app;
 				PRODUCT_NAME = LBSUrunDana;
+				SWIFT_OBJC_BRIDGING_HEADER = "JailbreakDetection/LBSUrunDana-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -373,6 +392,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = id.lbs.app;
 				PRODUCT_NAME = LBSUrunDana;
+				SWIFT_OBJC_BRIDGING_HEADER = "JailbreakDetection/LBSUrunDana-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -458,10 +478,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -541,10 +558,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
