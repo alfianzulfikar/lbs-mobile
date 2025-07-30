@@ -6,6 +6,7 @@ import ICCaretArrowDown from './icons/ICCaretArrowDown';
 import {useThemeColor} from '../hooks/useThemeColor';
 import BottomSheet from './BottomSheet';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DropdownInput = ({
   value,
@@ -20,6 +21,14 @@ const DropdownInput = ({
   let colorScheme = useColorScheme();
   const textColor2 = useThemeColor({}, 'text2');
   const [showOption, setShowOption] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setShowOption(false);
+      };
+    }, []),
+  );
 
   return (
     <>

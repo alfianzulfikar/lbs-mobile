@@ -1,5 +1,6 @@
 import {
   Alert,
+  Animated,
   Image,
   ImageBackground,
   Keyboard,
@@ -9,7 +10,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Text from '../components/Text';
 import {useThemeColor} from '../hooks/useThemeColor';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -44,6 +45,7 @@ import {OrderStackParamList} from '../constants/Types';
 import {useInsets} from '../hooks/useInsets';
 import {useDispatch} from 'react-redux';
 import {setAlert, setShowAlert} from '../slices/globalError';
+import ListingRemainingTime from '../components/ListingRemainingTime';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'BusinessDetail'>;
 
@@ -69,6 +71,7 @@ const BusinessDetail = ({route}: Props) => {
   const {user, getUser} = useUser();
   const {notchHeight} = useInsets();
   const dispatch = useDispatch();
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const [loadingOrder, setLoadingOrder] = useState(false);
   const [loadingPage, setLoadingPage] = useState(true);
@@ -151,92 +154,108 @@ const BusinessDetail = ({route}: Props) => {
           ? colorScheme === 'dark'
             ? 'gradient'
             : 'pattern'
-          : 'gradient'
+          : 'pattern'
       }
-      notch={false}>
-      <ScrollView bounces={false} contentContainerStyle={{flexGrow: 1}}>
+      header
+      customHeader={
+        <Header
+          rightIcon={
+            <IconWrapper onPress={() => handleShare()}>
+              <ICShare color={iconColor} size={24} />
+            </IconWrapper>
+          }
+        />
+      }
+      childScrollY={scrollY}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={{flexGrow: 1}}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {
+            useNativeDriver: false,
+          },
+        )}>
         <View style={[styles.container, {}]}>
-          <View>
-            {business.image && (
-              <Image
-                source={{uri: business.image}}
-                style={{width: '100%', height: '100%', position: 'absolute'}}
-                resizeMode="cover"
-              />
-            )}
-            <View
-              style={{
-                width: '100%',
-                aspectRatio: 16 / 10,
-                zIndex: 2,
-                backgroundColor: RGBAColors(0.2).dark.background,
-              }}>
-              <Gap height={(Platform.OS === 'ios' ? notchHeight : 0) + 24} />
-              <Header
-                rightIcon={
-                  <IconWrapper onPress={() => handleShare()}>
-                    <ICShare color={iconColor} size={24} />
-                  </IconWrapper>
-                }
-              />
+          <View
+            style={{
+              width: '100%',
+              zIndex: 2,
+              // backgroundColor: RGBAColors(0.2).dark.background,
+            }}>
+            {/* <Gap height={(Platform.OS === 'ios' ? notchHeight : 0) + 24} /> */}
 
-              {/* <Gap height={136} /> */}
-              <Gap flex={1} />
-
-              <View style={styles.optionContainer}>
-                <IconWrapper
-                  onPress={() => handleLike(slug, isLiked ? 'delete' : 'like')}
-                  loading={likeLoading}>
-                  {isLiked ? (
-                    <ICLikeFill color={iconColor} size={24} />
-                  ) : (
-                    <ICLike color={iconColor} size={24} />
-                  )}
-                </IconWrapper>
-                <Gap width={16} />
-                {['PRE-LISTING', 'LISTING'].includes(business.status) && (
-                  <IconWrapper
-                    onPress={() =>
-                      navigation.navigate('Order', {
-                        screen: 'BusinessDiscussion',
-                        params: {
-                          slug: business.slug,
-                          businessStatus: business.status,
-                        },
-                      })
-                    }>
-                    <ICChat color={iconColor} size={24} />
-                  </IconWrapper>
-                )}
-                {business.tipeBisnis === 'SUKUK' &&
-                  ['PRE-LISTING', 'LISTING'].includes(business.status) && (
-                    <>
-                      <Gap width={16} />
-                      <IconWrapper
-                        onPress={() => {
-                          if (
-                            ['PRE-LISTING', 'LISTING'].includes(business.status)
-                          ) {
-                            setShowCalculator(true);
-                          }
-                        }}
-                        width={204}>
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <ICCalculator color={iconColor} size={24} />
-                          <Gap width={4} />
-                          <Text
-                            style={[styles.calculatorText, {color: textColor}]}>
-                            Kalkulator Investasi
-                          </Text>
-                        </View>
-                      </IconWrapper>
-                    </>
-                  )}
+            <View style={{paddingHorizontal: 24}}>
+              <View
+                style={{
+                  width: '100%',
+                  marginVertical: 24,
+                  aspectRatio: 354 / 200,
+                  borderRadius: 24,
+                  overflow: 'hidden',
+                  backgroundColor,
+                }}>
+                <Image
+                  source={{uri: business.image}}
+                  style={{width: '100%', height: '100%'}}
+                  resizeMode="cover"
+                />
               </View>
-
-              <Gap height={16} />
             </View>
+
+            <View style={styles.optionContainer}>
+              <IconWrapper
+                onPress={() => handleLike(slug, isLiked ? 'delete' : 'like')}
+                loading={likeLoading}>
+                {isLiked ? (
+                  <ICLikeFill color={iconColor} size={24} />
+                ) : (
+                  <ICLike color={iconColor} size={24} />
+                )}
+              </IconWrapper>
+              <Gap width={16} />
+              {['PRE-LISTING', 'LISTING'].includes(business.status) && (
+                <IconWrapper
+                  onPress={() =>
+                    navigation.navigate('Order', {
+                      screen: 'BusinessDiscussion',
+                      params: {
+                        slug: business.slug,
+                        businessStatus: business.status,
+                      },
+                    })
+                  }>
+                  <ICChat color={iconColor} size={24} />
+                </IconWrapper>
+              )}
+              {business.tipeBisnis === 'SUKUK' &&
+                ['PRE-LISTING', 'LISTING'].includes(business.status) && (
+                  <>
+                    <Gap width={16} />
+                    <IconWrapper
+                      onPress={() => {
+                        if (
+                          ['PRE-LISTING', 'LISTING'].includes(business.status)
+                        ) {
+                          setShowCalculator(true);
+                        }
+                      }}
+                      width={204}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <ICCalculator color={iconColor} size={24} />
+                        <Gap width={4} />
+                        <Text
+                          style={[styles.calculatorText, {color: textColor}]}>
+                          Kalkulator Investasi
+                        </Text>
+                      </View>
+                    </IconWrapper>
+                  </>
+                )}
+            </View>
+
+            <Gap height={16} />
           </View>
 
           <View
@@ -291,6 +310,14 @@ const BusinessDetail = ({route}: Props) => {
                         </Text>
                       </View>
                     </View>
+
+                    {business.status === 'LISTING' && (
+                      <View style={styles.remainingTimeContainer}>
+                        <ListingRemainingTime
+                          targetDate={business.targetDate || ''}
+                        />
+                      </View>
+                    )}
 
                     <Text style={[styles.title, {color: textColor}]}>
                       {business.merkDagang}
@@ -472,7 +499,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    transform: [{translateY: -36}],
+    // transform: [{translateY: -36}],
     paddingHorizontal: 24,
   },
   calculatorText: {
@@ -485,22 +512,15 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     overflow: 'hidden',
-    transform: [{translateY: -36}],
-    // top: -36,
-    marginBottom: -36,
     zIndex: 2,
   },
   main: {
     flex: 1,
     paddingVertical: 24,
-    // borderTopLeftRadius: 40,
-    // borderTopRightRadius: 40,
-    // position: 'relative',
     zIndex: 2,
   },
   mainSection1: {
     flexDirection: 'row',
-    // alignItems: 'center',
     paddingHorizontal: 24,
   },
   location: {
@@ -561,5 +581,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     marginTop: 8,
+  },
+  remainingTimeContainer: {
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    marginTop: 12,
   },
 });

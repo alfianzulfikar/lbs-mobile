@@ -63,9 +63,13 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Badge text={capitalize(data.category)} transparent mode="dark" />
               <Gap width={16} />
-              <View style={styles.authorImageContainer}>
+              <View
+                style={[
+                  styles.authorImageContainer,
+                  {backgroundColor: '#FFFFFF'},
+                ]}>
                 <Image
-                  source={require('../assets/images/profile-picture-light.png')}
+                  source={require('../assets/images/logo-lbs.png')}
                   style={{width: '100%', height: '100%'}}
                   resizeMode="cover"
                 />

@@ -221,7 +221,6 @@ const KYCPersonal = () => {
         endpoint: '/user/biodata/pribadi',
         authorization: true,
       });
-      console.log('get data personal', res);
       setIDFormState({
         nik: res.ktp?.nik || '',
         tglRegistrasiKTP: res.ktp?.tgl_registrasi || '',

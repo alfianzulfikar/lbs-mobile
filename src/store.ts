@@ -2,12 +2,14 @@ import {configureStore} from '@reduxjs/toolkit';
 import colorSchemeReducer from './slices/colorScheme';
 import userReducer from './slices/user';
 import globalErrorReducer from './slices/globalError';
+import businessViewTypeReducer from './slices/businessViewType';
 
 export const store = configureStore({
   reducer: {
     colorScheme: colorSchemeReducer,
     user: userReducer,
     globalError: globalErrorReducer,
+    businessViewType: businessViewTypeReducer,
   },
 });
 

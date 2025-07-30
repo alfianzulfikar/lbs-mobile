@@ -26,6 +26,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import HelpButton from '../components/HelpButton';
 
 const MenuItem = ({
   name,
@@ -408,6 +409,9 @@ const Transaction = () => {
   );
 
   const scrollY = useRef(new Animated.Value(0)).current;
+  const buttonAnim = useRef(new Animated.Value(-24)).current;
+  const lastScrollY = useRef(0);
+  const isButtonVisible = useRef(true);
 
   return (
     <View style={{flex: 1}}>
@@ -468,7 +472,37 @@ const Transaction = () => {
           <FlatList
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {useNativeDriver: false},
+              {
+                useNativeDriver: false,
+                listener: event => {
+                  const currentY = event.nativeEvent?.contentOffset.y;
+
+                  if (
+                    currentY > 0 &&
+                    currentY > lastScrollY.current + 5 &&
+                    isButtonVisible.current
+                  ) {
+                    Animated.timing(buttonAnim, {
+                      toValue: 56,
+                      duration: 200,
+                      useNativeDriver: true,
+                    }).start();
+                    isButtonVisible.current = false;
+                  } else if (
+                    currentY < lastScrollY.current - 5 &&
+                    !isButtonVisible.current
+                  ) {
+                    Animated.timing(buttonAnim, {
+                      toValue: -24,
+                      duration: 200,
+                      useNativeDriver: true,
+                    }).start();
+                    isButtonVisible.current = true;
+                  }
+
+                  lastScrollY.current = currentY;
+                },
+              },
             )}
             scrollEventThrottle={16}
             onRefresh={onRefresh}
@@ -542,76 +576,17 @@ const Transaction = () => {
             }}
             // scrollEnabled={scrollEnabled}
           />
-
-          {/* {loadingTransaction ? (
-            <View style={{marginTop: 40}}>
-              <ActivityIndicator color={tint} />
-            </View>
-          ) : transactions.length > 0 ? (
-            <View style={{marginTop: 40, paddingHorizontal: 24}}>
-              {transactions.map((transaction, transactionId) => (
-                <View key={transactionId}>
-                  <TransactionItem
-                    transaction={{
-                      type:
-                        transaction.tipe_transaksi ||
-                        (transaction.type_bisnis === 'SAHAM'
-                          ? 'Dividen'
-                          : 'Bagi Hasil'),
-                      date:
-                        transaction.created_at ||
-                        transaction.tanggal_pembagian_deviden,
-                      nominal:
-                        transaction.nominal || transaction.nominal_deviden,
-                      status:
-                        transaction.status_transaksi || transaction.status,
-                    }}
-                    onPress={() => {
-                      if (activeMenu === 'dividen') {
-                        setDetail({
-                          kodeEfek: transaction.kode_bisnis || '',
-                          kodePembayaran: '',
-                          merkDagang: transaction.nama_bisnis || '',
-                          totalTransaksi: transaction.nominal_deviden || 0,
-                          jenisBisnis: transaction.type_bisnis || '',
-                          hargaPerLembar: 0,
-                          jumlahLembar: 0,
-                          nominal: transaction.nominal_deviden || 0,
-                          biayaAdminBank: 0,
-                          biayaPlatform: 0,
-                          jenisTransaksi:
-                            transaction.type_bisnis === 'SAHAM'
-                              ? 'Dividen'
-                              : 'Bagi Hasil',
-                          statusTransaksi: transaction.status || '',
-                          periodePembayaran:
-                            transaction.periode_pembayaran || '',
-                          tanggalPembayaran:
-                            transaction.tanggal_pembagian_deviden || '',
-                        });
-                        setShowDetail(true);
-                      } else {
-                        setShowDetail(true);
-                        getTransactionDetail({
-                          paymentCode: transaction.kode,
-                          type: transaction.tipe_transaksi,
-                        });
-                      }
-                    }}
-                  />
-                  {transactionId !== transactions.length - 1 && (
-                    <HorizontalLine marginVertical={24} />
-                  )}
-                </View>
-              ))}
-            </View>
-          ) : (
-            <Text style={{textAlign: 'center', marginTop: 40, fontSize: 14}}>
-              Belum ada {activeMenu}
-            </Text>
-          )} */}
-          {/* <Gap height={104} /> */}
         </View>
+        <Animated.View
+          style={[
+            styles.helpButtonContainer,
+            {
+              transform: [{translateX: buttonAnim}],
+              bottom: 104,
+            },
+          ]}>
+          <HelpButton />
+        </Animated.View>
       </ScreenWrapper>
 
       {showDetail && (
@@ -676,5 +651,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     marginTop: 8,
+  },
+  helpButtonContainer: {
+    position: 'absolute',
+    right: 0,
+    zIndex: 3,
   },
 });

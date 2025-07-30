@@ -98,7 +98,7 @@ const ScreenWrapper = ({
     extrapolate: 'clamp',
   });
 
-  const buttonAnim = useRef(new Animated.Value(-24)).current; // opacity (1: visible, 0: hidden)
+  const buttonAnim = useRef(new Animated.Value(-24)).current;
   const lastScrollY = useRef(0);
   const isButtonVisible = useRef(true);
 
@@ -110,6 +110,11 @@ const ScreenWrapper = ({
 
   useFocusEffect(
     useCallback(() => {
+      Animated.timing(buttonAnim, {
+        toValue: -24,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
       return () => {
         dispatch(setShowAlert(false));
       };
@@ -238,6 +243,7 @@ const ScreenWrapper = ({
                         const currentY = event.nativeEvent?.contentOffset.y;
 
                         if (
+                          currentY > 0 &&
                           currentY > lastScrollY.current + 5 &&
                           isButtonVisible.current
                         ) {
@@ -310,6 +316,19 @@ const ScreenWrapper = ({
                 </Animated.View>
               )}
               {children}
+
+              {helpButton && (
+                <Animated.View
+                  style={[
+                    styles.helpButtonContainer,
+                    {
+                      transform: [{translateX: buttonAnim}],
+                      bottom: bottomTab ? 104 : 24,
+                    },
+                  ]}>
+                  <HelpButton />
+                </Animated.View>
+              )}
             </View>
           )}
           {isKeyboardVisible && Platform.OS === 'android' && (

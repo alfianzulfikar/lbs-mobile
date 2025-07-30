@@ -133,8 +133,6 @@ export const useDownload = () => {
     }/${fileName}`;
     const fileExist = await findPath(path);
 
-    console.log('path', fileExist, path);
-
     if (Platform.OS === 'android' && fileExist) {
       // if (Platform.OS === 'ios') {
       //   RNFetchBlob.ios.previewDocument(path);

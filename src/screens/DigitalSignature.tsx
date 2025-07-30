@@ -76,7 +76,6 @@ const DigitalSignature = ({route}: Props) => {
           otp: Object.values(otpValue).join(''),
         },
       });
-      console.log('submit res', res);
       if (res.statusCode === 401) {
         dispatch(
           setAlert({

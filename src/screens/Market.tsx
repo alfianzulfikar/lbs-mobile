@@ -49,7 +49,7 @@ const Market = () => {
     <ScreenWrapper
       background
       backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
-      scrollView header headerTitle='Pasar Sekunder'>
+      scrollView header headerTitle='Pasar Sekunder' helpButton>
       {/* <Gap height={24} />
       <Header title="Pasar Sekunder" /> */}
       <View style={{paddingHorizontal: 24, marginTop: 20}}>

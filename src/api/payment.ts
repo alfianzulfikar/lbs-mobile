@@ -30,7 +30,6 @@ export const usePayment = () => {
         endpoint: `/waiting-payment/${paymentCode}`,
         authorization: true,
       });
-      console.log('get payment', res);
       const biayaPlatform = Math.round((res.nominal * res.percentage) / 100);
       const jenisTransaksi = type;
       const fee = res.total_nominal - res.nominal;

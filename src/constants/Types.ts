@@ -60,6 +60,7 @@ export type AccountStackParamList = {
   TermsAndConditions: undefined;
   ComplaintProcedure: undefined;
   AboutUs: undefined;
+  Disclaimer: undefined;
 };
 
 export type KYCStackParamList = {
@@ -199,6 +200,7 @@ export interface BusinessType {
   file?: string;
   businessContent?: any;
   id: number | null;
+  targetDate?: number | string;
 }
 
 export type Callback = (event: GestureResponderEvent) => void;

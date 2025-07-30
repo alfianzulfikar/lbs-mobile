@@ -64,7 +64,6 @@ const AccountVerification = ({route}: Props) => {
       confirmPassword: cpassword,
       otp_methods: method,
     };
-    console.log(body);
     submitVerification(token, body);
   };
 

@@ -9,8 +9,10 @@ import Button from '../components/Button';
 import {useAPI} from '../services/api';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {useThemeColor} from '../hooks/useThemeColor';
 
 const ChangePassword = () => {
+  const textColor2 = useThemeColor({}, 'text2');
   const dispatch = useDispatch();
   const {apiRequest} = useAPI();
   const [form, setForm] = useState({
@@ -90,8 +92,9 @@ const ChangePassword = () => {
           <Gap height={16} />
           <Input
             label="Kata Sandi Baru"
+            subLabel="Minimal 8 karakter, kombinasi huruf besar, huruf kecil dan angka"
             type="password"
-            placeholder="Minimum 8 Digit"
+            placeholder="Kata sandi baru"
             value={form.newPassword}
             onChange={value => setForm(prev => ({...prev, newPassword: value}))}
             error={error.newPassword}

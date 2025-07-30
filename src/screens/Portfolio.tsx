@@ -30,6 +30,7 @@ import {useColorScheme} from '../hooks/useColorScheme';
 import {PortfolioType} from '../constants/Types';
 import {RGBAColors} from '../constants/Colors';
 import BlurOverlay from '../components/BlurOverlay';
+import HelpButton from '../components/HelpButton';
 
 const Portfolio = () => {
   let colorScheme = useColorScheme();
@@ -62,6 +63,9 @@ const Portfolio = () => {
   const onEndReachedCalledDuringMomentum = useRef(false);
   const isFiltering = useRef(false);
   const scrollY = useRef(new Animated.Value(0)).current;
+  const buttonAnim = useRef(new Animated.Value(-24)).current;
+  const lastScrollY = useRef(0);
+  const isButtonVisible = useRef(true);
 
   const typeOption = [
     {name: 'Jenis', id: ''},
@@ -275,7 +279,37 @@ const Portfolio = () => {
       <FlatList
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: false},
+          {
+            useNativeDriver: false,
+            listener: event => {
+              const currentY = event.nativeEvent?.contentOffset.y;
+
+              if (
+                currentY > 0 &&
+                currentY > lastScrollY.current + 5 &&
+                isButtonVisible.current
+              ) {
+                Animated.timing(buttonAnim, {
+                  toValue: 56,
+                  duration: 200,
+                  useNativeDriver: true,
+                }).start();
+                isButtonVisible.current = false;
+              } else if (
+                currentY < lastScrollY.current - 5 &&
+                !isButtonVisible.current
+              ) {
+                Animated.timing(buttonAnim, {
+                  toValue: -24,
+                  duration: 200,
+                  useNativeDriver: true,
+                }).start();
+                isButtonVisible.current = true;
+              }
+
+              lastScrollY.current = currentY;
+            },
+          },
         )}
         scrollEventThrottle={16}
         onRefresh={onRefresh}
@@ -308,6 +342,17 @@ const Portfolio = () => {
           total={user.totalLimit}
         />
       )}
+
+      <Animated.View
+        style={[
+          styles.helpButtonContainer,
+          {
+            transform: [{translateX: buttonAnim}],
+            bottom: 24,
+          },
+        ]}>
+        <HelpButton />
+      </Animated.View>
     </ScreenWrapper>
   );
 };
@@ -359,5 +404,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
     marginTop: 8,
+  },
+  helpButtonContainer: {
+    position: 'absolute',
+    right: 0,
+    zIndex: 3,
   },
 });

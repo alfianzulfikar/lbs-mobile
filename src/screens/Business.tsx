@@ -6,6 +6,7 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -23,6 +24,15 @@ import {BusinessType} from '../constants/Types';
 import BusinessCardSkeleton2 from '../components/BusinessCardSkeleton2';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {maxScreenWidth} from '../constants/Screen';
+import IconWrapper from '../components/IconWrapper';
+import ICSettings from '../components/icons/ICSettings';
+import CustomBottomSheet from '../components/BottomSheet';
+import {RGBAColors} from '../constants/Colors';
+import ICScrollHorizontal from '../components/icons/ICScrollHorizontal';
+import ICScrollVertical from '../components/icons/ICScrollVertical';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../store';
+import {setViewType} from '../slices/businessViewType';
 
 const Business = () => {
   const {width} = useWindowDimensions();
@@ -40,6 +50,8 @@ const Business = () => {
     isLastPage,
   } = useBusiness();
   const businessFlatlistRef = useRef<FlatList<BusinessType>>(null);
+  const {viewType} = useSelector((item: RootState) => item.businessViewType);
+  const dispatch = useDispatch();
 
   const [filter, setFilter] = useState({
     progress: '',
@@ -49,6 +61,10 @@ const Business = () => {
   const [keyword, setKeyword] = useState('');
   const [flatlistScrollEnabled, setFlatlistScrollEnabled] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  // const [viewType, setViewType] = useState<'vertical' | 'horizontal'>(
+  //   'vertical',
+  // );
+  const [showSettings, setShowSettings] = useState(false);
 
   const progressOption = [
     {name: 'Terkumpul', id: ''},
@@ -64,26 +80,17 @@ const Business = () => {
     {name: 'Terlama', id: 'false'},
   ];
 
-  // const renderItem: ListRenderItem<any> | null | undefined = ({
-  //   item,
-  //   index,
-  // }) => {
-  //   return (
-  //     <View
-  //       style={{
-  //         marginRight: index === businesses.length - 1 ? 24 : 16,
-  //         marginLeft: index === 0 ? 24 : 0,
-  //       }}>
-  //       <BusinessCard2 business={item} />
-  //     </View>
-  //   );
-  // };
+  const viewOption: {name: string; id: 'vertical' | 'horizontal'}[] = [
+    {name: 'Geser Vertikal', id: 'vertical'},
+    {name: 'Geser Horizontal', id: 'horizontal'},
+  ];
 
   const renderHeader = () => {
     return (
       <View
         style={{
-          height: width > maxScreenWidth ? 'auto' : 508,
+          // height: width > maxScreenWidth ? 'auto' : 508,
+          height: viewType === 'vertical' ? 'auto' : 508,
           justifyContent: 'center',
         }}>
         {businessesLoading ? (
@@ -100,7 +107,8 @@ const Business = () => {
     return (
       <View
         style={{
-          height: width > maxScreenWidth ? 50 : 508,
+          // height: width > maxScreenWidth ? 50 : 508,
+          height: viewType === 'vertical' ? 50 : 508,
           justifyContent: 'center',
           marginRight: 24,
         }}>
@@ -180,17 +188,27 @@ const Business = () => {
     <ScreenWrapper
       background
       backgroundType="pattern"
-      scrollView={width < maxScreenWidth}
+      scrollView={viewType === 'horizontal'}
       refreshing={refreshing}
-      onRefresh={onRefresh}>
+      onRefresh={onRefresh}
+      helpButton
+      bottomTab>
       <View style={{paddingHorizontal: 24}}>
-        <Gap height={24} />
-        <SearchBar
-          keyword={keyword}
-          onSubmit={handleSearch}
-          setKeyword={setKeyword}
-          placeholder="Cari Bisnis"
-        />
+        {viewType === 'horizontal' && <Gap height={24} />}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <SearchBar
+              keyword={keyword}
+              onSubmit={handleSearch}
+              setKeyword={setKeyword}
+              placeholder="Cari Bisnis"
+            />
+          </View>
+          <Gap width={8} />
+          <IconWrapper onPress={() => setShowSettings(prev => !prev)}>
+            <ICSettings color={textColor2} />
+          </IconWrapper>
+        </View>
         {/* <View style={{flexDirection: 'row', marginTop: 16}}>
           <DropdownInput
             option={progressOption}
@@ -205,15 +223,26 @@ const Business = () => {
           />
         </View> */}
       </View>
-      <Gap height={40} />
+      <Gap height={viewType === 'vertical' ? 24 : 40} />
       {businessesLoading ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Gap width={24} />
-          <BusinessCardSkeleton2 />
-          <Gap width={16} />
-          <BusinessCardSkeleton2 />
-          <Gap width={24} />
-        </ScrollView>
+        viewType === 'vertical' ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{paddingHorizontal: 24}}>
+            <BusinessCardSkeleton2 />
+            <Gap height={16} />
+            <BusinessCardSkeleton2 />
+            <Gap height={24} />
+          </ScrollView>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <Gap width={24} />
+            <BusinessCardSkeleton2 />
+            <Gap width={16} />
+            <BusinessCardSkeleton2 />
+            <Gap width={24} />
+          </ScrollView>
+        )
       ) : businesses.length === 0 ? (
         <View
           style={{
@@ -241,7 +270,7 @@ const Business = () => {
             dengan kata kunci yang berbeda.
           </Text>
         </View>
-      ) : width > maxScreenWidth ? (
+      ) : viewType === 'vertical' ? (
         <FlatList
           refreshing={refreshing}
           onRefresh={onRefresh}
@@ -258,7 +287,7 @@ const Business = () => {
               <BusinessCard2 business={item} orientation="horizontal" />
             </View>
           )}
-          numColumns={2}
+          numColumns={width > maxScreenWidth ? 2 : 1}
           ListHeaderComponent={renderHeader()}
           ListFooterComponent={renderFooter()}
           keyExtractor={(item, id) => id.toString()}
@@ -268,8 +297,6 @@ const Business = () => {
           scrollEnabled={flatlistScrollEnabled}
         />
       ) : (
-        // <View style={{backgroundColor: 'green'}}>
-        // </View>
         <>
           <View style={{flexDirection: 'row'}}>
             <FlatList
@@ -301,6 +328,48 @@ const Business = () => {
       )}
       <Gap maxHeight={120} flex={1} />
       <Gap height={80} />
+
+      {showSettings && (
+        <CustomBottomSheet
+          onDismiss={() => setShowSettings(false)}
+          paddingHorizontal={0}
+          snapPoints={['40%']}>
+          {viewOption.map((item, i) => (
+            <TouchableOpacity
+              key={item.id}
+              style={{
+                paddingHorizontal: 24,
+                paddingVertical: 24,
+                borderBottomWidth: i !== viewOption.length - 1 ? 1 : 0,
+                borderColor: RGBAColors(0.1)[colorScheme].text,
+                backgroundColor:
+                  viewType === item.id
+                    ? RGBAColors(0.04)[colorScheme].text
+                    : 'transparent',
+              }}
+              onPress={() => {
+                dispatch(setViewType({viewType: item.id}));
+                setShowSettings(false);
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                {item.id === 'horizontal' ? (
+                  <ICScrollHorizontal color={textColor} />
+                ) : (
+                  <ICScrollVertical color={textColor} />
+                )}
+                <Gap width={8} />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: viewType === item.id ? '700' : '400',
+                  }}>
+                  {item.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </CustomBottomSheet>
+      )}
     </ScreenWrapper>
   );
 };

@@ -32,7 +32,20 @@ const RoundedProgressIndicator = ({
   const baseStrokeDashoffset = circumference * (1 - 100 / 100);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        ...(type !== 'large'
+          ? [
+              {
+                shadowColor: colorScheme === 'dark' ? '#FFE7C2' : '#00FFF7',
+                shadowOffset: {width: 0, height: 0},
+                shadowOpacity: 0.8,
+                shadowRadius: 4,
+              },
+            ]
+          : []),
+      ]}>
       <Svg
         width={size + (type === 'large' ? 40 : type === 'medium' ? 20 : 0)}
         height={size + (type === 'large' ? 40 : type === 'medium' ? 20 : 0)}
@@ -103,6 +116,7 @@ const RoundedProgressIndicator = ({
             origin={`${size / 2}, ${size / 2}`}
           />
         )}
+        <View>
         <Circle
           cx={size / 2}
           cy={size / 2}
@@ -112,7 +126,7 @@ const RoundedProgressIndicator = ({
           fill={
             transparent
               ? 'transparent'
-              : RGBAColors(0.4)[colorScheme].background
+              : RGBAColors(0.3)[colorScheme].background
           }
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -121,6 +135,7 @@ const RoundedProgressIndicator = ({
           origin={`${size / 2}, ${size / 2}`}
           {...(shadow ? {filter: 'url(#shadow)'} : {})}
         />
+        </View>
       </Svg>
       <Text
         style={[
@@ -132,7 +147,7 @@ const RoundedProgressIndicator = ({
             // transform: [{translateY: -2}],
           },
         ]}>
-        {progress.toFixed(progress < 1 && progress !== 0 ? 2 : 0)}%
+        {progress < 1 ? progress.toFixed(2) : Math.floor(progress)}%
       </Text>
     </View>
   );

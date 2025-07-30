@@ -17,7 +17,6 @@ export const useStatistc = () => {
     try {
       const res = await apiRequest({endpoint: '/info-statistik'});
       if (res.secondary_market) {
-        console.log('get statistic', res.secondary_market);
         setMarketStatus({
           isOpen: res.secondary_market.is_open || false,
           message:

@@ -179,7 +179,7 @@ const Guide = () => {
     },
     {
       title: 'Menunggu Verifikasi Tim Internal',
-      desc: 'Tim kami akan meninjau data Anda dalam 3x24 jam. Pantau notifikasi di aplikasi.',
+      desc: 'Tim kami akan meninjau data Anda dalam 1x24 jam. Pantau notifikasi di aplikasi.',
       image: (
         <Image
           source={require('../assets/images/guide-kyc-5.png')}

@@ -29,6 +29,7 @@ export const useBusiness = () => {
     file: '',
     businessContent: [],
     id: null,
+    targetDate: '',
   });
   const [prelistingLoading, setPrelistingLoading] = useState(false);
   const [businessesLoading, setBusinessesLoading] = useState(false);
@@ -75,7 +76,7 @@ export const useBusiness = () => {
           newArray = [...businesses];
         }
         response.map((item: any) => {
-          let businessHightlight = item.bisnis_content.find(
+          let businessHighlight = item.bisnis_content.find(
             (item: any) => item?.name?.target_dana,
           );
 
@@ -85,14 +86,16 @@ export const useBusiness = () => {
           let hargaPerLembar = 0;
           let minimalPemesanan = 0;
           let lembarTersisa = 0;
-          if (businessHightlight) {
-            target = businessHightlight?.name?.target_dana || 0;
-            image = businessHightlight?.name?.thumbnail || '';
-            kode = businessHightlight?.name?.kode_saham || '';
+          let targetDate = '';
+          if (businessHighlight) {
+            target = businessHighlight?.name?.target_dana || 0;
+            image = businessHighlight?.name?.thumbnail || '';
+            kode = businessHighlight?.name?.kode_saham || '';
             hargaPerLembar =
-              businessHightlight?.name?.harga_per_lembar_saham || 0;
-            minimalPemesanan = businessHightlight?.name?.minimal_investasi || 0;
+              businessHighlight?.name?.harga_per_lembar_saham || 0;
+            minimalPemesanan = businessHighlight?.name?.minimal_investasi || 0;
             lembarTersisa = item.saham_tersisa / hargaPerLembar;
+            targetDate = businessHighlight?.name?.target_date || '';
           }
 
           const investmentHighlight = item?.bisnis_content
@@ -124,6 +127,7 @@ export const useBusiness = () => {
                   tenor: investmentHighlight?.name.tenor || 0,
                 }
               : {}),
+            targetDate,
           });
         });
         if (prelisting) {
@@ -177,6 +181,7 @@ export const useBusiness = () => {
       let minimalPemesanan = 0;
       let lembarTersisa = 0;
       let file = '';
+      let targetDate = '';
       if (businessHighlight) {
         target = businessHighlight?.name?.target_dana || 0;
         image = businessHighlight?.name?.thumbnail || '';
@@ -189,6 +194,7 @@ export const useBusiness = () => {
         );
         lembarTersisa = response.saham_tersisa / hargaPerLembar;
         file = businessHighlight?.name?.prospektus || '';
+        targetDate = businessHighlight?.name?.target_date || '';
       }
 
       const investmentHighlight = response?.bisnis_content
@@ -221,6 +227,7 @@ export const useBusiness = () => {
           : {}),
         file,
         businessContent,
+        targetDate,
       };
       setBusiness(data);
     } catch (error: any) {

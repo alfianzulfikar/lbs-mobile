@@ -79,6 +79,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {useThemeColor} from './hooks/useThemeColor';
 import RootErrorBottomSheet from './components/RootErrorBottomSheet';
+import Disclaimer from './screens/Disclaimer';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -152,6 +153,7 @@ function Account() {
         component={ComplaintProcedure}
       />
       <AccountStack.Screen name="AboutUs" component={AboutUs} />
+      <AccountStack.Screen name="Disclaimer" component={Disclaimer} />
     </AccountStack.Navigator>
   );
 }

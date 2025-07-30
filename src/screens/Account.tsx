@@ -253,7 +253,12 @@ const Account = () => {
   );
 
   return (
-    <ScreenWrapper background backgroundType="pattern" scrollView>
+    <ScreenWrapper
+      background
+      backgroundType="pattern"
+      scrollView
+      helpButton
+      bottomTab>
       <View
         style={[
           styles.profilePicture,
@@ -421,6 +426,16 @@ const Account = () => {
             onPress={() =>
               navigation.navigate('Account', {
                 screen: 'PrivacyPolicy',
+              })
+            }
+          />
+          <Gap height={48} />
+          <MenuItem
+            title="Disclaimer"
+            icon={<ICPrivacy color={textColor2} />}
+            onPress={() =>
+              navigation.navigate('Account', {
+                screen: 'Disclaimer',
               })
             }
           />

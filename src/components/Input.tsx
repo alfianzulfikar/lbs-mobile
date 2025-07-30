@@ -364,6 +364,8 @@ const Input = ({
                       value
                         ? typeof value === 'string'
                           ? value
+                          : type === 'number'
+                          ? value.toLocaleString('id-ID')
                           : String(value)
                         : ''
                     }
@@ -381,13 +383,14 @@ const Input = ({
                         : 'default'
                     }
                     editable={disable ? !disable : true}
-                    onChangeText={value => {
+                    onChangeText={newValue => {
                       if (type === 'number') {
-                        if (!checkNonNumeric(value)) {
-                          onChange(value);
+                        const valueWithoutDot = newValue.replaceAll('.', '');
+                        if (!checkNonNumeric(valueWithoutDot)) {
+                          onChange(Number(valueWithoutDot));
                         }
                       } else {
-                        onChange(value);
+                        onChange(newValue);
                       }
                     }}
                     // onPress={() => }

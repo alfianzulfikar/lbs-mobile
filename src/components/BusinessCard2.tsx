@@ -28,6 +28,9 @@ import ICTerpenuhi from './icons/ICTerpenuhi';
 import ICBerjalan from './icons/ICBerjalan';
 import ICSelesai from './icons/ICSelesai';
 import BlurOverlay from './BlurOverlay';
+import ListingRemainingTime from './ListingRemainingTime';
+import {maxScreenWidth} from '../constants/Screen';
+import ProgressIndicator from './ProgressIndicator';
 
 const BusinessCard2 = ({
   business,
@@ -40,6 +43,7 @@ const BusinessCard2 = ({
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
+  const tint = useThemeColor({}, 'tint');
   const navigation = useNavigation();
   const {width} = useWindowDimensions();
   return (
@@ -49,8 +53,11 @@ const BusinessCard2 = ({
         {
           width:
             orientation === 'horizontal'
-              ? ((width - 72) * 50) / 100
+              ? width > maxScreenWidth
+                ? ((width - 72) * 50) / 100
+                : width - 48
               : (width * 76) / 100,
+          // minHeight: orientation === 'horizontal' ? 'auto' : 508,
         },
         ...(orientation !== 'horizontal' ? [{maxWidth: 308}] : []),
       ]}
@@ -87,7 +94,7 @@ const BusinessCard2 = ({
           />
         ) : null}
         <BlurOverlay blurType="regular" />
-        <View style={{padding: 16, zIndex: 2}}>
+        <View style={{padding: 16, paddingBottom: 24, zIndex: 2}}>
           <View style={{flexDirection: 'row'}}>
             <Badge text={capitalize(business.tipeBisnis || '')} />
             <Gap width={8} />
@@ -108,60 +115,139 @@ const BusinessCard2 = ({
                 )
               }
             />
+            {orientation === 'horizontal' && business.roi && (
+              <>
+                <Gap width={8} />
+                <Badge
+                  text={`ROI ${business.roi}% p.a`}
+                  transparent
+                  icon={<ICRoi color={textColor2} size={16} />}
+                />
+              </>
+            )}
           </View>
-          <Text style={styles.title} numberOfLines={3}>
+          <Text
+            style={[
+              styles.title,
+              // {height: orientation === 'horizontal' ? 'auto' : 72},
+            ]}
+            numberOfLines={3}>
             {business.merkDagang}
           </Text>
-          <View style={{flexDirection: 'row', marginTop: 24}}>
-            <View style={{flexDirection: 'row', flex: 1}}>
-              <IconWrapper2>
-                <ICTarget color={textColor2} />
-              </IconWrapper2>
-              <View style={{marginLeft: 8}}>
-                <Text style={[styles.targetLabel, {color: textColor2}]}>
-                  Target
-                </Text>
-                <Text style={[styles.targetValue, {color: textColor}]}>
-                  Rp{numberFormat(business.target, true)}
-                </Text>
-              </View>
-            </View>
-            {business.roi && (
-              <View style={{flexDirection: 'row', flex: 1}}>
-                <IconWrapper2>
-                  <ICRoi color={textColor2} />
-                </IconWrapper2>
-                <View style={{marginLeft: 8}}>
-                  <Text style={[styles.targetLabel, {color: textColor2}]}>
-                    ROI
+          {orientation === 'horizontal' ? (
+            <>
+              <Gap height={16} />
+              {business.status !== 'PRE-LISTING' && (
+                <>
+                  <ProgressIndicator
+                    target={business.target}
+                    current={business.terpenuhi}
+                  />
+                  <Gap height={8} />
+                </>
+              )}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                }}>
+                <View style={{flex: 1}}>
+                  <Text style={{fontSize: 12, color: textColor2}}>
+                    Target Dana
                   </Text>
-                  <Text style={[styles.targetValue, {color: textColor}]}>
-                    {business.roi}% p.a
+                  <Text
+                    style={{fontSize: 14, fontWeight: '700', color: textColor}}>
+                    Rp{numberFormat(Number(business.target))}
+                  </Text>
+                </View>
+                {business.status !== 'PRE-LISTING' && (
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'flex-end',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: textColor2,
+                        textAlign: 'right',
+                      }}>
+                      Dana Terkumpul
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: '700',
+                        color: tint,
+                        textAlign: 'right',
+                      }}>
+                      Rp{numberFormat(business.terpenuhi)}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={{flexDirection: 'row', marginTop: 24}}>
+                <View style={{flexDirection: 'row', flex: 1}}>
+                  <IconWrapper2>
+                    <ICTarget color={textColor2} />
+                  </IconWrapper2>
+                  <View style={{marginLeft: 8}}>
+                    <Text style={[styles.targetLabel, {color: textColor2}]}>
+                      Target
+                    </Text>
+                    <Text style={[styles.targetValue, {color: textColor}]}>
+                      Rp{numberFormat(business.target, true)}
+                    </Text>
+                  </View>
+                </View>
+                {business.roi && (
+                  <View style={{flexDirection: 'row', flex: 1}}>
+                    <IconWrapper2>
+                      <ICRoi color={textColor2} />
+                    </IconWrapper2>
+                    <View style={{marginLeft: 8}}>
+                      <Text style={[styles.targetLabel, {color: textColor2}]}>
+                        ROI
+                      </Text>
+                      <Text style={[styles.targetValue, {color: textColor}]}>
+                        {business.roi}% p.a
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 24,
+                  opacity:
+                    capitalize(business.status) !== 'Pre-listing' ? 1 : 0,
+                }}>
+                <RoundedProgressIndicator
+                  current={business.terpenuhi}
+                  target={business.target}
+                  type="medium"
+                />
+                <View
+                  style={{marginLeft: 8, flex: 1, justifyContent: 'center'}}>
+                  <Text style={[styles.terkumpulLabel, {color: textColor2}]}>
+                    Dana Terkumpul
+                  </Text>
+                  <Text style={[styles.terkumpulValue, {color: textColor}]}>
+                    Rp{numberFormat(business.terpenuhi)}
                   </Text>
                 </View>
               </View>
-            )}
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 24,
-              opacity: capitalize(business.status) !== 'Pre-listing' ? 1 : 0,
-            }}>
-            <RoundedProgressIndicator
-              current={business.terpenuhi}
-              target={business.target}
-              type="medium"
-            />
-            <View style={{marginLeft: 8, flex: 1, justifyContent: 'center'}}>
-              <Text style={[styles.terkumpulLabel, {color: textColor2}]}>
-                Dana Terkumpul
-              </Text>
-              <Text style={[styles.terkumpulValue, {color: textColor}]}>
-                Rp{numberFormat(business.terpenuhi)}
-              </Text>
+            </>
+          )}
+          {business.status === 'LISTING' && (
+            <View style={{marginTop: 16}}>
+              <ListingRemainingTime targetDate={business.targetDate || ''} />
             </View>
-          </View>
+          )}
         </View>
       </View>
     </Pressable>
@@ -172,7 +258,7 @@ export default BusinessCard2;
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 508,
+    // minHeight: 508,
   },
   imageContainer: {
     width: '100%',
@@ -193,7 +279,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 24,
     marginTop: 16,
-    height: 72,
   },
   targetLabel: {
     fontSize: 12,

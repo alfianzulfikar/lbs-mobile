@@ -121,11 +121,13 @@ const Home = () => {
             </View>
           )}
           {(bannersLoading || banners.length > 0) && <Gap height={40} />}
-          {Platform.OS === 'android' ? (
-            <BannerCarousel banners={banners} loading={bannersLoading} />
-          ) : (
-            <BannerCarousel2 banners={banners} loading={bannersLoading} />
-          )}
+          {banners.length > 0 ? (
+            Platform.OS === 'android' ? (
+              <BannerCarousel banners={banners} loading={bannersLoading} />
+            ) : (
+              <BannerCarousel2 banners={banners} loading={bannersLoading} />
+            )
+          ) : null}
           <Gap height={40} />
           <View style={styles.menuContainer}>
             {menu.map((menuItem, index) => (

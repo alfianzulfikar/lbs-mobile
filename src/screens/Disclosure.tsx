@@ -21,7 +21,8 @@ const Disclosure = () => {
       backgroundType="gradient"
       scrollView
       header
-      headerTitle="Keterbukaan Informasi">
+      headerTitle="Keterbukaan Informasi"
+      helpButton>
       <View style={{paddingHorizontal: 24, marginTop: 20}}>
         {disclosureListLoading ? (
           <ActivityIndicator color={tint} />

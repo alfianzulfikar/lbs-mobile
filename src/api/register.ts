@@ -45,7 +45,6 @@ export const useRegister = () => {
         endpoint: `/auth/verify-register/${token}`,
         body,
       });
-      console.log('verif success', res);
       navigation.navigate('OTP', {
         phone: body.phone,
         register: {body, token},

@@ -180,7 +180,8 @@ const PortfolioDetail = ({route}: Props) => {
             </IconWrapper>
           }
         />
-      }>
+      }
+      helpButton>
       {/* <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}

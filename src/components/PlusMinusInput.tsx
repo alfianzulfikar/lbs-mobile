@@ -56,10 +56,8 @@ const PlusMinusInput = ({
               if (Number(value) > 0) {
                 if (increment) {
                   const rest = (value - increment) % increment;
-                  console.log('rest', rest);
                   if (rest !== 0) {
                     const newValue = value - rest;
-                    console.log('newValue', newValue);
                     onChange(rest < 0 ? 0 : newValue);
                   } else {
                     onChange(value - (increment || 1));
@@ -91,10 +89,8 @@ const PlusMinusInput = ({
             onPress={() => {
               if (increment) {
                 const rest = (value + increment) % increment;
-                console.log('rest', rest);
                 if (rest !== 0) {
                   const newValue = value + increment - rest;
-                  console.log('newValue', newValue);
                   onChange(newValue);
                 } else {
                   onChange(value + (increment || 1));

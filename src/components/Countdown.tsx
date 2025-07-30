@@ -19,8 +19,6 @@ export const Countdown = ({
     let now = new Date().getTime();
     let distance = value - now;
 
-    console.log('countdown', value, now);
-
     if (value) {
       if (distance < 0) {
         setResult('Expired');
@@ -36,8 +34,6 @@ export const Countdown = ({
         const seconds = String(
           Math.floor((distance % (1000 * 60)) / 1000),
         ).padStart(2, '0');
-
-        console.log('countdown', seconds, minutes, hours);
 
         setResult(`${hours}:${minutes}:${seconds}`);
       }

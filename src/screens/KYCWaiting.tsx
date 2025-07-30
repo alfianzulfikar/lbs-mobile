@@ -34,7 +34,7 @@ const KYCWaiting = () => {
           <Text style={styles.heading}>Menunggu Verifikasi Internal</Text>
           <Text style={[styles.desc, {color: textColor2}]}>
             Data KYC sedang dalam tahap review oleh internal LBS Urun Dana.
-            Harap menunggu hasil verifikasi internal maksimum 3x24 jam.
+            Harap menunggu hasil verifikasi internal maksimum 1x24 jam.
           </Text>
           <Gap flex={1} />
           <Gap height={24} />

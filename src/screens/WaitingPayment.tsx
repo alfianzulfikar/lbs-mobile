@@ -88,7 +88,6 @@ const WaitingPayment = ({route}: Props) => {
         endpoint: `/waiting-payment/${code}`,
         authorization: true,
       });
-      console.log('getPaymentDetail', res);
       const isMarket = res.status_transaksi.id == 8;
 
       let percentage = res.percentage;

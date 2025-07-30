@@ -24,6 +24,7 @@ import ICTerpenuhi from './icons/ICTerpenuhi';
 import ICBerjalan from './icons/ICBerjalan';
 import ICSelesai from './icons/ICSelesai';
 import LinearGradient from 'react-native-linear-gradient';
+import ListingRemainingTime from './ListingRemainingTime';
 
 const BusinessCard = ({data}: {data: BusinessType}) => {
   let colorScheme = useColorScheme();
@@ -114,9 +115,16 @@ const BusinessCard = ({data}: {data: BusinessType}) => {
               )}
             </View>
             <Gap height={capitalize(data.status) === 'Pre-listing' ? 24 : 8} />
-            <Text style={styles.merkDagang} numberOfLines={2}>
+            <Text
+              style={styles.merkDagang}
+              numberOfLines={capitalize(data.status) === 'Listing' ? 2 : 4}>
               {data.merkDagang}
             </Text>
+            {data.status === 'LISTING' && (
+              <View style={{marginTop: 12}}>
+                <ListingRemainingTime targetDate={data.targetDate || ''} />
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -140,7 +148,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 24,
     borderBottomLeftRadius: 24,
     overflow: 'hidden',
-    height: 142,
+    height: 186,
   },
   blurView: {
     position: 'absolute',

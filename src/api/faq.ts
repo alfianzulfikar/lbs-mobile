@@ -15,7 +15,6 @@ export const useFAQ = () => {
         baseUrl: 'https://uda-news.lbs.id',
       });
       const faqPemodal: any = res.find((item: any) => item.title === 'PEMODAL');
-      console.log('faqPemodal', faqPemodal);
       if (faqPemodal?.items) {
         const newArray: FAQType[] = [];
         // newArray.push({
