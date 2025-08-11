@@ -29,6 +29,8 @@ export const globalError = createSlice({
   reducers: {
     setShowNetworkError: (state, action: PayloadAction<GlobalErrorType>) => {
       state.showNetworkError = action.payload.showNetworkError;
+      state.title = action.payload.title || '';
+      state.desc = action.payload.desc || '';
     },
     setShowRootError: (state, action: PayloadAction<GlobalErrorType>) => {
       state.showRootError = action.payload.showRootError;

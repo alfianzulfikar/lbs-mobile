@@ -122,14 +122,24 @@ export const useAPI = () => {
               response.status &&
               String(response.status).charAt(0) === '5'
             ) {
-              dispatch(
-                setAlert({
-                  title: 'Terjadi kesalahan pada server',
-                  desc: '',
-                  type: 'danger',
-                  showAlert: true,
-                }),
-              );
+              if (response.status === 502) {
+                dispatch(
+                  setShowNetworkError({
+                    showNetworkError: true,
+                    title: 'Maaf, sistem sedang dalam pemeliharaan',
+                    desc: 'Demi meningkatkan kenyamanan dan keamanan dalam bertransaksi, saat ini sistem sedang dalam pemeliharaan. Mohon kembali lagi nanti.',
+                  }),
+                );
+              } else {
+                dispatch(
+                  setAlert({
+                    title: 'Terjadi kesalahan pada server',
+                    desc: '',
+                    type: 'danger',
+                    showAlert: true,
+                  }),
+                );
+              }
             }
             throw data
               ? {data, status: response.status}
@@ -141,14 +151,24 @@ export const useAPI = () => {
         return data;
       } else {
         if (response.status && String(response.status).charAt(0) === '5') {
-          dispatch(
-            setAlert({
-              title: 'Terjadi kesalahan pada server',
-              desc: '',
-              type: 'danger',
-              showAlert: true,
-            }),
-          );
+          if (response.status === 502) {
+            dispatch(
+              setShowNetworkError({
+                showNetworkError: true,
+                title: 'Maaf, sistem sedang dalam pemeliharaan',
+                desc: 'Demi meningkatkan kenyamanan dan keamanan dalam bertransaksi, saat ini sistem sedang dalam pemeliharaan. Mohon kembali lagi nanti.',
+              }),
+            );
+          } else {
+            dispatch(
+              setAlert({
+                title: 'Terjadi kesalahan pada server',
+                desc: '',
+                type: 'danger',
+                showAlert: true,
+              }),
+            );
+          }
         }
         console.log('status', response?.status, method || 'get', response.url);
         throw {
@@ -159,12 +179,19 @@ export const useAPI = () => {
       }
     } catch (error) {
       if (error instanceof TypeError) {
-        dispatch(setShowNetworkError({showNetworkError: true}));
-        console.log('fetch error', String(error));
+        dispatch(
+          setShowNetworkError({
+            showNetworkError: true,
+            title: 'Koneksi Anda Terputus',
+            desc: 'Aplikasi tidak dapat mengakses internet. Silakan periksa jaringan Wi-Fi atau data seluler Anda, dan coba beberapa saat lagi.',
+          }),
+        );
+        console.log('fetch error type error', String(error));
+        throw String(error);
       } else {
-        console.log('fetch error', error);
+        console.log('fetch error not type error', error);
+        throw error;
       }
-      throw error;
     }
   };
 

@@ -3,7 +3,7 @@ import {Alert, BackHandler, NativeModules, Platform} from 'react-native';
 import {isEmulator} from 'react-native-device-info';
 import JailMonkey from 'jail-monkey';
 import {useDispatch} from 'react-redux';
-import {setShowNetworkError, setShowRootError} from '../slices/globalError';
+import {setShowRootError} from '../slices/globalError';
 
 const useSecurityCheck = () => {
   const dispatch = useDispatch();

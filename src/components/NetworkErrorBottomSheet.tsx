@@ -9,7 +9,13 @@ import Button from './Button';
 import {useDispatch} from 'react-redux';
 import {setShowNetworkError} from '../slices/globalError';
 
-const NetworkErrorBottomSheet = () => {
+const NetworkErrorBottomSheet = ({
+  title,
+  desc,
+}: {
+  title?: string;
+  desc?: string;
+}) => {
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
   const textColor = useThemeColor({}, 'text');
@@ -18,7 +24,9 @@ const NetworkErrorBottomSheet = () => {
   return (
     <CustomBottomSheet
       onDismiss={() =>
-        dispatch(setShowNetworkError({showNetworkError: false}))
+        dispatch(
+          setShowNetworkError({showNetworkError: false, title: '', desc: ''}),
+        )
       }>
       <View style={styles.emptyContainer}>
         <Image
@@ -32,17 +40,21 @@ const NetworkErrorBottomSheet = () => {
         />
       </View>
       <Text style={[styles.emptyTitle, {color: textColor}]}>
-        Koneksi Anda Terputus
+        {title || 'Koneksi Anda Terputus'}
       </Text>
       <Text style={[styles.emptyDesc, {color: textColor2}]}>
-        Aplikasi tidak dapat mengakses internet. Silakan periksa jaringan Wi-Fi
-        atau data seluler Anda, dan coba beberapa saat lagi.
+        {desc ||
+          'Aplikasi tidak dapat mengakses internet. Silakan periksa jaringan Wi-Fi atau data seluler Anda, dan coba beberapa saat lagi.'}
       </Text>
       <Gap flex={1} />
       <Gap height={24} />
       <Button
         title="Tutup"
-        onPress={() => dispatch(setShowNetworkError({showNetworkError: false}))}
+        onPress={() =>
+          dispatch(
+            setShowNetworkError({showNetworkError: false, title: '', desc: ''}),
+          )
+        }
       />
     </CustomBottomSheet>
   );

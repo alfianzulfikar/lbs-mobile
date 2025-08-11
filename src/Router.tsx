@@ -457,7 +457,7 @@ export default function App() {
   const {initTheme} = useInitTheme();
   const {setBusinessViewType} = useBusinessViewType();
   const backgroundColor = useThemeColor({}, 'background');
-  const {showNetworkError, showRootError} = useSelector(
+  const {showNetworkError, showRootError, title, desc} = useSelector(
     (item: RootState) => item.globalError,
   );
 
@@ -476,7 +476,9 @@ export default function App() {
           <RouterComponent />
         </SafeAreaView>
       )}
-      {showNetworkError && <NetworkErrorBottomSheet />}
+      {showNetworkError && (
+        <NetworkErrorBottomSheet title={title} desc={desc} />
+      )}
       {showRootError && <RootErrorBottomSheet />}
     </SafeAreaProvider>
   );
