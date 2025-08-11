@@ -117,24 +117,24 @@ const RoundedProgressIndicator = ({
           />
         )}
         <View>
-        <Circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={progressColor}
-          strokeWidth={strokeWidth}
-          fill={
-            transparent
-              ? 'transparent'
-              : RGBAColors(0.3)[colorScheme].background
-          }
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          rotation="-90"
-          origin={`${size / 2}, ${size / 2}`}
-          {...(shadow ? {filter: 'url(#shadow)'} : {})}
-        />
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={progressColor}
+            strokeWidth={strokeWidth}
+            fill={
+              transparent
+                ? 'transparent'
+                : RGBAColors(0.3)[colorScheme].background
+            }
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            rotation="-90"
+            origin={`${size / 2}, ${size / 2}`}
+            {...(shadow ? {filter: 'url(#shadow)'} : {})}
+          />
         </View>
       </Svg>
       <Text
@@ -147,7 +147,12 @@ const RoundedProgressIndicator = ({
             // transform: [{translateY: -2}],
           },
         ]}>
-        {progress < 1 ? progress.toFixed(2) : Math.floor(progress)}%
+        {progress > 100
+          ? 100
+          : progress < 1
+          ? progress.toFixed(2)
+          : Math.floor(progress)}
+        %
       </Text>
     </View>
   );

@@ -3,13 +3,15 @@ import React, {useRef} from 'react';
 import Video, {VideoRef} from 'react-native-video';
 import {useDeepLinks} from '../utils/handleDeepLinks';
 import useSecurityCheck from '../hooks/useSecurityCheck';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
 const Splash = () => {
   const colorScheme = useColorScheme() ?? 'light';
   const videoRef = useRef<VideoRef>(null);
   const background = require('../assets/videos/splash.mp4');
-  const {handleDeepLinks} = useDeepLinks();
   const {checkDeviceSecurity} = useSecurityCheck();
+  const {handleInitRoute} = useDeepLinks();
 
   return (
     <View style={styles.container}>
@@ -26,7 +28,7 @@ const Splash = () => {
         onEnd={async () => {
           const safe = await checkDeviceSecurity();
           if (safe) {
-            await handleDeepLinks();
+            await handleInitRoute();
           }
         }}
         muted={true}

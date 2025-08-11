@@ -52,7 +52,7 @@ const KYCOccupation = () => {
       name: 'totalAssetUser',
       label: 'Total Aset Pribadi',
       placeholder: '0',
-      type: 'number',
+      type: 'currency',
       required: true,
     },
     {

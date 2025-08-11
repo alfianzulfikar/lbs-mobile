@@ -1,15 +1,18 @@
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {Linking, StyleSheet, useWindowDimensions} from 'react-native';
 import React from 'react';
 import RenderHTML from 'react-native-render-html';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {RGBAColors} from '../constants/Colors';
+import queryString from 'query-string';
+import {useDispatch} from 'react-redux';
+import {setArticle} from '../slices/article';
 
 const Html = ({source}: {source: string}) => {
   const {width} = useWindowDimensions();
   const colorScheme = useColorScheme();
   const textColor2 = useThemeColor({}, 'text2');
-  const backgroundColor = useThemeColor({}, 'background');
+  const dispatch = useDispatch();
 
   const tagsStyles = React.useMemo(
     () => ({
@@ -80,6 +83,9 @@ const Html = ({source}: {source: string}) => {
       img: {
         backgroundColor: RGBAColors(0.8).light.background,
       },
+      a: {
+        textDecorationLine: 'underline',
+      },
     }),
     [],
   );
@@ -89,6 +95,19 @@ const Html = ({source}: {source: string}) => {
       source={{html: source}}
       contentWidth={width - 48}
       tagsStyles={tagsStyles}
+      renderersProps={{
+        a: {
+          onPress: (event, href) => {
+            if (href.startsWith('https://www.lbs.id/publication')) {
+              const parsedHash = queryString.parseUrl(href);
+              const splitUrl = parsedHash.url.split('/');
+              dispatch(setArticle({slug: splitUrl[5], category: splitUrl[4]}));
+            } else {
+              Linking.openURL(href); // fallback: buka browser
+            }
+          },
+        },
+      }}
     />
   );
 };

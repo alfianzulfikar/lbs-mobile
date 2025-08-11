@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import React, {useEffect} from 'react';
-import {KeyboardAvoidingView, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './screens/Home';
@@ -80,6 +80,7 @@ import {useSelector} from 'react-redux';
 import {useThemeColor} from './hooks/useThemeColor';
 import RootErrorBottomSheet from './components/RootErrorBottomSheet';
 import Disclaimer from './screens/Disclaimer';
+import {useBusinessViewType} from './hooks/useBusinessViewType';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -439,9 +440,6 @@ declare global {
   }
 }
 
-// export default function App() {
-//   return <Navigation />;
-
 const RouterComponent = () => {
   return (
     <NavigationContainer
@@ -457,6 +455,7 @@ const RouterComponent = () => {
 
 export default function App() {
   const {initTheme} = useInitTheme();
+  const {setBusinessViewType} = useBusinessViewType();
   const backgroundColor = useThemeColor({}, 'background');
   const {showNetworkError, showRootError} = useSelector(
     (item: RootState) => item.globalError,
@@ -464,6 +463,7 @@ export default function App() {
 
   useEffect(() => {
     initTheme();
+    setBusinessViewType();
     console.log('render router');
   }, []);
 

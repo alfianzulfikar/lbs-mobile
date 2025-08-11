@@ -75,7 +75,7 @@ const KYCTax = () => {
         'Penghasilan per tahun akan berpengaruh pada limit pemesanan saham',
       subLabelIcon: <ICInfo color={textColor2} />,
       placeholder: '0',
-      type: 'number',
+      type: 'currency',
       required: true,
     },
     {

@@ -1,73 +1,79 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StackActions, useNavigation} from '@react-navigation/native';
 import queryString from 'query-string';
-import {Linking} from 'react-native';
 import {envMode} from '../constants/Env';
 import {jwtDecode} from 'jwt-decode';
+import {replace} from '../services/navigation';
 
 export const useDeepLinks = () => {
-  const navigation = useNavigation();
-
   const handleProtectedRoute = async (
-    targetRoute: {mainRoute: string; options?: {screen?: string; params: any}},
-    accessToken: string,
+    targetRoute: {mainRoute: string; options?: {screen?: string; params?: any}},
+    accessToken?: string | null,
   ) => {
     if (accessToken) {
-      navigation.dispatch(
-        StackActions.replace(targetRoute.mainRoute, {
-          screen: targetRoute.options?.screen,
-          params: targetRoute.options?.params,
-        }),
-      );
+      replace({
+        screen: targetRoute.mainRoute || '',
+        params: targetRoute.options,
+      });
     } else {
-      navigation.dispatch(
-        StackActions.replace('Auth', {
-          screen: 'Login',
-          params: {targetRoute},
-        }),
-      );
+      replace({
+        screen: 'Login',
+        params: {targetRoute},
+      });
     }
   };
 
-  const navigationFromUrl = (url: string, accessToken: string) => {
+  const navigationFromUrl = async (url: string) => {
+    const accessToken = await AsyncStorage.getItem('access_token');
     const parsedHash = queryString.parseUrl(url);
     const splitUrl = parsedHash.url.split('/');
     const baseURL = splitUrl[2];
+    const token: string =
+      typeof parsedHash?.query?.token === 'string'
+        ? parsedHash?.query?.token || ''
+        : '';
     if (splitUrl[3] == 'verify') {
-      const token: string =
-        typeof parsedHash?.query?.token === 'string'
-          ? parsedHash?.query?.token || ''
-          : '';
       if (token) {
         const decode: {exp?: number} = jwtDecode(token, {header: true});
         if ((decode.exp || 0) < Date.now() / 1000) {
-          navigation.dispatch(
-            StackActions.replace('Auth', {
+          replace({
+            screen: 'Auth',
+            params: {
               screen: 'AccountVerificationExpired',
-            }),
-          );
+            },
+          });
         } else {
-          navigation.dispatch(
-            StackActions.replace('Auth', {
+          replace({
+            screen: 'Auth',
+            params: {
               screen: 'AccountVerification',
               params: {token: parsedHash.query.token},
-            }),
-          );
+            },
+          });
         }
       } else {
-        navigation.dispatch(
-          StackActions.replace('Auth', {
+        replace({
+          screen: 'Auth',
+          params: {
             screen: 'AccountVerificationExpired',
-          }),
-        );
+          },
+        });
       }
     } else if (splitUrl.length > 6 && splitUrl[5] == 'reset-password') {
-      navigation.dispatch(
-        StackActions.replace('Auth', {
+      replace({
+        screen: 'Auth',
+        params: {
           screen: 'ResetPassword',
           params: {token: splitUrl[6]},
-        }),
-      );
+        },
+      });
+    } else if (splitUrl[3] == 'reset-password') {
+      replace({
+        screen: 'Auth',
+        params: {
+          screen: 'ResetPassword',
+          params: {token},
+        },
+      });
     } else if (splitUrl[3] == 'detail') {
       handleProtectedRoute(
         {
@@ -112,34 +118,31 @@ export const useDeepLinks = () => {
     //   });
     // }
     else {
-      navigation.dispatch(StackActions.replace('MainTab'));
+      handleProtectedRoute(
+        {
+          mainRoute: 'MainTab',
+          options: {
+            screen: 'Home',
+          },
+        },
+        accessToken,
+      );
     }
   };
 
-  const handleDeepLinks = async () => {
+  const handleInitRoute = async () => {
     const accessToken = await AsyncStorage.getItem('access_token');
-    Linking.addEventListener('url', event => {
-      if (event.url) {
-        navigationFromUrl(event.url, accessToken || '');
-      }
-    });
-    Linking.getInitialURL().then(async url => {
-      if (url) {
-        navigationFromUrl(url, accessToken || '');
+    const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
+    if (accessToken) {
+      replace({screen: 'MainTab'});
+    } else {
+      if (hasVisitedOnboarding) {
+        replace({screen: 'Auth'});
       } else {
-        const hasVisitedOnboarding = await AsyncStorage.getItem('onboarding');
-        if (accessToken) {
-          navigation.dispatch(StackActions.replace('MainTab'));
-        } else {
-          if (hasVisitedOnboarding) {
-            navigation.dispatch(StackActions.replace('Auth'));
-          } else {
-            navigation.dispatch(StackActions.replace('OnBoarding'));
-          }
-        }
+        replace({screen: 'OnBoarding'});
       }
-    });
+    }
   };
 
-  return {handleDeepLinks};
+  return {handleInitRoute, navigationFromUrl};
 };

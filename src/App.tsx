@@ -7,6 +7,8 @@ import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import {useNotification} from './services/notification';
 import * as Sentry from '@sentry/react-native';
+import {useDeepLinks} from './utils/handleDeepLinks';
+import {Linking} from 'react-native';
 
 Sentry.init({
   dsn: 'https://ade466671fc7475582ade181ffa91d3c@o1258244.ingest.us.sentry.io/6432180',
@@ -25,6 +27,8 @@ Sentry.init({
 });
 
 const App = () => {
+  const {navigationFromUrl} = useDeepLinks();
+
   const {
     onAppBootstrap,
     handleForgroundNotification,
@@ -63,9 +67,23 @@ const App = () => {
       })
       .catch(error => console.log('error getting initial notif', error));
 
+    const linkingSubscription = Linking.addEventListener('url', event => {
+      if (event.url) {
+        navigationFromUrl(event.url);
+      }
+    });
+    Linking.getInitialURL().then(async url => {
+      if (url) {
+        setTimeout(() => {
+          navigationFromUrl(url);
+        }, 3000);
+      }
+    });
+
     return () => {
       unsubscribeOnMessage();
       unsubscribeNotificationOpened();
+      linkingSubscription.remove();
     };
   }, []);
 

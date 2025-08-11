@@ -33,6 +33,7 @@ import ICScrollVertical from '../components/icons/ICScrollVertical';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store';
 import {setViewType} from '../slices/businessViewType';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Business = () => {
   const {width} = useWindowDimensions();
@@ -194,7 +195,7 @@ const Business = () => {
       helpButton
       bottomTab>
       <View style={{paddingHorizontal: 24}}>
-        {viewType === 'horizontal' && <Gap height={24} />}
+        <Gap height={viewType === 'vertical' ? 0 : 24} />
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1}}>
             <SearchBar
@@ -347,8 +348,9 @@ const Business = () => {
                     ? RGBAColors(0.04)[colorScheme].text
                     : 'transparent',
               }}
-              onPress={() => {
+              onPress={async () => {
                 dispatch(setViewType({viewType: item.id}));
+                await AsyncStorage.setItem('businessViewType', item.id);
                 setShowSettings(false);
               }}>
               <View style={{flexDirection: 'row'}}>

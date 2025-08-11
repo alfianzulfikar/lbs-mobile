@@ -64,17 +64,12 @@ export const useNotificationAPI = () => {
       const newArray: TopicType[] = [];
       if (res.status) {
         res.data.map((item: any) => {
-          // if (item.name === 'news') {
-          // }
           newArray.push({
             id: item.id,
-            description:
-              item.name === 'news'
-                ? 'Pemberitahuan mengenai bisnis yang sedang listing dan pra listing'
-                : item.description,
+            description: item.description,
             name: item.name,
             isSubscribed: item.is_subscribed,
-            label: item.name === 'news' ? 'Listing & Pra Listing' : item.name,
+            label: item.label || item.name,
           });
         });
       }

@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -71,21 +72,25 @@ const BannerCarousel = ({
           },
         ]}
         onPress={() => {
-          if (item.link.includes('publication')) {
-            const parts = item.link.split('/').filter(Boolean);
-            const category = parts[parts.length - 2];
-            const slug = parts[parts.length - 1];
-            navigation.navigate('Article', {
-              screen: 'ArticleDetail',
-              params: {slug, category},
-            });
-          } else if (item.link.includes('detail')) {
-            const parts = item.link.split('/').filter(Boolean);
-            const slug = parts[parts.length - 1];
-            navigation.navigate('Order', {
-              screen: 'BusinessDetail',
-              params: {slug},
-            });
+          if (item.link) {
+            if (item.link.includes('publication')) {
+              const parts = item.link.split('/').filter(Boolean);
+              const category = parts[parts.length - 2];
+              const slug = parts[parts.length - 1];
+              navigation.navigate('Article', {
+                screen: 'ArticleDetail',
+                params: {slug, category},
+              });
+            } else if (item.link.includes('detail')) {
+              const parts = item.link.split('/').filter(Boolean);
+              const slug = parts[parts.length - 1];
+              navigation.navigate('Order', {
+                screen: 'BusinessDetail',
+                params: {slug},
+              });
+            } else {
+              Linking.openURL(item.link);
+            }
           }
         }}>
         <Image

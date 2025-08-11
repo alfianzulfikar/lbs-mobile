@@ -93,7 +93,7 @@ const BusinessCard2 = ({
             resizeMode="cover"
           />
         ) : null}
-        <BlurOverlay blurType="regular" />
+        <BlurOverlay />
         <View style={{padding: 16, paddingBottom: 24, zIndex: 2}}>
           <View style={{flexDirection: 'row'}}>
             <Badge text={capitalize(business.tipeBisnis || '')} />
@@ -181,7 +181,12 @@ const BusinessCard2 = ({
                         color: tint,
                         textAlign: 'right',
                       }}>
-                      Rp{numberFormat(business.terpenuhi)}
+                      Rp
+                      {numberFormat(
+                        business.terpenuhi > business.target
+                          ? business.target
+                          : business.terpenuhi,
+                      )}
                     </Text>
                   </View>
                 )}

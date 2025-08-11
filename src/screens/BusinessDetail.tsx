@@ -189,7 +189,7 @@ const BusinessDetail = ({route}: Props) => {
               <View
                 style={{
                   width: '100%',
-                  marginVertical: 24,
+                  marginBottom: 24,
                   aspectRatio: 354 / 200,
                   borderRadius: 24,
                   overflow: 'hidden',
@@ -368,7 +368,14 @@ const BusinessDetail = ({route}: Props) => {
                             </Text>
                             <Text
                               style={[styles.fundingValue, {color: textColor}]}>
-                              Rp{numberFormat(Number(business.terpenuhi))}
+                              Rp
+                              {numberFormat(
+                                Number(
+                                  business.terpenuhi > business.target
+                                    ? business.target
+                                    : business.terpenuhi,
+                                ),
+                              )}
                             </Text>
                           </View>
                         </View>

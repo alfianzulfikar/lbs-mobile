@@ -1,13 +1,12 @@
 import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {HomeMenuScreenType} from '../constants/Types';
+import {DisclosureType, HomeMenuScreenType} from '../constants/Types';
 import {useBusiness} from '../api/business';
 import BusinessCarousel from '../components/BusinessCarousel';
 import Gap from '../components/Gap';
 import HomeMenu from '../components/HomeMenu';
 import VideoBackground from '../components/VideoBackground';
-import HelpButton from '../components/HelpButton';
 import {Colors} from '../constants/Colors';
 import Badge from '../components/Badge';
 import ICBell from '../components/icons/ICBell';
@@ -22,6 +21,7 @@ import BannerCarousel from '../components/BannerCarousel';
 import {useBannerCarousel} from '../api/bannerCarousel';
 import HomeKycStatus from '../components/HomeKycStatus';
 import BannerCarousel2 from '../components/BannerCarousel2';
+import {useInsets} from '../hooks/useInsets';
 
 const Home = () => {
   const colorScheme = useColorScheme();
@@ -40,8 +40,12 @@ const Home = () => {
     useDisclosure();
   const {banners, bannersLoading, getBanners} = useBannerCarousel();
   const {width} = useWindowDimensions();
+  const {notchHeight} = useInsets();
 
   const [refreshing, setRefreshing] = useState(false);
+  const [computedDisclosureList, setComputedDisclosureList] = useState<
+    DisclosureType[]
+  >([]);
 
   const menu: {id: number; label: string; to: HomeMenuScreenType}[] = [
     {id: 1, label: 'Portofolio', to: 'Portfolio'},
@@ -49,6 +53,14 @@ const Home = () => {
     {id: 3, label: 'FAQ', to: 'FAQ'},
     {id: 4, label: 'Panduan', to: 'Guide'},
   ];
+
+  useEffect(() => {
+    if (disclosureList.length > 0) {
+      let newDisclosureList = [];
+      newDisclosureList = disclosureList.slice(0, 5);
+      setComputedDisclosureList(newDisclosureList);
+    }
+  }, [disclosureList]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -58,7 +70,7 @@ const Home = () => {
     getBusinesses(1, 5, false);
     getBusinesses(1, 5, true);
     getArticles();
-    getDisclosureList(5);
+    getDisclosureList(1, 5);
     // getBanners();
     setRefreshing(false);
   };
@@ -71,7 +83,7 @@ const Home = () => {
       getBusinesses(1, 5, false);
       getBusinesses(1, 5, true);
       getArticles();
-      getDisclosureList();
+      getDisclosureList(1, 5);
       getBanners();
 
       return () => {};
@@ -176,7 +188,7 @@ const Home = () => {
           />
           <Gap height={40} />
           <DisclosureCarousel
-            disclosures={disclosureList}
+            disclosures={computedDisclosureList}
             loading={disclosureListLoading}
           />
           <Gap height={104} />

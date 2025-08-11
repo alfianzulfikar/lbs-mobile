@@ -34,7 +34,7 @@ const FormBuilder = ({
           style={{marginBottom: fieldId !== fields.length - 1 ? 24 : 0}}>
           {item.customInput === 'phone' ? (
             <>
-              <Label title={item.label} />
+              <Label title={item.label} required={item.required} />
               <Gap height={8} />
               <View style={{flexDirection: 'row'}}>
                 <View style={{width: 100}}>

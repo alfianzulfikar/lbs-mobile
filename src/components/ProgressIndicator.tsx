@@ -30,7 +30,7 @@ const ProgressIndicator = ({
         style={{
           height: 8,
           borderRadius: 8,
-          width: `${progress}%`,
+          width: `${progress > 100 ? 100 : progress}%`,
           shadowColor: colorScheme === 'dark' ? '#FFE7C2' : '#00FFF7',
           shadowOffset: {width: 0, height: 0},
           shadowOpacity: 0.8,

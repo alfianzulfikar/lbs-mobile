@@ -41,7 +41,14 @@ const ArticleCard = ({data}: {data: ArticleType}) => {
         })
       }>
       <View style={[styles.container, {width: (width * 84) / 100}]}>
-        <View style={[styles.imageContainer, {width: '100%'}]}>
+        <View
+          style={[
+            styles.imageContainer,
+            {
+              width: '100%',
+              backgroundColor: RGBAColors(0.3).light.background,
+            },
+          ]}>
           <Image
             source={{uri: data.image}}
             style={{width: '100%', aspectRatio: 340 / 256}}

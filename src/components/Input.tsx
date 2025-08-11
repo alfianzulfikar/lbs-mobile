@@ -364,7 +364,7 @@ const Input = ({
                       value
                         ? typeof value === 'string'
                           ? value
-                          : type === 'number'
+                          : type === 'currency'
                           ? value.toLocaleString('id-ID')
                           : String(value)
                         : ''
@@ -378,13 +378,13 @@ const Input = ({
                     keyboardType={
                       type === 'email'
                         ? 'email-address'
-                        : type === 'number'
+                        : type === 'number' || type === 'currency'
                         ? 'number-pad'
                         : 'default'
                     }
                     editable={disable ? !disable : true}
                     onChangeText={newValue => {
-                      if (type === 'number') {
+                      if (type === 'number' || type === 'currency') {
                         const valueWithoutDot = newValue.replaceAll('.', '');
                         if (!checkNonNumeric(valueWithoutDot)) {
                           onChange(Number(valueWithoutDot));

@@ -3,6 +3,7 @@ import colorSchemeReducer from './slices/colorScheme';
 import userReducer from './slices/user';
 import globalErrorReducer from './slices/globalError';
 import businessViewTypeReducer from './slices/businessViewType';
+import articleReducer from './slices/article';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: userReducer,
     globalError: globalErrorReducer,
     businessViewType: businessViewTypeReducer,
+    article: articleReducer,
   },
 });
 

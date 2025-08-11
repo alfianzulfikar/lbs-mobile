@@ -1,41 +1,81 @@
 import {useState} from 'react';
-import {DisclosureType} from '../constants/Types';
+import {DisclosureType, GroupedDisclosureType} from '../constants/Types';
 import {useAPI} from '../services/api';
 
 export const useDisclosure = () => {
   const {apiRequest} = useAPI();
   const [disclosureList, setDisclosureList] = useState<DisclosureType[]>([]);
+  const [groupedDisclosureList, setGroupedDisclosureList] = useState<
+    GroupedDisclosureType[]
+  >([]);
   const [disclosureListLoading, setDisclosureListLoading] = useState(false);
+  const [moreDisclosureListLoading, setMoreDisclosureListLoading] =
+    useState(false);
+  const [hasNext, setHasNext] = useState(true);
 
-  const getDisclosureList = async (numberOfItems?: number) => {
-    setDisclosureListLoading(true);
+  const getDisclosureList = async (
+    page?: number,
+    perPage?: number,
+    search?: string,
+    slug?: string,
+  ) => {
+    if (page && page > 1) {
+      setMoreDisclosureListLoading(true);
+    } else {
+      setDisclosureListLoading(true);
+    }
     try {
       const res = await apiRequest({
-        endpoint: '/keterbukaan-informasi',
+        endpoint: slug
+          ? `/keterbukaan-informasi/${slug}`
+          : `/keterbukaan-informasi?page=${page || 1}&per_page=${perPage || 3}${
+              search ? '&q=' + search : ''
+            }`,
       });
-      let newArray: DisclosureType[] = [];
-      res.map((item: any) => {
+      const data: any[] = res.data;
+      setHasNext(res.pagination.has_next);
+      let newGroupedDisclosureList: GroupedDisclosureType[] =
+        page && page > 1 ? [...groupedDisclosureList] : [];
+      let newDisclosureList: DisclosureType[] =
+        page && page > 1 ? [...disclosureList] : [];
+      data.map((item: any) => {
+        let newTempDisclosureList: DisclosureType[] = [];
         if (item.keterbukaan_informasi.length > 0) {
           item.keterbukaan_informasi.map((item2: any) => {
-            newArray.push({
+            const newItem: DisclosureType = {
               name: item2.title,
               file: item2.file,
               date: item2.created_at,
               merkDagang: item.merk_dagang,
-            });
+            };
+            newTempDisclosureList.push(newItem);
+            newDisclosureList.push(newItem);
           });
         }
+        newGroupedDisclosureList.push({
+          merkDagang: item.merk_dagang,
+          list: newTempDisclosureList,
+        });
       });
-      if (numberOfItems && newArray.length > numberOfItems) {
-        newArray = newArray.slice(0, numberOfItems);
-      }
-      setDisclosureList(newArray);
+      setDisclosureList(newDisclosureList);
+      setGroupedDisclosureList(newGroupedDisclosureList);
     } catch (error) {
       console.log(error);
     } finally {
-      setDisclosureListLoading(false);
+      if (page && page > 1) {
+        setMoreDisclosureListLoading(false);
+      } else {
+        setDisclosureListLoading(false);
+      }
     }
   };
 
-  return {disclosureList, getDisclosureList, disclosureListLoading};
+  return {
+    getDisclosureList,
+    groupedDisclosureList,
+    disclosureList,
+    disclosureListLoading,
+    moreDisclosureListLoading,
+    hasNext,
+  };
 };

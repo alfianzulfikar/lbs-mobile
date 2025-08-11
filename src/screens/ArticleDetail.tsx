@@ -22,8 +22,10 @@ import IconWrapper from '../components/IconWrapper';
 import ICShare from '../components/icons/ICShare';
 import {Colors, RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {RootState} from '../store';
+import {setArticle} from '../slices/article';
 
 type Props = StaticScreenProps<{
   slug: string;
@@ -38,8 +40,11 @@ const ArticleDetail = ({route}: Props) => {
   const tint = useThemeColor({}, 'tint');
   let colorScheme = useColorScheme();
   const dispatch = useDispatch();
+  const {category, slug} = useSelector((item: RootState) => item.article);
 
   const [loading, setLoading] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState(route.params.category);
+  const [currentSlug, setCurrentSlug] = useState(route.params.slug);
 
   const handleShare = async () => {
     try {
@@ -61,12 +66,24 @@ const ArticleDetail = ({route}: Props) => {
 
   const handleGetArticle = async () => {
     setLoading(true);
-    await getArticle(route.params.slug, route.params.category);
+    await getArticle(
+      slug || route.params.slug,
+      category || route.params.category,
+    );
     setLoading(false);
   };
 
   useEffect(() => {
+    if (slug && category) {
+      handleGetArticle();
+    }
+  }, [slug, category]);
+
+  useEffect(() => {
     handleGetArticle();
+    return () => {
+      dispatch(setArticle({slug: '', category: ''}));
+    };
   }, []);
 
   return (

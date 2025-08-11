@@ -243,6 +243,11 @@ export type DisclosureType = {
   merkDagang: string;
 };
 
+export type GroupedDisclosureType = {
+  merkDagang: string;
+  list: DisclosureType[];
+};
+
 export type PortfolioType = {
   merkDagang: string;
   type: string;
@@ -291,7 +296,8 @@ export type InputType =
   | 'email'
   | 'otp-method'
   | 'number'
-  | 'checkbox';
+  | 'checkbox'
+  | 'currency';
 
 export type InputDropdownOption = {
   id: string | number | boolean;

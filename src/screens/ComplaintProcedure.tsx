@@ -23,19 +23,19 @@ const ComplaintProcedure = () => {
   const procedureStandart = [
     {
       title: 'Menyampaikan Aduan',
-      desc: 'Pengaduan disampaikan melalui email customercare@lbs.id dan mengisi form secara tertulis yang telah disediakan oleh Admin LBS',
+      desc: 'Pengaduan disampaikan melalui Customer Service atau melalui email customercare@lbs.id',
     },
     {
       title: 'LBS Urun Dana Merespon Aduan',
-      desc: 'Tim LBS akan memberikan feedback atau tanggapan pengaduan dalam waktu paling lama 20 (dua puluh) hari kerja sejak menerima laporan tersebut',
+      desc: 'Tim LBS akan memberikan feedback atau tanggapan pengaduan pada hari yang sama di jam kerja',
     },
     {
       title: 'Jika Pengaduan Telah Diselesaikan',
-      desc: 'Menandatangani form kesepahaman yang dibubuhi tanda tangan digital menyebutkan bahwa proses pengaduan telah dilaksanakan dan telah diselesaikan oleh kedua belah pihak',
+      desc: 'Customer Service akan mengirimkan form penilaian Skor Kepuasan Pelanggan',
     },
     {
       title: 'Jika Tidak Ditemukan Penyelesaian',
-      desc: 'Apabila tidak ditemukan titik penyelesaian terhadap pengaduan maka penyelesaian dapat dilakukan dengan penyelesaian lain melalui penyelesaian sengketa diluar pengadilan, penyelesaian sengketa melalui Otoritas Jasa Keuangan, atau melalui pengadilan',
+      desc: 'Apabila tidak ditemukan titik penyelesaian terhadap pengaduan di hari yang sama khususnya di kanal Customer Service maka dapat menghubungi kembali layanan Customer Service di hari berikutnya di jam kerja',
     },
   ];
 
