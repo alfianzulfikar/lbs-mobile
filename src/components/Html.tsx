@@ -21,7 +21,7 @@ const Html = ({source}: {source: string}) => {
         color: textColor2,
         fontSize: 16,
         lineHeight: 24,
-        textAlign: 'justify',
+        textAlign: 'left',
       },
       h1: {
         fontSize: 28,

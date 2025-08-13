@@ -34,6 +34,7 @@ import {useDownload} from '../utils/downloadFile';
 import {useColorScheme} from '../hooks/useColorScheme';
 import LoadingModal from '../components/LoadingModal';
 import ICWarningRounded from '../components/icons/ICWarningRounded';
+import ICDoubleArrow from '../components/icons/ICDoubleArrow';
 
 type Props = {
   route: {
@@ -48,6 +49,8 @@ const PortfolioDetail = ({route}: Props) => {
   const {id, slug} = route.params;
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
+  const textColorSuccess = useThemeColor({}, 'textSuccess');
+  const textColorDanger = useThemeColor({}, 'textDanger');
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
   const textColor4 = useThemeColor({}, 'text4');
@@ -147,7 +150,7 @@ const PortfolioDetail = ({route}: Props) => {
         ? [
             {
               field: 'Return',
-              value: 'Rp' + numberFormat(portfolio.return),
+              value: 'Rp' + numberFormat(Math.abs(portfolio.return || 0)),
             },
           ]
         : []),
@@ -235,7 +238,20 @@ const PortfolioDetail = ({route}: Props) => {
                         marginBottom: infoId !== info.length - 1 ? 16 : 0,
                       }}
                       key={infoId}>
-                      <Text style={[styles.infoField, {color: textColor2}]}>
+                      <Text
+                        style={[
+                          styles.infoField,
+                          {
+                            color:
+                              item.field === 'Return'
+                                ? portfolio.return > 0
+                                  ? textColorSuccess
+                                  : portfolio.return < 0
+                                  ? textColorDanger
+                                  : textColor2
+                                : textColor2,
+                          },
+                        ]}>
                         {item.field}
                       </Text>
                       <Text style={styles.infoValue}>{item.value}</Text>
@@ -275,7 +291,42 @@ const PortfolioDetail = ({route}: Props) => {
                         <Text style={[styles.infoField, {color: textColor2}]}>
                           {item.field}
                         </Text>
-                        <Text style={styles.infoValue}>{item.value}</Text>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          {item.field === 'Return' && portfolio.return != 0 && (
+                            <ICDoubleArrow
+                              color={
+                                portfolio.return > 0
+                                  ? textColorSuccess
+                                  : textColorDanger
+                              }
+                              style={{
+                                transform: [
+                                  {
+                                    rotate:
+                                      portfolio.return < 0 ? '180deg' : '0deg',
+                                  },
+                                ],
+                              }}
+                            />
+                          )}
+                          <Text
+                            style={[
+                              styles.infoValue,
+                              {
+                                color:
+                                  item.field === 'Return'
+                                    ? portfolio.return > 0
+                                      ? textColorSuccess
+                                      : portfolio.return < 0
+                                      ? textColorDanger
+                                      : textColor2
+                                    : textColor2,
+                              },
+                            ]}>
+                            {item.value}
+                          </Text>
+                        </View>
                       </View>
                     ))}
                   </View>

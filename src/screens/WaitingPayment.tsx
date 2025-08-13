@@ -53,7 +53,7 @@ const WaitingPayment = ({route}: Props) => {
   const dispatch = useDispatch();
 
   const [informationContent, setInformationContent] = useState<InfoType[]>([]);
-  const [loadingPage, setLoadingPage] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
   const [form, setForm] = useState({
     type_bisnis: '',
     kode_saham: '',

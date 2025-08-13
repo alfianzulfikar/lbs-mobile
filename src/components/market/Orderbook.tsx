@@ -7,9 +7,11 @@ import {useThemeColor} from '../../hooks/useThemeColor';
 import numberFormat from '../../utils/numberFormat';
 import {useMarket} from '../../api/market';
 
-const Orderbook = ({id}: {id: number}) => {
+const Orderbook = ({id, closePrice}: {id: number; closePrice: number}) => {
   const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
+  const textColorSuccess = useThemeColor({}, 'textSuccess');
+  const textColorDanger = useThemeColor({}, 'textDanger');
   const textColor2 = useThemeColor({}, 'text2');
   const {bidList, askList, numberOfOrderRow, getOrderbook, orderbookLoading} =
     useMarket();
@@ -57,28 +59,52 @@ const Orderbook = ({id}: {id: number}) => {
             <View style={{flexDirection: 'row'}} key={index}>
               <View style={styles.cell}>
                 <Text style={[styles.bodyText, {color: textColor2}]}>
-                  {bidList[index].B_Lembar
+                  {bidList[index]?.B_Lembar
                     ? numberFormat(bidList[index].B_Lembar)
                     : ''}
                 </Text>
               </View>
               <View style={styles.cell}>
-                <Text style={[styles.bodyText, {color: textColor2}]}>
-                  {bidList[index].Bid_Rp
+                <Text
+                  style={[
+                    styles.bodyText,
+                    {
+                      color: bidList[index]?.Bid_Rp
+                        ? bidList[index]?.Bid_Rp > closePrice
+                          ? textColorSuccess
+                          : bidList[index]?.Bid_Rp < closePrice
+                          ? textColorDanger
+                          : textColor2
+                        : textColor2,
+                    },
+                  ]}>
+                  {bidList[index]?.Bid_Rp
                     ? numberFormat(bidList[index].Bid_Rp)
                     : ''}
                 </Text>
               </View>
               <View style={styles.cell}>
-                <Text style={[styles.bodyText, {color: textColor2}]}>
-                  {askList[index].Ask_Rp
+                <Text
+                  style={[
+                    styles.bodyText,
+                    {
+                      color: askList[index]?.Ask_Rp
+                        ? askList[index]?.Ask_Rp > closePrice
+                          ? textColorSuccess
+                          : askList[index]?.Ask_Rp < closePrice
+                          ? textColorDanger
+                          : textColor2
+                        : textColor2,
+                    },
+                  ]}>
+                  {askList[index]?.Ask_Rp
                     ? numberFormat(askList[index].Ask_Rp)
                     : ''}
                 </Text>
               </View>
               <View style={styles.cell}>
                 <Text style={[styles.bodyText, {color: textColor2}]}>
-                  {askList[index].A_Lembar
+                  {askList[index]?.A_Lembar
                     ? numberFormat(askList[index].A_Lembar)
                     : ''}
                 </Text>

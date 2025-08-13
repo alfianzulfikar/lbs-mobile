@@ -3,6 +3,7 @@ import {
   Image,
   Keyboard,
   PermissionsAndroid,
+  Platform,
   Pressable,
   StyleSheet,
   TextInput,
@@ -124,22 +125,26 @@ const Input = ({
       if (type === 'galery') {
         await launchImageLibrary(options, res => handleImageRes(res));
       } else {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          await launchCamera(options, res => handleImageRes(res));
-        } else {
-          dispatch(
-            setAlert({
-              title: 'Tidak ada akses ke kamera',
-              desc: 'Izinkan aplikasi LBS Urun Dana untuk mengakses kamera melalui pengaturan perangkat Anda.',
-              type: 'danger',
-              showAlert: true,
-              alertButtonAction: 'open-settings',
-            }),
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
           );
-          setShowPictureOption(false);
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            await launchCamera(options, res => handleImageRes(res));
+          } else {
+            dispatch(
+              setAlert({
+                title: 'Tidak ada akses ke kamera',
+                desc: 'Izinkan aplikasi LBS Urun Dana untuk mengakses kamera melalui pengaturan perangkat Anda.',
+                type: 'danger',
+                showAlert: true,
+                alertButtonAction: 'open-settings',
+              }),
+            );
+            setShowPictureOption(false);
+          }
+        } else {
+          await launchCamera(options, res => handleImageRes(res));
         }
       }
       setShowPictureOption(false);

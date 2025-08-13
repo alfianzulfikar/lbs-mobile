@@ -136,10 +136,9 @@ export const useMarket = () => {
     setOrderbookLoading(true);
     try {
       const res = await apiRequest({endpoint: `/market/${id}/orderbook`});
-      console.log(res)
 
       let newBid: BidOrderbookType[] = [];
-      res.value.map((orderItem: any) => {
+      res.map((orderItem: any) => {
         if (orderItem.B_Lembar && orderItem.Bid_Rp) {
           newBid.push({
             B_Lembar: orderItem.B_Lembar || null,
@@ -150,7 +149,7 @@ export const useMarket = () => {
       setBidList(newBid);
 
       let newAsk: AskOrderbookType[] = [];
-      res.value.map((orderItem: any) => {
+      res.map((orderItem: any) => {
         if (orderItem.Ask_Rp && orderItem.A_Lembar) {
           newAsk.push({
             Ask_Rp: orderItem.Ask_Rp || null,

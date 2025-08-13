@@ -311,23 +311,26 @@ const MarketDetail = ({route}: Props) => {
                         : '-'}
                     </Text>
                   </View>
-                  <>
-                    <Gap height={16} />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text style={[styles.overviewLabel, {color: textColor3}]}>
-                        Fair Value
-                      </Text>
-                      <Text style={styles.overviewValue}>
-                        {overview.fairValue
-                          ? 'Rp' + numberFormat(overview.fairValue)
-                          : '-'}
-                      </Text>
-                    </View>
-                  </>
+                  {!overview.closePrice && (
+                    <>
+                      <Gap height={16} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text
+                          style={[styles.overviewLabel, {color: textColor3}]}>
+                          Fair Value
+                        </Text>
+                        <Text style={styles.overviewValue}>
+                          {overview.fairValue
+                            ? 'Rp' + numberFormat(overview.fairValue)
+                            : '-'}
+                        </Text>
+                      </View>
+                    </>
+                  )}
                 </View>
               </View>
 
@@ -437,7 +440,7 @@ const MarketDetail = ({route}: Props) => {
           ]}>
           <View style={{padding: 24}}>
             {activeMenu === 'orderbook' ? (
-              <Orderbook id={id} />
+              <Orderbook id={id} closePrice={overview.closePrice || 0} />
             ) : activeMenu === 'tradebook' ? (
               <Tradebook id={id} />
             ) : activeMenu === 'daily' ? (
@@ -487,6 +490,7 @@ const MarketDetail = ({route}: Props) => {
                   type: transactionType,
                   feeBuy: overview.feeBuy || 0,
                   feeSell: overview.feeSell || 0,
+                  defaultPrice: overview.closePrice || overview.fairValue || 0,
                 },
               });
             }}
