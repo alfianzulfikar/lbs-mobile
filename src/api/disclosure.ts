@@ -32,33 +32,53 @@ export const useDisclosure = () => {
               search ? '&q=' + search : ''
             }`,
       });
-      const data: any[] = res.data;
-      setHasNext(res.pagination.has_next);
-      let newGroupedDisclosureList: GroupedDisclosureType[] =
-        page && page > 1 ? [...groupedDisclosureList] : [];
-      let newDisclosureList: DisclosureType[] =
-        page && page > 1 ? [...disclosureList] : [];
-      data.map((item: any) => {
-        let newTempDisclosureList: DisclosureType[] = [];
-        if (item.keterbukaan_informasi.length > 0) {
-          item.keterbukaan_informasi.map((item2: any) => {
-            const newItem: DisclosureType = {
-              name: item2.title,
-              file: item2.file,
-              date: item2.created_at,
-              merkDagang: item.merk_dagang,
-            };
-            newTempDisclosureList.push(newItem);
-            newDisclosureList.push(newItem);
-          });
+      if (slug) {
+        const data: any = res.data;
+        if (
+          data?.keterbukaan_informasi &&
+          data?.keterbukaan_informasi?.length > 0
+        ) {
         }
-        newGroupedDisclosureList.push({
-          merkDagang: item.merk_dagang,
-          list: newTempDisclosureList,
+        let newDisclosureList: DisclosureType[] = [];
+        data.keterbukaan_informasi.map((item: any) => {
+          const newItem: DisclosureType = {
+            name: item.title,
+            file: item.file,
+            date: item.created_at,
+            merkDagang: data.merk_dagang,
+          };
+          newDisclosureList.push(newItem);
         });
-      });
-      setDisclosureList(newDisclosureList);
-      setGroupedDisclosureList(newGroupedDisclosureList);
+        setDisclosureList(newDisclosureList);
+      } else {
+        const data: any[] = res.data;
+        setHasNext(res.pagination.has_next);
+        let newGroupedDisclosureList: GroupedDisclosureType[] =
+          page && page > 1 ? [...groupedDisclosureList] : [];
+        let newDisclosureList: DisclosureType[] =
+          page && page > 1 ? [...disclosureList] : [];
+        data.map((item: any) => {
+          let newTempDisclosureList: DisclosureType[] = [];
+          if (item.keterbukaan_informasi.length > 0) {
+            item.keterbukaan_informasi.map((item2: any) => {
+              const newItem: DisclosureType = {
+                name: item2.title,
+                file: item2.file,
+                date: item2.created_at,
+                merkDagang: item.merk_dagang,
+              };
+              newTempDisclosureList.push(newItem);
+              newDisclosureList.push(newItem);
+            });
+          }
+          newGroupedDisclosureList.push({
+            merkDagang: item.merk_dagang,
+            list: newTempDisclosureList,
+          });
+        });
+        setDisclosureList(newDisclosureList);
+        setGroupedDisclosureList(newGroupedDisclosureList);
+      }
     } catch (error) {
       console.log(error);
     } finally {

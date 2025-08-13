@@ -9,33 +9,39 @@ import {useMarket} from '../../api/market';
 import {useDisclosure} from '../../api/disclosure';
 import DisclosureItem from '../DisclosureItem';
 import Gap from '../Gap';
+import DisclosureItem2 from '../DisclosureItem2';
 
-const MarketInformation = ({merkDagang}: {merkDagang: string}) => {
+const MarketInformation = ({slug}: {slug: string}) => {
   const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
-  // const {disclosureList, disclosureListLoading, getDisclosureList} = useDisclosure()
-  const {getDisclosure, computedDisclosure, disclosureLoading} = useMarket();
+  const {disclosureList, disclosureListLoading, getDisclosureList} =
+    useDisclosure();
+  // const {getDisclosure, computedDisclosure, disclosureLoading} = useMarket();
 
   useEffect(() => {
-    // getDisclosureList();
-    getDisclosure(merkDagang);
+    getDisclosureList(undefined, undefined, undefined, slug);
+    // getDisclosure(slug);
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Keterbukaan Informasi</Text>
       <Gap height={24} />
-      {disclosureLoading ? (
+      {disclosureListLoading ? (
         <ActivityIndicator color={tint} />
-      ) : computedDisclosure.length > 0 ? (
-        computedDisclosure.map((item, index) => (
+      ) : disclosureList.length > 0 ? (
+        disclosureList.map((item, index) => (
           <View
             key={index}
             style={{
-              marginBottom: index !== computedDisclosure.length - 1 ? 24 : 0,
+              marginBottom: index !== disclosureList.length - 1 ? 24 : 0,
             }}>
-            <DisclosureItem disclosure={item} />
+            <DisclosureItem2
+              name={item.name}
+              date={item.date}
+              file={item.file}
+            />
           </View>
         ))
       ) : (

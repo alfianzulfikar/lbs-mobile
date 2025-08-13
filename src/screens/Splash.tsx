@@ -1,10 +1,19 @@
-import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from 'react-native';
 import React, {useRef} from 'react';
 import Video, {VideoRef} from 'react-native-video';
 import {useDeepLinks} from '../utils/handleDeepLinks';
 import useSecurityCheck from '../hooks/useSecurityCheck';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import SpInAppUpdates, {
+  IAUUpdateKind,
+  StartUpdateOptions,
+} from 'sp-react-native-in-app-updates';
+import * as Sentry from '@sentry/react-native';
 
 const Splash = () => {
   const colorScheme = useColorScheme() ?? 'light';
@@ -12,6 +21,29 @@ const Splash = () => {
   const background = require('../assets/videos/splash.mp4');
   const {checkDeviceSecurity} = useSecurityCheck();
   const {handleInitRoute} = useDeepLinks();
+
+  const handleUpdate = async () => {
+    try {
+      const inAppUpdates = new SpInAppUpdates(
+        false, // isDebug
+      );
+
+      await inAppUpdates.checkNeedsUpdate().then(result => {
+        if (result.shouldUpdate) {
+          let updateOptions: StartUpdateOptions = {};
+          if (Platform.OS === 'android') {
+            updateOptions = {
+              updateType: IAUUpdateKind.IMMEDIATE,
+            };
+          }
+          inAppUpdates.startUpdate(updateOptions);
+        }
+      });
+    } catch (error) {
+      Sentry.captureException(error);
+      console.log('check update error', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,6 +60,7 @@ const Splash = () => {
         onEnd={async () => {
           const safe = await checkDeviceSecurity();
           if (safe) {
+            await handleUpdate();
             await handleInitRoute();
           }
         }}

@@ -136,6 +136,7 @@ export const useMarket = () => {
     setOrderbookLoading(true);
     try {
       const res = await apiRequest({endpoint: `/market/${id}/orderbook`});
+      console.log(res)
 
       let newBid: BidOrderbookType[] = [];
       res.value.map((orderItem: any) => {
@@ -208,11 +209,11 @@ export const useMarket = () => {
     }
   };
 
-  const getDisclosure = async (merkDagang: string) => {
+  const getDisclosure = async (slug: string) => {
     setDisclosureLoading(true);
-    setMerkDagangState(merkDagang);
+    // setMerkDagangState(merkDagang);
     try {
-      await getDisclosureList();
+      await getDisclosureList(undefined, undefined, undefined, slug);
     } catch {}
   };
 

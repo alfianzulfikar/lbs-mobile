@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ListRenderItem,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -195,7 +196,11 @@ const Business = () => {
       helpButton
       bottomTab>
       <View style={{paddingHorizontal: 24}}>
-        <Gap height={viewType === 'vertical' ? 0 : 24} />
+        <Gap
+          height={
+            viewType === 'vertical' ? (Platform.OS === 'ios' ? 24 : 0) : 24
+          }
+        />
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1}}>
             <SearchBar

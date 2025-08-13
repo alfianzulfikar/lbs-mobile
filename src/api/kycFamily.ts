@@ -68,6 +68,7 @@ export const useKYCFamily = () => {
     Keyboard.dismiss();
     setFamilySubmitLoading(true);
     try {
+      const tlpAhliWaris = String(family.tlpAhliWaris);
       const body = trimStringInObject({
         nama_pasangan:
           family.statusPernikahanId == 2 ? family.namaPasangan : '',
@@ -77,10 +78,10 @@ export const useKYCFamily = () => {
           item => item.id === family.hubunganDenganAhliWaris,
         )?.label,
         tlp_ahli_waris: `${family.phoneCode}-${
-          family.tlpAhliWaris
-            ? family.tlpAhliWaris.charAt(0) === '0'
-              ? family.tlpAhliWaris.slice(1)
-              : family.tlpAhliWaris
+          tlpAhliWaris
+            ? tlpAhliWaris.charAt(0) === '0'
+              ? tlpAhliWaris.slice(1)
+              : tlpAhliWaris
             : ''
         }`,
         status_pernikahan_id: family.statusPernikahanId,

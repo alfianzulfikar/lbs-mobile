@@ -31,6 +31,7 @@ const DisclosureCard = ({name, file}: {name: string; file: string}) => {
                   .background
               : RGBAColors(0.2)['light'].background,
           width: width > maxScreenWidth ? 340 : (width * 84) / 100,
+          maxWidth: width > maxScreenWidth ? 340 : (width * 84) / 100,
         },
       ]}>
       {/* <BlurOverlay blurAmount={80} blurType='light' /> */}
@@ -60,7 +61,6 @@ export default DisclosureCard;
 const styles = StyleSheet.create({
   container: {
     borderRadius: 24,
-    maxWidth: 340,
     aspectRatio: 340 / 192,
     overflow: 'hidden',
   },

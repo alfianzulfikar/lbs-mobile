@@ -61,7 +61,9 @@ const HomeKycStatus = ({
             // })
           }>
           <ICUser color={tint} type="outline" />
-          <Text style={[styles.desc, {color: tint}]}>Isi Data KYC</Text>
+          <Text style={[styles.desc, {color: tint, textAlign: 'center'}]}>
+            Isi Data KYC
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

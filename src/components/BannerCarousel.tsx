@@ -106,7 +106,7 @@ const BannerCarousel = ({
     if (banners.length > 0) {
       autoScroll.current = setInterval(() => {
         if (visibleSlide.current <= banners.length - 1) {
-          if (flatListRef.current && banners.length > 0) {
+          if (flatListRef.current && banners.length > 1) {
             flatListRef.current.scrollToIndex({
               index: visibleSlide.current,
               animated: true,
@@ -132,7 +132,7 @@ const BannerCarousel = ({
   // }, [visibleSlide, banners]);
 
   useEffect(() => {
-    if (banners.length > 0) {
+    if (banners.length > 1) {
       startAutoScroll();
     }
   }, [banners]);

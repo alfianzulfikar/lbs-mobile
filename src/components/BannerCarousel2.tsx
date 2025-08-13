@@ -39,7 +39,8 @@ const BannerCarousel2 = ({
   const currentIndex = useRef<number | null>(0);
   const autoScrollInterval = useRef<NodeJS.Timeout>(null);
 
-  const loopData = [...banners, ...banners, ...banners];
+  const loopData =
+    banners.length > 1 ? [...banners, ...banners, ...banners] : banners;
   const middleIndex = banners.length; // Mulai dari index tengah agar bisa scroll bolak-balik
   currentIndex.current = middleIndex;
 
@@ -60,14 +61,16 @@ const BannerCarousel2 = ({
 
   const handleScrollEnd = () => {
     let index = currentIndex.current;
-    if (index >= banners.length * 2) {
+    if (index && index >= banners.length * 2) {
       // Jika di akhir, reset ke tengah
       index = banners.length;
-      listRef.current.scrollToIndex({index, animated: false});
-    } else if (index < banners.length) {
+      if (banners.length > 1 && listRef.current)
+        listRef.current.scrollToIndex({index, animated: false});
+    } else if (index && index < banners.length) {
       // Jika di awal, reset ke tengah
       index = banners.length + (index % banners.length);
-      listRef.current.scrollToIndex({index, animated: false});
+      if (banners.length > 1 && listRef.current)
+        listRef.current.scrollToIndex({index, animated: false});
     }
   };
 
@@ -77,10 +80,11 @@ const BannerCarousel2 = ({
     autoScrollInterval.current = setInterval(() => {
       if (currentIndex.current !== null && listRef.current) {
         let nextIndex = currentIndex.current + 1;
-        listRef.current.scrollToIndex({
-          index: nextIndex,
-          animated: true,
-        });
+        if (banners.length > 1 && listRef.current)
+          listRef.current.scrollToIndex({
+            index: nextIndex,
+            animated: true,
+          });
       }
     }, AUTO_SCROLL_INTERVAL);
   };
@@ -152,7 +156,7 @@ const BannerCarousel2 = ({
   // }, []);
 
   useEffect(() => {
-    if (banners.length > 0) {
+    if (banners.length > 1) {
       startAutoScroll();
     }
   }, [banners]);

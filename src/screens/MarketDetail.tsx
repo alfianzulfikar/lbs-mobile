@@ -443,7 +443,7 @@ const MarketDetail = ({route}: Props) => {
             ) : activeMenu === 'daily' ? (
               <Daily id={id} />
             ) : (
-              <MarketInformation merkDagang={merkDagang} />
+              <MarketInformation slug={slug} />
             )}
           </View>
         </View>

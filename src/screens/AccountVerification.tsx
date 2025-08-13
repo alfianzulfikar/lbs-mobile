@@ -53,12 +53,17 @@ const AccountVerification = ({route}: Props) => {
   ];
 
   const handleSubmit = async () => {
+    const stringPhone = String(phone);
     const body = {
       firstname,
       lastname,
       email,
       phone: `${code}-${
-        phone ? (phone.charAt(0) === '0' ? phone.slice(1) : phone) : ''
+        stringPhone
+          ? stringPhone.charAt(0) === '0'
+            ? stringPhone.slice(1)
+            : stringPhone
+          : ''
       }`,
       password,
       confirmPassword: cpassword,
