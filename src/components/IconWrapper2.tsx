@@ -4,10 +4,26 @@ import Text from './Text';
 import LinearGradient from 'react-native-linear-gradient';
 import {useColorScheme} from '../hooks/useColorScheme';
 
-const IconWrapper2 = ({children}: {children: ReactNode}) => {
+const IconWrapper2 = ({
+  children,
+  size,
+}: {
+  children: ReactNode;
+  size?: number;
+}) => {
   let colorScheme = useColorScheme();
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        [
+          styles.container,
+          {
+            width: size || 40,
+            height: size || 40,
+            borderRadius: size ? size / 2 : 20,
+          },
+        ],
+      ]}>
       <LinearGradient
         colors={
           colorScheme === 'dark'
@@ -25,9 +41,6 @@ export default IconWrapper2;
 
 const styles = StyleSheet.create({
   container: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',

@@ -56,7 +56,7 @@ const BusinessDetail = ({route}: Props) => {
   const textColor = useThemeColor({}, 'text');
   const navigation = useNavigation();
   const {apiRequest} = useAPI();
-  const {slug} = route.params;
+  const {slug, openDiscussion} = route.params;
   const {
     business,
     businessStatus,
@@ -144,6 +144,16 @@ const BusinessDetail = ({route}: Props) => {
 
   useEffect(() => {
     getBusinessLike();
+
+    if (openDiscussion) {
+      navigation.navigate('Order', {
+        screen: 'BusinessDiscussion',
+        params: {
+          slug: business.slug,
+          businessStatus: business.status,
+        },
+      });
+    }
   }, [business]);
 
   return (
@@ -195,11 +205,13 @@ const BusinessDetail = ({route}: Props) => {
                   overflow: 'hidden',
                   backgroundColor,
                 }}>
-                <Image
-                  source={{uri: business.image}}
-                  style={{width: '100%', height: '100%'}}
-                  resizeMode="cover"
-                />
+                {!loadingPage && business.image && (
+                  <Image
+                    source={{uri: business.image}}
+                    style={{width: '100%', height: '100%'}}
+                    resizeMode="cover"
+                  />
+                )}
               </View>
             </View>
 

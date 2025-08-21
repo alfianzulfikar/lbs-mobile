@@ -8,7 +8,13 @@ import queryString from 'query-string';
 import {useDispatch} from 'react-redux';
 import {setArticle} from '../slices/article';
 
-const Html = ({source}: {source: string}) => {
+const Html = ({
+  source,
+  textAlign,
+}: {
+  source: string;
+  textAlign?: 'justify' | 'left';
+}) => {
   const {width} = useWindowDimensions();
   const colorScheme = useColorScheme();
   const textColor2 = useThemeColor({}, 'text2');
@@ -21,7 +27,7 @@ const Html = ({source}: {source: string}) => {
         color: textColor2,
         fontSize: 16,
         lineHeight: 24,
-        textAlign: 'left',
+        textAlign: textAlign || 'justify',
       },
       h1: {
         fontSize: 28,

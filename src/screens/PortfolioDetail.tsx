@@ -40,13 +40,13 @@ type Props = {
   route: {
     params: {
       slug: string;
-      id: number;
+      openDisclosure?: boolean;
     };
   };
 };
 
 const PortfolioDetail = ({route}: Props) => {
-  const {id, slug} = route.params;
+  const {slug, openDisclosure} = route.params;
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColorSuccess = useThemeColor({}, 'textSuccess');
@@ -155,6 +155,7 @@ const PortfolioDetail = ({route}: Props) => {
           ]
         : []),
     ]);
+    if (openDisclosure) setShowDisclosure(true);
   }, [portfolio]);
 
   useEffect(() => {

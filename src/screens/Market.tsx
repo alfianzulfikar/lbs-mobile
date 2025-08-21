@@ -49,7 +49,10 @@ const Market = () => {
     <ScreenWrapper
       background
       backgroundType={colorScheme === 'dark' ? 'gradient' : 'pattern'}
-      scrollView header headerTitle='Pasar Sekunder' helpButton>
+      scrollView
+      header
+      headerTitle="Pasar Sekunder"
+      helpButton>
       {/* <Gap height={24} />
       <Header title="Pasar Sekunder" /> */}
       <View style={{paddingHorizontal: 24, marginTop: 20}}>
@@ -148,9 +151,8 @@ const Market = () => {
                     Pasar Sekunder Ditutup
                   </Text>
                   <Text style={[styles.emptyDesc, {color: textColor2}]}>
-                    Saat ini tidak ada sesi perdagangan saham karena periode
-                    pasar sekunder telah berakhir. Pasar sekunder Insyaa
-                    Allah akan kembali dibuka pada periode berikutnya.
+                    Sesi perdagangan di pasar sekunder telah berakhir. Insya
+                    Allah akan dibuka kembali di periode berikutnya.
                   </Text>
                 </View>
               ) : (

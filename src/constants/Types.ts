@@ -5,15 +5,19 @@ import {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
 export type MainTabParamList = {
   Home: undefined;
   Business: undefined;
-  Transaction: undefined;
+  Transaction: TransactionStackParamList;
   Account: undefined;
 };
 
+export type TransactionStackParamList = {
+  TransactionScreen: {paymentCode: string};
+};
+
 export type OrderStackParamList = {
-  BusinessDetail: {slug: string};
+  BusinessDetail: {slug: string; openDiscussion?: boolean};
   OrderBusiness: {slug: string; customerCode: string};
   WaitingPayment: {
-    code: string;
+    paymentCode: string;
     type?: 'ask' | 'bid';
     feeBuy?: number;
     feeSell?: number;
@@ -88,7 +92,7 @@ export type PortfolioStackParamList = {
   PortfolioScreen: undefined;
   PortfolioDetail: {
     slug: string;
-    id: number;
+    openDisclosure?: boolean;
   };
 };
 

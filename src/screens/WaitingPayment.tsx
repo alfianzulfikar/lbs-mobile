@@ -48,7 +48,7 @@ const WaitingPayment = ({route}: Props) => {
   const dangerSurface = useThemeColor({}, 'dangerSurface');
   const navigation = useNavigation();
   const {apiRequest} = useAPI();
-  const {code} = route.params;
+  const {paymentCode} = route.params;
   const {paymentBankList, getPaymentBankList} = useBank();
   const dispatch = useDispatch();
 
@@ -85,7 +85,7 @@ const WaitingPayment = ({route}: Props) => {
     setLoadingPage(true);
     try {
       const res = await apiRequest({
-        endpoint: `/waiting-payment/${code}`,
+        endpoint: `/waiting-payment/${paymentCode}`,
         authorization: true,
       });
       const isMarket = res.status_transaksi.id == 8;
@@ -101,7 +101,7 @@ const WaitingPayment = ({route}: Props) => {
       if (res.status_transaksi?.name === 'Success') {
         navigation.dispatch(
           StackActions.replace('PaymentSuccess', {
-            paymentCode: code,
+            paymentCode: paymentCode,
           }),
         );
       } else if (
@@ -110,7 +110,7 @@ const WaitingPayment = ({route}: Props) => {
       ) {
         setForm({
           type_bisnis: res.bisnis_transaksi[0]?.type_bisnis || '',
-          kode: code || '',
+          kode: paymentCode || '',
           merk_dagang: res.bisnis_transaksi[0]?.merk_dagang || '',
           kode_saham: res.bisnis_transaksi[0]?.kode_saham || '',
           billing_expired: res.billing_expired || form.billing_expired,
@@ -150,7 +150,7 @@ const WaitingPayment = ({route}: Props) => {
         },
         {
           label: 'Kode Transaksi',
-          value: code,
+          value: paymentCode,
         },
         {
           label: 'Nominal',
@@ -185,7 +185,7 @@ const WaitingPayment = ({route}: Props) => {
     setLoadingCancel(true);
     try {
       const res = await apiRequest({
-        endpoint: `/cancel-payment/${code}`,
+        endpoint: `/cancel-payment/${paymentCode}`,
         authorization: true,
       });
       if (res) {
@@ -417,7 +417,7 @@ const WaitingPayment = ({route}: Props) => {
                   </View>
                 ))}
               </View>
-              {form.status === 'Pending' && (
+              {(form.status === 'Pending' || form.status === 'Hold') && (
                 <>
                   <Gap height={24} />
                   <Button
@@ -429,7 +429,13 @@ const WaitingPayment = ({route}: Props) => {
                           routes: [
                             {
                               name: 'MainTab',
-                              params: {screen: 'Transaction'},
+                              params: {
+                                screen: 'Transaction',
+                                params: {
+                                  screen: 'TransactionScreen',
+                                  params: {paymentCode: ''},
+                                },
+                              },
                             },
                           ],
                         }),
@@ -482,7 +488,13 @@ const WaitingPayment = ({route}: Props) => {
                     routes: [
                       {
                         name: 'MainTab',
-                        params: {screen: 'Transaction'},
+                        params: {
+                          screen: 'Transaction',
+                          params: {
+                            screen: 'TransactionScreen',
+                            params: {paymentCode: ''},
+                          },
+                        },
                       },
                     ],
                   }),

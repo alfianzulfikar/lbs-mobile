@@ -6,7 +6,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './screens/Home';
 import Business from './screens/Business';
-import Transaction from './screens/Transaction';
+import TransactionScreen from './screens/Transaction';
 import AccountScreen from './screens/Account';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CustomBottomTab from './components/CustomBottomTab';
@@ -67,6 +67,7 @@ import {
   OrderStackParamList,
   PortfolioStackParamList,
   RootStackParamList,
+  TransactionStackParamList,
 } from './constants/Types';
 import {navigationRef, tryFlushPendingNavigation} from './services/navigation';
 import NotificationDetail from './screens/NotificationDetail';
@@ -91,6 +92,8 @@ const KYCStack = createNativeStackNavigator<KYCStackParamList>();
 const ArticleStack = createNativeStackNavigator<ArticleStackParamList>();
 const PortfolioStack = createNativeStackNavigator<PortfolioStackParamList>();
 const MarketStack = createNativeStackNavigator<MarketStackParamList>();
+const TransactionStack =
+  createNativeStackNavigator<TransactionStackParamList>();
 
 function Auth() {
   return (
@@ -112,6 +115,21 @@ function Auth() {
         component={AccountVerificationExpired}
       />
     </AuthStack.Navigator>
+  );
+}
+
+function Transaction() {
+  return (
+    <TransactionStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <TransactionStack.Screen
+        name="TransactionScreen"
+        component={TransactionScreen}
+        initialParams={{paymentCode: ''}}
+      />
+    </TransactionStack.Navigator>
   );
 }
 
@@ -464,7 +482,8 @@ export default function App() {
   useEffect(() => {
     initTheme();
     setBusinessViewType();
-    console.log('render router');
+
+    return () => {};
   }, []);
 
   return (

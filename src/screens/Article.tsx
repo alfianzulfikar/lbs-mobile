@@ -116,8 +116,7 @@ const Article = () => {
               Pencarian Tidak Ditemukan
             </Text>
             <Text style={[styles.emptyDesc, {color: textColor2}]}>
-              Maaf, kami tidak menemukan artikel yang Anda cari. Silakan cari
-              dengan kata kunci atau filter yang berbeda.
+              Mohon ubah kata kunci atau filter pencarian Anda.
             </Text>
           </View>
         )}

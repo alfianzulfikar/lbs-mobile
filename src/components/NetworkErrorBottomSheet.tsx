@@ -40,11 +40,10 @@ const NetworkErrorBottomSheet = ({
         />
       </View>
       <Text style={[styles.emptyTitle, {color: textColor}]}>
-        {title || 'Koneksi Anda Terputus'}
+        {title || 'Koneksi Terputus'}
       </Text>
       <Text style={[styles.emptyDesc, {color: textColor2}]}>
-        {desc ||
-          'Aplikasi tidak dapat mengakses internet. Silakan periksa jaringan Wi-Fi atau data seluler Anda, dan coba beberapa saat lagi.'}
+        {desc || 'Pastikan Wi-Fi atau data seluler aktif, lalu coba kembali. '}
       </Text>
       <Gap flex={1} />
       <Gap height={24} />

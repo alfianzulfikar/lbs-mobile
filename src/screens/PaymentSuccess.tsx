@@ -7,7 +7,7 @@ import {RGBAColors} from '../constants/Colors';
 import BlurOverlay from '../components/BlurOverlay';
 import {useThemeColor} from '../hooks/useThemeColor';
 import Gap from '../components/Gap';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {useTransaction} from '../api/transaction';
 import numberFormat from '../utils/numberFormat';
@@ -195,7 +195,15 @@ const PaymentSuccess = ({route}: Props) => {
           <Gap height={40} />
           <Button
             title="Kembali ke Beranda"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              } else {
+                navigation.dispatch(
+                  CommonActions.reset({index: 0, routes: [{name: 'MainTab'}]}),
+                );
+              }
+            }}
           />
           <Gap height={40} />
         </View>

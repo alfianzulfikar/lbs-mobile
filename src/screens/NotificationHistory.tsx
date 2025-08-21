@@ -91,7 +91,7 @@ const NotificationHistory = () => {
             Belum Ada Notifikasi
           </Text>
           <Text style={[styles.emptyDesc, {color: textColor2}]}>
-            Saat ini Anda belum menerima notifikasi.
+            Saat ini belum ada notifikasi yang masuk.
           </Text>
           <Gap maxHeight={160} flex={1} />
         </View>
@@ -118,7 +118,7 @@ const NotificationHistory = () => {
                   ...(item.data?.key === 'BusinessDetail'
                     ? {slug: item.data.value}
                     : item.data?.key === 'WaitingPayment'
-                    ? {code: item.data.value}
+                    ? {paymentCode: item.data.value}
                     : {}),
                 });
               }}

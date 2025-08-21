@@ -194,7 +194,7 @@ const Prospectus = ({route}: Props) => {
           />
         </View>
         <View style={{paddingHorizontal: 24, marginTop: 24}}>
-          <Html source={htmlBody} />
+          <Html source={htmlBody} textAlign="left" />
 
           {category === '1' && (
             <View style={{marginTop: 40}}>

@@ -28,6 +28,7 @@ const TransactionDetail = ({
   setShow,
   loading,
   data,
+  clearPaymentCode = () => {},
 }: {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
@@ -47,6 +48,7 @@ const TransactionDetail = ({
     periodePembayaran: string;
     tanggalPembayaran: string;
   };
+  clearPaymentCode?: () => void;
 }) => {
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
@@ -205,6 +207,7 @@ const TransactionDetail = ({
                 <IconWrapper
                   onPress={() => {
                     slideOut();
+                    clearPaymentCode();
                     setShow(false);
                   }}>
                   <ICCancel color={iconColor} />
@@ -281,11 +284,12 @@ const TransactionDetail = ({
                     <Button
                       title="Selesaikan Pembayaran"
                       onPress={() => {
+                        clearPaymentCode();
                         setShow(false);
                         navigation.navigate('Order', {
                           screen: 'WaitingPayment',
                           params: {
-                            code: data.kodePembayaran,
+                            paymentCode: data.kodePembayaran,
                           },
                         });
                       }}

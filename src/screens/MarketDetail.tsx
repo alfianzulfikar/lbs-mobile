@@ -67,6 +67,7 @@ const MarketDetail = ({route}: Props) => {
   const [showExplanation, setShowExplanation] = useState(false);
   const [showAttention, setShowAttention] = useState(false);
   const [transactionType, setTransactionType] = useState<'ask' | 'bid'>('bid');
+  const [refreshing, setRefreshing] = useState(false);
 
   const menuOption: InputDropdownOption[] = [
     {id: 'orderbook', label: 'Orderbook'},
@@ -158,6 +159,14 @@ const MarketDetail = ({route}: Props) => {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getOverview(id);
+    getStatistic();
+    getBusinessDetail(slug);
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     getOverview(id);
     getStatistic();
@@ -196,7 +205,9 @@ const MarketDetail = ({route}: Props) => {
             </View>
           </View>
         </View>
-      }>
+      }
+      refreshing={refreshing}
+      onRefresh={onRefresh}>
       <View style={{flex: 1}}>
         <View style={{paddingHorizontal: 24, marginTop: 20}}>
           {overviewLoading ? (
@@ -503,7 +514,13 @@ const MarketDetail = ({route}: Props) => {
             paddingVertical={12}
             onPress={() => {
               setShowAttention(false);
-              navigation.navigate('MainTab', {screen: 'Transaction'});
+              navigation.navigate('MainTab', {
+                screen: 'Transaction',
+                params: {
+                  screen: 'TransactionScreen',
+                  params: {paymentCode: ''},
+                },
+              });
             }}
           />
           <Gap height={12} />

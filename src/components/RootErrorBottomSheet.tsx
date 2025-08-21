@@ -35,11 +35,7 @@ const RootErrorBottomSheet = () => {
       }}>
       <View style={styles.emptyContainer}>
         <Image
-          source={
-            colorScheme === 'dark'
-              ? require('../assets/images/empty-network-dark.png')
-              : require('../assets/images/empty-network-light.png')
-          }
+          source={require('../assets/images/empty-jailbreak.png')}
           style={{width: 160, height: 160}}
           resizeMode="cover"
         />
@@ -80,6 +76,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 18,
   },
   emptyTitle: {
     fontSize: 16,

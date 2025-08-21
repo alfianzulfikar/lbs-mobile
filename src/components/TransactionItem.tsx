@@ -1,5 +1,5 @@
 import {Pressable, StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Text from './Text';
 import ICCashIn from './icons/ICCashIn';
 import ICCashOut from './icons/ICCashOut';
@@ -10,6 +10,7 @@ import numberFormat from '../utils/numberFormat';
 const TransactionItem = ({
   transaction,
   onPress = () => {},
+  openDetail,
 }: {
   transaction: {
     type: string;
@@ -18,7 +19,12 @@ const TransactionItem = ({
     status: string;
   };
   onPress?: () => void;
+  openDetail?: boolean;
 }) => {
+  useEffect(() => {
+    if (openDetail) onPress();
+  }, []);
+
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <View style={[styles.iconContainer]}>

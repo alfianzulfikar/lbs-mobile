@@ -28,7 +28,6 @@ Sentry.init({
 
 const App = () => {
   const {navigationFromUrl} = useDeepLinks();
-
   const {
     onAppBootstrap,
     handleForgroundNotification,
@@ -37,6 +36,7 @@ const App = () => {
 
   useEffect(() => {
     onAppBootstrap();
+
     const unsubscribeOnMessage = messaging().onMessage(async message => {
       try {
         console.log('FOREGROUND', message);
@@ -72,6 +72,7 @@ const App = () => {
         navigationFromUrl(event.url);
       }
     });
+
     Linking.getInitialURL().then(async url => {
       if (url) {
         setTimeout(() => {

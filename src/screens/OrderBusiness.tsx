@@ -99,7 +99,7 @@ const OrderBusiness = ({route}: Props) => {
           StackActions.replace('Order', {
             screen: 'WaitingPayment',
             params: {
-              code: res.kode,
+              paymentCode: res.kode,
             },
           }),
         );

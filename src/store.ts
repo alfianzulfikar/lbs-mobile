@@ -4,6 +4,7 @@ import userReducer from './slices/user';
 import globalErrorReducer from './slices/globalError';
 import businessViewTypeReducer from './slices/businessViewType';
 import articleReducer from './slices/article';
+import transactionReducer from './slices/transaction';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     globalError: globalErrorReducer,
     businessViewType: businessViewTypeReducer,
     article: articleReducer,
+    transaction: transactionReducer,
   },
 });
 

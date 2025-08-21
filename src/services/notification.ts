@@ -6,7 +6,7 @@ import {
 } from '@react-native-firebase/messaging';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {replace} from './navigation';
+import {replace, navigationRef} from './navigation';
 
 export const useNotification = () => {
   const createChannel = async () => {
@@ -79,10 +79,37 @@ export const useNotification = () => {
       } else if (data.key === 'WaitingPayment') {
         replace({
           screen: 'Order',
-          params: {screen: 'WaitingPayment', params: {code: data.value}},
+          params: {screen: 'WaitingPayment', params: {paymentCode: data.value}},
         });
-      } else if (data.key === 'PaymentSuccess' || data.key === 'Transaction') {
-        replace({screen: 'Transaction'});
+      } else if (data.key === 'Transaction') {
+        replace({
+          screen: 'MainTab',
+          params: {
+            screen: 'Transaction',
+            params: {
+              screen: 'TransactionScreen',
+              params: {paymentCode: data.value},
+            },
+          },
+        });
+      } else if (data.key === 'PaymentSuccess') {
+        replace({screen: 'PaymentSuccess', params: {paymentCode: data.value}});
+      } else if (data.key === 'PortfolioDetail') {
+        replace({
+          screen: 'Portfolio',
+          params: {
+            screen: 'PortfolioDetail',
+            params: {slug: data.value, openDisclosure: true},
+          },
+        });
+      } else if (data.key === 'NotificationDetail') {
+        replace({
+          screen: 'Order',
+          params: {
+            screen: 'BusinessDetail',
+            params: {slug: data.value, openDiscussion: true},
+          },
+        });
       } else {
         replace({screen: 'MainTab', params: {screen: 'Home'}});
       }
@@ -92,10 +119,27 @@ export const useNotification = () => {
   };
 
   const handleForgroundNotification = async (
-    message: FirebaseMessagingTypes.RemoteMessage,
+    remoteMessage: FirebaseMessagingTypes.RemoteMessage,
   ) => {
-    // const currentRoute = navigation.getId();
-    console.log('handleForgroundNotification', message);
+    try {
+      console.log('handleForgroundNotification', remoteMessage);
+      const currentRoute =
+        navigationRef?.current?.getCurrentRoute()?.name || '';
+      const data = remoteMessage?.data;
+      if (
+        data &&
+        data.key === 'PaymentSuccess' &&
+        currentRoute === 'WaitingPayment'
+      ) {
+        replace({screen: 'PaymentSuccess', params: {paymentCode: data.value}});
+      }
+    } catch (error) {
+      console.log('handleForgroundNotification error', error);
+    }
+    // const currentRoute = navigationRef.getId();
+    // if (data && data.key === 'PaymentSuccess') {
+    //   replace({screen: 'PaymentSuccess', params: {code: data.value}});
+    // }
     // await notifee.displayNotification({
     //   title: message.notification?.title || 'LBS Urun Dana',
     //   body: message.notification?.body || 'Notifikasi baru dari LBS Urun Dana',

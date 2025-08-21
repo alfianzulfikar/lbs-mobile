@@ -255,7 +255,7 @@ export const useMarket = () => {
       navigation.dispatch(
         StackActions.replace('Order', {
           screen: 'WaitingPayment',
-          params: {code: paymentCode},
+          params: {paymentCode: paymentCode},
         }),
       );
       setShowSuccessOrderDialog(false);

@@ -187,11 +187,11 @@ const Portfolio = () => {
                 />
               </View>
               <Text style={[styles.emptyTitle, {color: textColor}]}>
-                Belum Ada Portofolio
+                Portofolio Masih Kosong
               </Text>
               <Text style={[styles.emptyDesc, {color: textColor2}]}>
-                Mulai berinvestasi dengan melakukan pemesanan efek di salah satu
-                bisnis yang sedang listing di platform kami
+                Pesan efek dari bisnis yang sedang listing untuk membangun
+                portofolio Anda.
               </Text>
             </View>
           </View>
@@ -213,7 +213,6 @@ const Portfolio = () => {
             screen: 'PortfolioDetail',
             params: {
               slug: item.slug,
-              id: item.id,
             },
           })
         }

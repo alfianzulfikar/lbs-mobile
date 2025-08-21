@@ -126,8 +126,8 @@ export const useAPI = () => {
                 dispatch(
                   setShowNetworkError({
                     showNetworkError: true,
-                    title: 'Maaf, sistem sedang dalam pemeliharaan',
-                    desc: 'Demi meningkatkan kenyamanan dan keamanan dalam bertransaksi, saat ini sistem sedang dalam pemeliharaan. Mohon kembali lagi nanti.',
+                    title: 'Maaf, Sedang Pemeliharaan Sistem',
+                    desc: 'Sedang ada pemeliharaan sistem supaya kenyamanan dan keamanan Anda tetap terjaga.',
                   }),
                 );
               } else {
@@ -155,8 +155,8 @@ export const useAPI = () => {
             dispatch(
               setShowNetworkError({
                 showNetworkError: true,
-                title: 'Maaf, sistem sedang dalam pemeliharaan',
-                desc: 'Demi meningkatkan kenyamanan dan keamanan dalam bertransaksi, saat ini sistem sedang dalam pemeliharaan. Mohon kembali lagi nanti.',
+                title: 'Maaf, Sedang Pemeliharaan Sistem',
+                desc: 'Sedang ada pemeliharaan sistem supaya kenyamanan dan keamanan Anda tetap terjaga.',
               }),
             );
           } else {
@@ -182,8 +182,8 @@ export const useAPI = () => {
         dispatch(
           setShowNetworkError({
             showNetworkError: true,
-            title: 'Koneksi Anda Terputus',
-            desc: 'Aplikasi tidak dapat mengakses internet. Silakan periksa jaringan Wi-Fi atau data seluler Anda, dan coba beberapa saat lagi.',
+            title: 'Koneksi Terputus',
+            desc: 'Pastikan Wi-Fi atau data seluler aktif, lalu coba kembali.',
           }),
         );
         console.log('fetch error type error', String(error));

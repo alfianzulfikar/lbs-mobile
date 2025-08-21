@@ -196,8 +196,8 @@ const BusinessCard2 = ({
             <>
               <View style={{flexDirection: 'row', marginTop: 24}}>
                 <View style={{flexDirection: 'row', flex: 1}}>
-                  <IconWrapper2>
-                    <ICTarget color={textColor2} />
+                  <IconWrapper2 size={32}>
+                    <ICTarget color={textColor2} size={22} />
                   </IconWrapper2>
                   <View style={{marginLeft: 8}}>
                     <Text style={[styles.targetLabel, {color: textColor2}]}>
@@ -210,8 +210,8 @@ const BusinessCard2 = ({
                 </View>
                 {business.roi && (
                   <View style={{flexDirection: 'row', flex: 1}}>
-                    <IconWrapper2>
-                      <ICRoi color={textColor2} />
+                    <IconWrapper2 size={32}>
+                      <ICRoi color={textColor2} size={22} />
                     </IconWrapper2>
                     <View style={{marginLeft: 8}}>
                       <Text style={[styles.targetLabel, {color: textColor2}]}>

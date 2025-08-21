@@ -22,11 +22,13 @@ import TransactionItem from '../components/TransactionItem';
 import HorizontalLine from '../components/HorizontalLine';
 import TransactionDetail from '../components/TransactionDetail';
 import {useAPI} from '../services/api';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setAlert} from '../slices/globalError';
 import HelpButton from '../components/HelpButton';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MainTabParamList, TransactionStackParamList} from '../constants/Types';
 
 const MenuItem = ({
   name,
@@ -62,7 +64,14 @@ const MenuItem = ({
   );
 };
 
-const Transaction = () => {
+type Props = NativeStackScreenProps<
+  TransactionStackParamList,
+  'TransactionScreen'
+>;
+
+const Transaction = ({route}: Props) => {
+  const {paymentCode} = route.params;
+  const navigation = useNavigation();
   const {apiRequest} = useAPI();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
@@ -74,7 +83,7 @@ const Transaction = () => {
   const dispatch = useDispatch();
 
   const [activeMenu, setActiveMenu] = useState<'dividen' | 'transaksi'>(
-    'transaksi',
+    paymentCode && paymentCode.includes('DV') ? 'dividen' : 'transaksi',
   );
   const [type, setType] = useState('');
   const [status, setStatus] = useState('');
@@ -183,10 +192,10 @@ const Transaction = () => {
   };
 
   const getTransactionDetail = async ({
-    paymentCode,
+    paymentCode2,
     type,
   }: {
-    paymentCode: string;
+    paymentCode2: string;
     type: string;
   }) => {
     setDetail(prev => {
@@ -209,7 +218,7 @@ const Transaction = () => {
     setLoadingDetail(true);
     try {
       const res = await apiRequest({
-        endpoint: `/waiting-payment/${paymentCode}`,
+        endpoint: `/waiting-payment/${paymentCode2}`,
         authorization: true,
       });
       const jenisTransaksi = type;
@@ -352,11 +361,13 @@ const Transaction = () => {
               />
             </View>
             <Text style={[styles.emptyTitle, {color: textColor}]}>
-              Belum Ada Transaksi
+              Belum Ada{' '}
+              {activeMenu === 'dividen' ? 'Dividen/Bagi Hasil' : 'Transaksi'}
             </Text>
             <Text style={[styles.emptyDesc, {color: textColor2}]}>
-              Belum ada transaksi masuk. Silakan mulai bertransaksi dengan
-              berinvestasi di bisnis kami.
+              {activeMenu === 'dividen'
+                ? 'Dividen/Bagi hasil dari portofolio Anda akan tampil di sini.'
+                : 'Transaksi Anda masih kosong. Mulai investasi dengan memesan efek dari bisnis yang sedang listing di sini.'}
             </Text>
           </View>
         )}
@@ -403,7 +414,6 @@ const Transaction = () => {
           status: '',
         });
         setActiveMenu('transaksi');
-        // setTransactions([]);
       };
     }, []),
   );
@@ -549,11 +559,12 @@ const Transaction = () => {
                     } else {
                       setShowDetail(true);
                       getTransactionDetail({
-                        paymentCode: item.kode,
+                        paymentCode2: item.kode,
                         type: item.tipe_transaksi,
                       });
                     }
                   }}
+                  openDetail={paymentCode === item.kode ? true : false}
                 />
                 {index !== transactions.length - 1 && (
                   <HorizontalLine marginVertical={24} />
@@ -594,6 +605,25 @@ const Transaction = () => {
           setShow={setShowDetail}
           loading={loadingDetail}
           data={detail}
+          clearPaymentCode={() => {
+            if (paymentCode) {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: 'MainTab',
+                    params: {
+                      screen: 'Transaction',
+                      params: {
+                        screen: 'TransactionScreen',
+                        params: {paymentCode: ''},
+                      },
+                    },
+                  },
+                ],
+              });
+            }
+          }}
         />
       )}
     </View>
