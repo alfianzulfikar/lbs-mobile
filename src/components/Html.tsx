@@ -1,4 +1,11 @@
-import {Linking, StyleSheet, useWindowDimensions} from 'react-native';
+import {
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import React from 'react';
 import RenderHTML from 'react-native-render-html';
 import {useThemeColor} from '../hooks/useThemeColor';
@@ -7,13 +14,18 @@ import {RGBAColors} from '../constants/Colors';
 import queryString from 'query-string';
 import {useDispatch} from 'react-redux';
 import {setArticle} from '../slices/article';
+import WebView from 'react-native-webview';
 
 const Html = ({
   source,
   textAlign,
+  isWebView,
+  addSection,
 }: {
   source: string;
   textAlign?: 'justify' | 'left';
+  isWebView?: boolean;
+  addSection?: string;
 }) => {
   const {width} = useWindowDimensions();
   const colorScheme = useColorScheme();
@@ -96,7 +108,87 @@ const Html = ({
     [],
   );
 
-  return (
+  const defaultStyles = `
+    * {
+      color: ${colorScheme === 'dark' ? '#CCCCCC' : '#444444'};
+      border-box: box-sizing;
+    }
+    body {
+      padding: 0 16px;
+    }
+    img {
+      background: #F5F5F5;
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0;
+      padding: 0;
+    }
+    table {
+      background-color: ${
+        colorScheme === 'dark' ? '#242424' : '#F5F5F5'
+      } !important;
+      border: 1px solid #CCCCCC !important;
+    }
+    th, td {
+      color: ${colorScheme === 'dark' ? '#E0E0E0' : '#000000'} !important;
+      border: 1px solid ${
+        colorScheme === 'dark' ? '#CCCCCC' : '#444444'
+      } !important;
+      padding: 0 8px;
+    }
+    iframe {
+      width: 100% !important;
+    }
+    p {
+      margin: 0;
+      margin-bottom: 8px;
+    }
+    .business-highlight-item {
+      margin-bottom: 18px;
+    }
+    .business-highlight-label {
+      font-size: 16px;
+    }
+    .business-highlight-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  `;
+
+  const newHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        ${defaultStyles}
+      </style>
+    </head>
+    <body>
+      ${source}
+      ${addSection || ''}
+    </body>
+    </html>
+  `;
+
+  return isWebView ? (
+    <View style={{flex: 1}}>
+      <WebView
+        originWhitelist={['*']}
+        source={{
+          html: newHtml,
+        }}
+        style={{flex: 1, backgroundColor: 'transparent'}}
+        scalesPageToFit={true}
+        onShouldStartLoadWithRequest={request => {
+          if (!request.url.includes('lbs.id')) {
+            Linking.openURL(request.url);
+          }
+          return false;
+        }}
+      />
+    </View>
+  ) : (
     <RenderHTML
       source={{html: source}}
       contentWidth={width - 48}

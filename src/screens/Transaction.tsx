@@ -178,7 +178,6 @@ const Transaction = ({route}: Props) => {
         }
       }
     } catch (error: any) {
-      console.log(error);
       if (error?.status === 404) {
         setIsLastPage(true);
       }
@@ -248,9 +247,7 @@ const Transaction = ({route}: Props) => {
               ? res.bisnis_transaksi[0].merk_dagang
               : '',
           totalTransaksi:
-            jenisTransaksi === 'Penjualan'
-              ? res.nominal - fee
-              : res.total_nominal,
+            jenisTransaksi === 'Penjualan' ? res.nominal - fee : res.nominal,
           jenisBisnis:
             res.bisnis_transaksi.length > 0
               ? res.bisnis_transaksi[0].type_bisnis
@@ -484,7 +481,7 @@ const Transaction = ({route}: Props) => {
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {
                 useNativeDriver: false,
-                listener: event => {
+                listener: (event: any) => {
                   const currentY = event.nativeEvent?.contentOffset.y;
 
                   if (

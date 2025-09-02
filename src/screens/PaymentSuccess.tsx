@@ -120,7 +120,7 @@ const PaymentSuccess = ({route}: Props) => {
             },
             {
               label: `Total ${
-                type === 'Pembelian' ? 'Pembayaran' : 'Penerimaan'
+                !type ? '' : type === 'Pembelian' ? 'Pembayaran' : 'Penerimaan'
               }`,
               value: transactionDetail.totalTransaksi
                 ? 'Rp' + numberFormat(transactionDetail.totalTransaksi)
@@ -152,7 +152,9 @@ const PaymentSuccess = ({route}: Props) => {
           </Text>
           <Text style={styles.desc}>
             {type
-              ? `Cek status order secara berkala untuk mengetahui progress ${type.toLowerCase()} saham.`
+              ? `Cek status order secara berkala untuk mengetahui progress ${type.toLowerCase()} ${capitalize(
+                  transactionDetail.jenisBisnis,
+                )}.`
               : 'Selamat! Ikhtiar Anda meraih finansial yang berkah sudah dimulai.'}
           </Text>
           <LottieView

@@ -143,16 +143,18 @@ const BusinessDetail = ({route}: Props) => {
   }, []);
 
   useEffect(() => {
-    getBusinessLike();
+    if (business.slug) {
+      getBusinessLike();
 
-    if (openDiscussion) {
-      navigation.navigate('Order', {
-        screen: 'BusinessDiscussion',
-        params: {
-          slug: business.slug,
-          businessStatus: business.status,
-        },
-      });
+      if (openDiscussion) {
+        navigation.navigate('Order', {
+          screen: 'BusinessDiscussion',
+          params: {
+            slug: business.slug,
+            businessStatus: business.status,
+          },
+        });
+      }
     }
   }, [business]);
 
@@ -353,60 +355,100 @@ const BusinessDetail = ({route}: Props) => {
                     <Gap height={24} />
 
                     <View style={{flexDirection: 'row', paddingHorizontal: 24}}>
-                      <View style={{flex: 1}}>
-                        <RoundedProgressIndicator
-                          target={business.target}
-                          current={business.terpenuhi}
-                          type="large"
-                          transparent
-                          color="#FFFFFF"
-                          shadow
-                        />
-                      </View>
-                      <Gap width={24} />
-                      <View style={{flex: 1, justifyContent: 'center'}}>
-                        <View style={{flexDirection: 'row'}}>
-                          <View
-                            style={[
-                              styles.dot,
-                              styles.shadow,
-                              {backgroundColor: 'white'},
-                            ]}
-                          />
-                          <View style={{marginLeft: 8}}>
-                            <Text
-                              style={[styles.fundingTitle, {color: iconColor}]}>
-                              Dana Terkumpul
-                            </Text>
-                            <Text
-                              style={[styles.fundingValue, {color: textColor}]}>
-                              Rp
-                              {numberFormat(
-                                Number(
-                                  business.terpenuhi > business.target
-                                    ? business.target
-                                    : business.terpenuhi,
-                                ),
-                              )}
-                            </Text>
+                      {business.status !== 'PRE-LISTING' && (
+                        <>
+                          <View style={{flex: 1}}>
+                            <RoundedProgressIndicator
+                              target={business.target}
+                              current={business.terpenuhi}
+                              type="large"
+                              transparent
+                              color="#FFFFFF"
+                              shadow
+                            />
                           </View>
-                        </View>
-                        <Gap height={33} />
+                          <Gap width={24} />
+                        </>
+                      )}
+                      <View style={{flex: 1, justifyContent: 'center'}}>
+                        {business.status !== 'PRE-LISTING' && (
+                          <>
+                            <View style={{flexDirection: 'row'}}>
+                              <View
+                                style={[
+                                  styles.dot,
+                                  styles.shadow,
+                                  {backgroundColor: 'white'},
+                                ]}
+                              />
+                              <View style={{marginLeft: 8}}>
+                                <Text
+                                  style={[
+                                    styles.fundingTitle,
+                                    {color: iconColor, fontSize: 12},
+                                  ]}>
+                                  Dana Terkumpul
+                                </Text>
+                                <Text
+                                  style={[
+                                    styles.fundingValue,
+                                    {
+                                      color: textColor,
+                                      fontSize: 16,
+                                      marginTop: 2,
+                                    },
+                                  ]}>
+                                  Rp
+                                  {numberFormat(
+                                    Number(
+                                      business.terpenuhi > business.target
+                                        ? business.target
+                                        : business.terpenuhi,
+                                    ),
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+                            <Gap height={33} />
+                          </>
+                        )}
                         <View style={{flexDirection: 'row'}}>
+                          {business.status !== 'PRE-LISTING' && (
+                            <View
+                              style={[
+                                styles.dot,
+                                styles.shadow,
+                                {backgroundColor: 'rgba(64, 64, 64, 0.4)'},
+                              ]}
+                            />
+                          )}
                           <View
-                            style={[
-                              styles.dot,
-                              styles.shadow,
-                              {backgroundColor: 'rgba(64, 64, 64, 0.2)'},
-                            ]}
-                          />
-                          <View style={{marginLeft: 8}}>
+                            style={{
+                              marginLeft:
+                                business.status !== 'PRE-LISTING' ? 8 : 0,
+                            }}>
                             <Text
-                              style={[styles.fundingTitle, {color: iconColor}]}>
+                              style={[
+                                styles.fundingTitle,
+                                {
+                                  color: iconColor,
+                                  fontSize:
+                                    business.status !== 'PRE-LISTING' ? 12 : 13,
+                                },
+                              ]}>
                               Target Investasi
                             </Text>
                             <Text
-                              style={[styles.fundingValue, {color: textColor}]}>
+                              style={[
+                                styles.fundingValue,
+                                {
+                                  color: textColor,
+                                  fontSize:
+                                    business.status !== 'PRE-LISTING' ? 16 : 17,
+                                  marginTop:
+                                    business.status !== 'PRE-LISTING' ? 2 : 4,
+                                },
+                              ]}>
                               Rp{numberFormat(Number(business.target))}
                             </Text>
                           </View>
@@ -445,10 +487,9 @@ const BusinessDetail = ({route}: Props) => {
                     businessContent: business?.businessContent || '',
                     tipeBisnis: capitalize(business?.tipeBisnis),
                     terjual: business?.terpenuhi || 0,
-                    tersisa:
-                      business.target && business.terpenuhi
-                        ? business.target - business.terpenuhi
-                        : 0,
+                    tersisa: business.target
+                      ? business.target - (business.terpenuhi || 0)
+                      : 0,
                   },
                 })
               }
@@ -565,14 +606,11 @@ const styles = StyleSheet.create({
     shadowColor: 'white',
   },
   fundingTitle: {
-    fontSize: 12,
     lineHeight: 16,
   },
   fundingValue: {
-    fontSize: 16,
     fontWeight: '700',
     lineHeight: 24,
-    marginTop: 2,
   },
   buttonWrapper: {
     paddingVertical: 20,

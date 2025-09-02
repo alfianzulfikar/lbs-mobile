@@ -5,7 +5,7 @@ import {GestureResponderEvent, StyleProp, ViewStyle} from 'react-native';
 export type MainTabParamList = {
   Home: undefined;
   Business: undefined;
-  Transaction: TransactionStackParamList;
+  Transaction: NavigatorScreenParams<TransactionStackParamList>;
   Account: undefined;
 };
 
@@ -581,6 +581,7 @@ export type StockOverviewType = {
 
 export type StockType = StockOverviewType & {
   id: number;
+  businessId: number;
   slug: string;
   code: string;
   merkDagang: string;

@@ -90,6 +90,7 @@ export const useMarket = () => {
       res.map((item: any) => {
         newArray.push({
           id: item.id,
+          businessId: item.bisnis_id,
           code: item.perusahaan,
           merkDagang: item.merk_dagang,
           slug: item.slug,
@@ -173,8 +174,8 @@ export const useMarket = () => {
         newArray.push({
           frequency: item.frequency || null,
           price: item.price || null,
-          value: item.value || null,
-          volume: item.total || null,
+          value: item.total || null,
+          volume: item.volume || null,
         });
       });
       setTradebookList(newArray);

@@ -14,6 +14,8 @@ import SpInAppUpdates, {
   StartUpdateOptions,
 } from 'sp-react-native-in-app-updates';
 import * as Sentry from '@sentry/react-native';
+import messaging from '@react-native-firebase/messaging';
+import {useNotification} from '../services/notification';
 
 const Splash = () => {
   const colorScheme = useColorScheme() ?? 'light';
@@ -21,6 +23,7 @@ const Splash = () => {
   const background = require('../assets/videos/splash.mp4');
   const {checkDeviceSecurity} = useSecurityCheck();
   const {handleInitRoute} = useDeepLinks();
+  const {handleBackgroundNotification} = useNotification();
 
   const handleUpdate = async () => {
     try {
@@ -60,14 +63,19 @@ const Splash = () => {
         onEnd={async () => {
           const safe = await checkDeviceSecurity();
           if (safe) {
-            await handleUpdate();
-            await handleInitRoute();
+            handleUpdate();
+            const initialMessage = await messaging().getInitialNotification();
+            if (initialMessage) {
+              handleBackgroundNotification(initialMessage);
+            } else {
+              await handleInitRoute();
+            }
           }
         }}
         muted={true}
         disableFocus={true}
         // ignoreSilentSwitch="ignore"
-        // playInBackground={false}
+        playInBackground={true}
         // playWhenInactive={false}
       />
     </View>

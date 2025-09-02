@@ -12,9 +12,11 @@ import {setShowNetworkError} from '../slices/globalError';
 const NetworkErrorBottomSheet = ({
   title,
   desc,
+  type,
 }: {
   title?: string;
   desc?: string;
+  type?: 'maintenance' | 'default';
 }) => {
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
@@ -25,13 +27,20 @@ const NetworkErrorBottomSheet = ({
     <CustomBottomSheet
       onDismiss={() =>
         dispatch(
-          setShowNetworkError({showNetworkError: false, title: '', desc: ''}),
+          setShowNetworkError({
+            showNetworkError: false,
+            title: '',
+            desc: '',
+            type: '',
+          }),
         )
       }>
       <View style={styles.emptyContainer}>
         <Image
           source={
-            colorScheme === 'dark'
+            type && type === 'maintenance'
+              ? require('../assets/images/maintenance.png')
+              : colorScheme === 'dark'
               ? require('../assets/images/empty-network-dark.png')
               : require('../assets/images/empty-network-light.png')
           }
@@ -51,7 +60,12 @@ const NetworkErrorBottomSheet = ({
         title="Tutup"
         onPress={() =>
           dispatch(
-            setShowNetworkError({showNetworkError: false, title: '', desc: ''}),
+            setShowNetworkError({
+              showNetworkError: false,
+              title: '',
+              desc: '',
+              type: '',
+            }),
           )
         }
       />

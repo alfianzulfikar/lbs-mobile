@@ -31,6 +31,7 @@ export const globalError = createSlice({
       state.showNetworkError = action.payload.showNetworkError;
       state.title = action.payload.title || '';
       state.desc = action.payload.desc || '';
+      state.type = action.payload.type || '';
     },
     setShowRootError: (state, action: PayloadAction<GlobalErrorType>) => {
       state.showRootError = action.payload.showRootError;

@@ -128,6 +128,7 @@ export const useAPI = () => {
                     showNetworkError: true,
                     title: 'Maaf, Sedang Pemeliharaan Sistem',
                     desc: 'Sedang ada pemeliharaan sistem supaya kenyamanan dan keamanan Anda tetap terjaga.',
+                    type: 'maintenance',
                   }),
                 );
               } else {
@@ -157,6 +158,7 @@ export const useAPI = () => {
                 showNetworkError: true,
                 title: 'Maaf, Sedang Pemeliharaan Sistem',
                 desc: 'Sedang ada pemeliharaan sistem supaya kenyamanan dan keamanan Anda tetap terjaga.',
+                type: 'maintenance',
               }),
             );
           } else {
@@ -184,6 +186,7 @@ export const useAPI = () => {
             showNetworkError: true,
             title: 'Koneksi Terputus',
             desc: 'Pastikan Wi-Fi atau data seluler aktif, lalu coba kembali.',
+            type: '',
           }),
         );
         console.log('fetch error type error', String(error));

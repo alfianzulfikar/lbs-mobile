@@ -8,9 +8,60 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import Toggle from '../components/Toggle';
 import {useNotificationAPI} from '../api/notification';
 import {TopicType} from '../constants/Types';
+import CustomBottomSheet from '../components/BottomSheet';
+import ContactAndPromotionExplanation from '../components/ContactAndPromotionExplanation';
+
+const TopicItem = ({
+  index,
+  topicsLength,
+  updateSettings,
+  label,
+  descriptionText,
+  descriptionComponent,
+  isSubscribed,
+}: {
+  index?: number;
+  topicsLength?: number;
+  updateSettings: () => void;
+  label: string;
+  descriptionText?: string;
+  descriptionComponent?: React.JSX.Element;
+  isSubscribed: boolean;
+}) => {
+  const textColor2 = useThemeColor({}, 'text2');
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        marginBottom:
+          (index || index === 0) && topicsLength
+            ? index !== topicsLength - 1
+              ? 24
+              : 0
+            : 0,
+      }}>
+      <View style={{flex: 1}}>
+        <Text style={styles.topicTitle}>{label}</Text>
+        {descriptionComponent ? (
+          descriptionComponent
+        ) : (
+          <Text style={[styles.topicDesc, {color: textColor2}]}>
+            {descriptionText}
+          </Text>
+        )}
+      </View>
+      <Gap width={32} />
+      <View style={{transform: [{translateY: 6}]}}>
+        <Toggle toggleState={isSubscribed} onPress={updateSettings} />
+      </View>
+    </View>
+  );
+};
 
 const NotificationSetting = () => {
   const tint = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
 
   const {
@@ -21,6 +72,8 @@ const NotificationSetting = () => {
     subscribeTopic,
     unsubscribeTopic,
   } = useNotificationAPI();
+
+  const [showContactAndPromotion, setShowContactAndPromotion] = useState(false);
 
   const updateSettings = async (
     topicId: number | string,
@@ -60,36 +113,69 @@ const NotificationSetting = () => {
         {topicsLoading ? (
           <ActivityIndicator color={tint} />
         ) : (
-          topics.map((item, index) => (
-            <View
-              style={{
-                flexDirection: 'row',
-                marginBottom: index !== topics.length ? 24 : 0,
-              }}
-              key={index}>
-              <View style={{flex: 1}}>
-                <Text style={styles.topicTitle}>{item.label}</Text>
-                <Text style={[styles.topicDesc, {color: textColor2}]}>
-                  {item.description}
-                </Text>
-              </View>
-              <Gap width={32} />
-              <View style={{transform: [{translateY: 6}]}}>
-                <Toggle
-                  toggleState={item.isSubscribed}
-                  onPress={() =>
+          <View>
+            <Text style={[styles.category, {color: tint}]}>
+              Push Notification
+            </Text>
+            <View style={{marginTop: 16}}>
+              {topics.map((item, index) => (
+                <TopicItem
+                  key={index}
+                  index={index}
+                  topicsLength={topics.length}
+                  label={item.label || ''}
+                  descriptionText={item.description || ''}
+                  isSubscribed={item.isSubscribed}
+                  updateSettings={() =>
                     updateSettings(
                       item.id,
                       item.isSubscribed ? 'unsubscribe' : 'subscribe',
                     )
                   }
                 />
+              ))}
+            </View>
+
+            {/* Setting WhatsApp, Email dan Telepon */}
+            <View style={{display: 'none'}}>
+              <Gap height={40} />
+              <Text style={[styles.category, {color: tint}]}>
+                WhatsApp, Email dan Telepon
+              </Text>
+              <View style={{marginTop: 16}}>
+                <TopicItem
+                  label="Kontak & Promosi"
+                  descriptionComponent={
+                    <Text style={[styles.topicDesc, {color: textColor2}]}>
+                      Anda setuju untuk menerima informasi, promosi, dan peluang
+                      investasi sesuai dengan{' '}
+                      <Text
+                        style={{
+                          color: tint,
+                          fontWeight: '700',
+                          textDecorationLine: 'underline',
+                        }}
+                        onPress={() => setShowContactAndPromotion(true)}>
+                        Kebijakan Kontak & Promosi
+                      </Text>{' '}
+                      yang berlaku melalui WhatsApp, email, atau telepon.
+                    </Text>
+                  }
+                  isSubscribed={true}
+                  updateSettings={() => {}}
+                />
               </View>
             </View>
-          ))
+          </View>
         )}
       </View>
       <Gap height={24} />
+
+      {showContactAndPromotion && (
+        <ContactAndPromotionExplanation
+          onDismiss={() => setShowContactAndPromotion(false)}
+        />
+      )}
     </ScreenWrapper>
   );
 };
@@ -106,5 +192,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     marginTop: 4,
+  },
+  category: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '700',
+  },
+  contactAndPromotionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 24,
+    marginBottom: 4,
+  },
+  contactAndPromotionText: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    marginRight: 15,
+    transform: [{translateY: 8}],
   },
 });

@@ -58,15 +58,6 @@ const App = () => {
       },
     );
 
-    messaging()
-      .getInitialNotification()
-      .then(async remoteMessage => {
-        if (remoteMessage) {
-          handleBackgroundNotification(remoteMessage);
-        }
-      })
-      .catch(error => console.log('error getting initial notif', error));
-
     const linkingSubscription = Linking.addEventListener('url', event => {
       if (event.url) {
         navigationFromUrl(event.url);

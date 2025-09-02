@@ -12,9 +12,11 @@ import {useNavigation} from '@react-navigation/native';
 const NotificationItem = ({
   data,
   onPress,
+  disabled,
 }: {
   data: NotificationType;
   onPress: () => void;
+  disabled: boolean;
 }) => {
   const text2 = useThemeColor({}, 'text2');
   const textInfo = Colors.light.textInfo;
@@ -54,15 +56,16 @@ const NotificationItem = ({
   //     : 'NotificationDetail';
 
   return (
-    <TouchableOpacity style={{flexDirection: 'row'}} onPress={onPress}>
+    <TouchableOpacity
+      style={{flexDirection: 'row'}}
+      onPress={onPress}
+      disabled={disabled}>
       <View style={[styles.iconWrapper, {backgroundColor}]}>
         <Icon color={iconColor} />
       </View>
       <View style={{flex: 1, marginLeft: 16}}>
         <Text style={styles.title}>{data.title}</Text>
-        <Text style={[styles.message, {color: text2}]} numberOfLines={1}>
-          {data.description}
-        </Text>
+        <Text style={[styles.message, {color: text2}]}>{data.description}</Text>
       </View>
     </TouchableOpacity>
   );

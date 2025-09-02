@@ -17,6 +17,7 @@ import NotificationItem from '../components/NotificationItem';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {replace} from '../services/navigation';
 
 const NotificationHistory = () => {
   const {
@@ -111,16 +112,38 @@ const NotificationHistory = () => {
             }}>
             <NotificationItem
               data={item}
+              disabled={item?.data?.key === 'Home'}
               onPress={() => {
-                navigation.navigate('NotificationDetail', {
-                  title: item.title,
-                  description: item.description,
-                  ...(item.data?.key === 'BusinessDetail'
-                    ? {slug: item.data.value}
-                    : item.data?.key === 'WaitingPayment'
-                    ? {paymentCode: item.data.value}
-                    : {}),
-                });
+                const data = item.data;
+                if (data) {
+                  if (data.key === 'Transaction') {
+                    navigation.navigate('MainTab', {
+                      screen: 'Transaction',
+                      params: {
+                        screen: 'TransactionScreen',
+                        params: {paymentCode: data.value || ''},
+                      },
+                    });
+                  } else if (data.key === 'PaymentSuccess') {
+                    navigation.navigate('MainTab', {
+                      screen: 'Transaction',
+                      params: {
+                        screen: 'TransactionScreen',
+                        params: {paymentCode: data.value || ''},
+                      },
+                    });
+                  } else if (data.key === 'PortfolioDetail') {
+                    navigation.navigate('Portfolio', {
+                      screen: 'PortfolioDetail',
+                      params: {slug: data.value || '', openDisclosure: true},
+                    });
+                  } else if (data.key === 'BusinessDiscussion') {
+                    navigation.navigate('Order', {
+                      screen: 'BusinessDetail',
+                      params: {slug: data.value || '', openDiscussion: true},
+                    });
+                  }
+                }
               }}
             />
           </View>

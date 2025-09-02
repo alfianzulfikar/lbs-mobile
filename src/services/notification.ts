@@ -102,7 +102,7 @@ export const useNotification = () => {
             params: {slug: data.value, openDisclosure: true},
           },
         });
-      } else if (data.key === 'NotificationDetail') {
+      } else if (data.key === 'BusinessDiscussion') {
         replace({
           screen: 'Order',
           params: {

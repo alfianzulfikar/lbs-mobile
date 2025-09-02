@@ -1,4 +1,10 @@
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Text from '../components/Text';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -34,16 +40,14 @@ const Prospectus = ({route}: Props) => {
   const [categoryOption, setCategoryOption] = useState<InputDropdownOption[]>(
     [],
   );
-  const [businessHightlightInfoState, setBusinessHighlightInfoState] = useState(
-    {
-      kode: '',
-      target: 0,
-      totalLembar: 0,
-      hargaPerLembar: 0,
-      minimalInvestasi: 0,
-      periode: '',
-    },
-  );
+  const [businessHighlightInfoState, setBusinessHighlightInfoState] = useState({
+    kode: '',
+    target: 0,
+    totalLembar: 0,
+    hargaPerLembar: 0,
+    minimalInvestasi: 0,
+    periode: '',
+  });
   const [shareOfferingInfo, setShareOfferingInfo] = useState({
     terjual: 0,
     persenTerjual: 0,
@@ -53,30 +57,31 @@ const Prospectus = ({route}: Props) => {
     lembarTersisa: 0,
   });
   const [mapSource, setMapSource] = useState('');
+  const [addSection, setAddSection] = useState('');
 
   const businessHightlightInfo = [
-    {field: `Kode ${tipeBisnis}`, value: businessHightlightInfoState.kode},
+    {field: `Kode ${tipeBisnis}`, value: businessHighlightInfoState.kode},
     {
       field: 'Target Dana yang Dibutuhkan',
-      value: `Rp${numberFormat(Number(businessHightlightInfoState.target))}`,
+      value: `Rp${numberFormat(Number(businessHighlightInfoState.target))}`,
     },
     {
       field: `Total Lembar  ${tipeBisnis}`,
-      value: `${numberFormat(businessHightlightInfoState.totalLembar)} Lembar`,
+      value: `${numberFormat(businessHighlightInfoState.totalLembar)} Lembar`,
     },
     {
       field: `Harga Per Lembar  ${tipeBisnis}`,
       value: `Rp${numberFormat(
-        Number(businessHightlightInfoState.hargaPerLembar),
+        Number(businessHighlightInfoState.hargaPerLembar),
       )}`,
     },
     {
       field: 'Minimal Investasi',
-      value: `Rp${numberFormat(businessHightlightInfoState.minimalInvestasi)}`,
+      value: `Rp${numberFormat(businessHighlightInfoState.minimalInvestasi)}`,
     },
     {
       field: 'Periode Pembagian Imbal Hasil',
-      value: businessHightlightInfoState.periode,
+      value: businessHighlightInfoState.periode,
     },
   ];
 
@@ -91,6 +96,102 @@ const Prospectus = ({route}: Props) => {
       item => String(item.bisnis_side_menu.id) === value,
     );
     setHtmlBody(currentContent?.name?.deskripsi || '');
+    if (value === '1') {
+      setAddSection(`
+      <div style="margin-top: 16px">
+        <div class="business-highlight-item">
+          <p class="business-highlight-label">Kode ${tipeBisnis}</p>
+          <p class="business-highlight-value">${
+            businessHighlightInfoState.kode
+          }</p>
+        </div>
+        <div class="business-highlight-item">
+          <p class="business-highlight-label">Target Dana yang Dibutuhkan</p>
+          <p class="business-highlight-value">Rp${numberFormat(
+            Number(businessHighlightInfoState.target),
+          )}</p>
+        </div>
+        <div class="business-highlight-item">
+          <p class="business-highlight-label">Total Lembar ${tipeBisnis}</p>
+          <p class="business-highlight-value">${numberFormat(
+            businessHighlightInfoState.totalLembar,
+          )} Lembar</p>
+        </div>
+        <div class="business-highlight-item">
+          <p class="business-highlight-label">Harga Per Lembar ${tipeBisnis}</p>
+          <p class="business-highlight-value">${numberFormat(
+            Number(businessHighlightInfoState.hargaPerLembar),
+          )} Lembar</p>
+        </div>
+        <div class="business-highlight-item">
+          <p class="business-highlight-label">Minimal Investasi</p>
+          <p class="business-highlight-value">Rp${numberFormat(
+            businessHighlightInfoState.minimalInvestasi,
+          )}</p>
+        </div>
+        <div class="business-highlight-item">
+          <p class="business-highlight-label">Periode Pembagian Imbal Hasil</p>
+          <p class="business-highlight-value">${
+            businessHighlightInfoState.periode
+          }</p>
+        </div>
+      </div>
+        `);
+    } else if (value === '2') {
+      setAddSection(`
+      <table class="offering-table" style="width: 400px">
+        <thead>
+          <tr class="offering-tr">
+            <th class="offering-td">
+            </th>
+            <th class="offering-td">
+              Tersisa
+            </th>
+            <th class="offering-td">
+              Terjual
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="offering-tr">
+            <td class="offering-td">Pers.</td>
+            <td class="offering-td">${
+              shareOfferingInfo.persenTersisa < 1
+                ? shareOfferingInfo.persenTersisa.toFixed(2)
+                : Math.floor(shareOfferingInfo.persenTersisa)
+            }%</td>
+            <td class="offering-td">${
+              shareOfferingInfo.persenTerjual < 1
+                ? shareOfferingInfo.persenTerjual.toFixed(2)
+                : Math.floor(shareOfferingInfo.persenTerjual)
+            }%</td>
+          </tr>
+          <tr class="offering-tr">
+            <td class="offering-td">Jumlah</td>
+            <td class="offering-td">Rp${numberFormat(
+              shareOfferingInfo.tersisa,
+            )}</td>
+            <td class="offering-td">Rp${numberFormat(
+              shareOfferingInfo.terjual,
+            )}</td>
+          </tr>
+          <tr class="offering-tr">
+            <td class="offering-td">Lembar</td>
+            <td class="offering-td">${numberFormat(
+              shareOfferingInfo.lembarTersisa,
+            )}</td>
+            <td class="offering-td">${numberFormat(
+              shareOfferingInfo.lembarTerjual,
+            )}</td>
+          </tr>
+        </tbody>
+      </table>
+        `);
+    } else if (value === '5') {
+      setAddSection(currentContent?.name?.textarea || '');
+    } else {
+      setAddSection('');
+    }
   };
 
   useEffect(() => {
@@ -150,6 +251,10 @@ const Prospectus = ({route}: Props) => {
     }
   }, []);
 
+  useEffect(() => {
+    handleFilter('1');
+  }, [businessHighlightInfoState]);
+
   return (
     <ScreenWrapper
       background
@@ -193,8 +298,205 @@ const Prospectus = ({route}: Props) => {
             activeColor={textColor}
           />
         </View>
-        <View style={{paddingHorizontal: 24, marginTop: 24}}>
-          <Html source={htmlBody} textAlign="left" />
+        <Gap height={16} />
+        <View
+          style={{
+            paddingHorizontal: Platform.OS === 'android' ? 0 : 24,
+            flex: 1,
+          }}>
+          <Html
+            source={htmlBody}
+            isWebView={Platform.OS === 'android'}
+            addSection={addSection}
+            textAlign="left"
+          />
+
+          {Platform.OS === 'ios' && (
+            <>
+              {category === '1' && (
+                <View style={{marginTop: 40}}>
+                  {businessHightlightInfo.map((item, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        marginBottom:
+                          index !== businessHightlightInfo.length - 1 ? 24 : 0,
+                      }}>
+                      <Text
+                        style={[
+                          styles.businessHighlightInfoField,
+                          {color: textColor2},
+                        ]}>
+                        {item.field}
+                      </Text>
+                      <Text style={styles.businessHighlightInfoValue}>
+                        {item.value}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {category === '2' && (
+                <View style={{borderWidth: 1, borderColor: textColor2}}>
+                  <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{
+                        width: 64,
+                        borderBottomWidth: 1,
+                        borderRightWidth: 1,
+                        borderColor: textColor2,
+                        paddingBottom: 4,
+                      }}></View>
+                    <View
+                      style={{
+                        flex: 1,
+                        borderBottomWidth: 1,
+                        borderColor: textColor2,
+                        paddingLeft: 4,
+                        paddingBottom: 4,
+                      }}>
+                      <Text
+                        style={[
+                          {
+                            color: textColor2,
+                            fontWeight: '600',
+                            textAlign: 'center',
+                          },
+                        ]}>
+                        Tersisa
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        borderBottomWidth: 1,
+                        borderColor: textColor2,
+                        paddingLeft: 4,
+                        paddingBottom: 4,
+                      }}>
+                      <Text
+                        style={[
+                          {
+                            color: textColor2,
+                            fontWeight: '600',
+                            textAlign: 'center',
+                          },
+                        ]}>
+                        Terjual
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{
+                        width: 64,
+                        borderRightWidth: 1,
+                        borderColor: textColor2,
+                        paddingTop: 4,
+                        paddingLeft: 4,
+                      }}>
+                      <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                        Pers.
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, paddingLeft: 4, paddingTop: 4}}>
+                      <Text style={[{color: textColor2, textAlign: 'right'}]}>
+                        {shareOfferingInfo.persenTersisa < 1
+                          ? shareOfferingInfo.persenTersisa.toFixed(2)
+                          : Math.floor(shareOfferingInfo.persenTersisa)}
+                        %
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, paddingLeft: 4, paddingTop: 4}}>
+                      <Text style={[{color: textColor2, textAlign: 'right'}]}>
+                        {shareOfferingInfo.persenTerjual < 1
+                          ? shareOfferingInfo.persenTerjual.toFixed(2)
+                          : Math.floor(shareOfferingInfo.persenTerjual)}
+                        %
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{
+                        width: 64,
+                        borderRightWidth: 1,
+                        borderColor: textColor2,
+                        paddingLeft: 4,
+                      }}>
+                      <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                        Jumlah
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, paddingLeft: 4}}>
+                      <Text style={[{color: textColor2, textAlign: 'right'}]}>
+                        Rp{numberFormat(shareOfferingInfo.tersisa)}
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, paddingLeft: 4}}>
+                      <Text style={[{color: textColor2, textAlign: 'right'}]}>
+                        Rp{numberFormat(shareOfferingInfo.terjual)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{
+                        width: 64,
+                        borderRightWidth: 1,
+                        borderColor: textColor2,
+                        paddingLeft: 4,
+                        paddingBottom: 4,
+                      }}>
+                      <Text style={[{color: textColor2, fontWeight: '600'}]}>
+                        Lembar
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, paddingLeft: 4, paddingBottom: 4}}>
+                      <Text style={[{color: textColor2, textAlign: 'right'}]}>
+                        {numberFormat(shareOfferingInfo.lembarTersisa)}
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, paddingLeft: 4, paddingBottom: 4}}>
+                      <Text style={[{color: textColor2, textAlign: 'right'}]}>
+                        {numberFormat(shareOfferingInfo.lembarTerjual)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              {category === '5' && mapSource ? (
+                <WebView
+                  source={{
+                    html: `<iframe width="100%" height="100%" id="gmap_canvas" ${mapSource} frameborder="0" scrolling="yes" marginheight="0" marginwidth="0"></iframe>`,
+                  }}
+                  style={{height: 315, borderRadius: 20}}
+                />
+              ) : null}
+            </>
+          )}
+        </View>
+      </View>
+
+      {/* <View
+        style={[
+          styles.container,
+          {backgroundColor: RGBAColors(0.5)[colorScheme].background},
+        ]}>
+        <View>
+          <CategoryFilter
+            options={categoryOption}
+            value={String(category)}
+            setValue={value => {
+              setCategory(value);
+              handleFilter(value);
+            }}
+            activeColor={textColor}
+          />
+        </View>
+        <View style={{paddingHorizontal: 24, marginTop: 24, flex: 1}}>
 
           {category === '1' && (
             <View style={{marginTop: 40}}>
@@ -339,7 +641,7 @@ const Prospectus = ({route}: Props) => {
             />
           ) : null}
         </View>
-      </View>
+      </View> */}
     </ScreenWrapper>
   );
 };

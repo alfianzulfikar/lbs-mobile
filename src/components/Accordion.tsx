@@ -21,7 +21,6 @@ const AccordionItem = ({title, list}: BankMethodType) => {
         styles.itemContainer,
         {
           backgroundColor: RGBAColors(0.4)[colorScheme].background,
-          height: show ? 'auto' : 52,
           borderRadius: show ? 26 : 40,
         },
       ]}>
@@ -33,10 +32,14 @@ const AccordionItem = ({title, list}: BankMethodType) => {
           <Text style={styles.title}>{title}</Text>
           <ICCaretArrowDown color={iconColor} />
         </Pressable>
-        <View style={styles.listContainer}>
+        <View
+          style={[
+            styles.listContainer,
+            {height: show ? 'auto' : 0, paddingBottom: show ? 14 : 0},
+          ]}>
           {list.map((item, id) => (
             <View key={id} style={{flexDirection: 'row'}}>
-              <Text style={[styles.methodText, {color: textColor2, width: 20}]}>
+              <Text style={[styles.methodText, {color: textColor2, width: 24}]}>
                 {id + 1}.
               </Text>
               <Text style={[styles.methodText, {color: textColor2, flex: 1}]}>
@@ -79,7 +82,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   listContainer: {
-    paddingBottom: 14,
     paddingHorizontal: 18,
   },
   title: {

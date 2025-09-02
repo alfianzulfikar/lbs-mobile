@@ -35,18 +35,24 @@ import {useColorScheme} from '../hooks/useColorScheme';
 import LoadingModal from '../components/LoadingModal';
 import ICWarningRounded from '../components/icons/ICWarningRounded';
 import ICDoubleArrow from '../components/icons/ICDoubleArrow';
+import Button from '../components/Button';
+import {useStatistc} from '../api/statistic';
+import {useMarket} from '../api/market';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 type Props = {
   route: {
     params: {
       slug: string;
       openDisclosure?: boolean;
+      id: number;
     };
   };
 };
 
 const PortfolioDetail = ({route}: Props) => {
-  const {slug, openDisclosure} = route.params;
+  const {slug, openDisclosure, id} = route.params;
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColorSuccess = useThemeColor({}, 'textSuccess');
@@ -57,15 +63,32 @@ const PortfolioDetail = ({route}: Props) => {
   const lineColor = useThemeColor({}, 'line');
   const navigation = useNavigation();
   const {downloadFile} = useDownload();
+  const dispatch = useDispatch();
 
   const {portfolio, getPortfolio} = usePortfolio();
-  const {businessStatus, getBusinessStatus} = useBusiness();
+  const {
+    businessStatus,
+    getBusinessStatus,
+    getBusinessDetail,
+    business,
+  } = useBusiness();
   const {
     transactionDetail,
     getTransactionDetail,
     transactionDetailLoading,
     setTransactionDetail,
   } = useTransaction();
+  const {getStatistic, marketStatus} = useStatistc();
+  const {
+    overview,
+    getOverview,
+    getTransactionStatus,
+    askLoading,
+    bidLoading,
+    getStockList,
+    stockList,
+    stockListLoading,
+  } = useMarket();
 
   const [info, setInfo] = useState<{field: string; value: number | string}[]>(
     [],
@@ -75,22 +98,15 @@ const PortfolioDetail = ({route}: Props) => {
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
-  // const [transactionDetail2, setTransactionDetail2] = useState({
-  //     kodeEfek: '',
-  //     kodePembayaran: '',
-  //     merkDagang: '',
-  //     totalTransaksi: 0,
-  //     jenisBisnis: '',
-  //     hargaPerLembar: 0,
-  //     jumlahLembar: 0,
-  //     nominal: 0,
-  //     biayaAdminBank: 0,
-  //     biayaPlatform: 0,
-  //     jenisTransaksi: '',
-  //     statusTransaksi: '',
-  //     periodePembayaran: '',
-  //     tanggalPembayaran: '',
-  //   });
+  const [transactionType, setTransactionType] = useState<'ask' | 'bid'>('bid');
+  const [showAttention, setShowAttention] = useState(false);
+  const [marketInfo, setMarketInfo] = useState<{
+    id: number | null;
+    available: boolean;
+  }>({
+    id: null,
+    available: false,
+  });
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -117,9 +133,45 @@ const PortfolioDetail = ({route}: Props) => {
     },
   ];
 
+  const checkOrder = async (type: 'ask' | 'bid') => {
+    setTransactionType(type);
+    if (!marketStatus?.isOpen) {
+      dispatch(
+        setAlert({
+          title: marketStatus?.message,
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
+    } else {
+      const hasTransaction = await getTransactionStatus(type, id);
+      if (hasTransaction) {
+        setShowAttention(true);
+      } else {
+        if (business.id) {
+          navigation.navigate('Market', {
+            screen: 'MarketOrder',
+            params: {
+              merkDagang: business.merkDagang,
+              id: business.id,
+              code: business.kode,
+              type,
+              feeBuy: overview.feeBuy || 0,
+              feeSell: overview.feeSell || 0,
+              defaultPrice: overview.closePrice || overview.fairValue || 0,
+            },
+          });
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     const asyncFunc = async () => {
       setPageLoading(true);
+      getBusinessDetail(slug);
+      await getStatistic();
       getBusinessStatus();
       await getPortfolio({slug});
       setPageLoading(false);
@@ -133,11 +185,14 @@ const PortfolioDetail = ({route}: Props) => {
         ? [
             {
               field: 'Harga Pasar',
-              value: 'Rp' + numberFormat(portfolio.hargaPasar),
+              value:
+                'Rp' +
+                numberFormat(parseFloat(portfolio.hargaPasar.toFixed(2))),
             },
             {
               field: 'Harga Perolehan',
-              value: 'Rp' + numberFormat(portfolio.average),
+              value:
+                'Rp' + numberFormat(parseFloat(portfolio.average.toFixed(2))),
             },
           ]
         : []),
@@ -150,12 +205,17 @@ const PortfolioDetail = ({route}: Props) => {
         ? [
             {
               field: 'Return',
-              value: 'Rp' + numberFormat(Math.abs(portfolio.return || 0)),
+              value:
+                'Rp' +
+                numberFormat(
+                  parseFloat(Math.abs(portfolio.return || 0).toFixed(2)),
+                ),
             },
           ]
         : []),
     ]);
     if (openDisclosure) setShowDisclosure(true);
+    if (portfolio.type === 'SAHAM') getStockList();
   }, [portfolio]);
 
   useEffect(() => {
@@ -163,6 +223,20 @@ const PortfolioDetail = ({route}: Props) => {
       setShowTransactionDetail(false);
     }
   }, [transactionDetailLoading]);
+
+  useEffect(() => {
+    if (stockList.length > 0) {
+      for (const item of stockList) {
+        if (item.businessId === business.id) {
+          setMarketInfo({
+            id: item.id,
+            available: true,
+          });
+          getOverview(item.id);
+        }
+      }
+    }
+  }, [stockList]);
 
   return (
     <ScreenWrapper
@@ -331,6 +405,34 @@ const PortfolioDetail = ({route}: Props) => {
                       </View>
                     ))}
                   </View>
+                  {stockListLoading ? (
+                    <>
+                      <Gap height={24} />
+                      <ActivityIndicator color={tint} />
+                    </>
+                  ) : marketInfo.available ? (
+                    <View style={{marginTop: 24, flexDirection: 'row'}}>
+                      <View style={{flex: 1}}>
+                        <Button
+                          title="Beli Saham"
+                          paddingVertical={10}
+                          onPress={() => checkOrder('bid')}
+                          loading={bidLoading}
+                        />
+                      </View>
+                      <Gap width={16} />
+                      <View style={{flex: 1}}>
+                        <Button
+                          title="Jual Saham"
+                          paddingVertical={10}
+                          type="secondary"
+                          onPress={() => checkOrder('ask')}
+                          loading={askLoading}
+                        />
+                      </View>
+                    </View>
+                  ) : null}
+                  <Gap height={8} />
                 </View>
               </>
             )}
@@ -533,6 +635,51 @@ const PortfolioDetail = ({route}: Props) => {
               </Text>
             </View>
           ))}
+        </BottomSheet>
+      )}
+
+      {showAttention && (
+        <BottomSheet setShow={setShowAttention} snapPoints={['75%']}>
+          <Text style={{color: textColor2, fontSize: 16, lineHeight: 24}}>
+            Anda memiliki transaksi yang sedang aktif di bisnis ini.
+          </Text>
+          <Gap height={16} />
+          <Button
+            title="Lanjutkan"
+            onPress={() => {
+              setShowAttention(false);
+              navigation.navigate('Market', {
+                screen: 'MarketOrder',
+                params: {
+                  merkDagang: business.merkDagang,
+                  id,
+                  code: business.kode,
+                  type: transactionType,
+                  feeBuy: overview.feeBuy || 0,
+                  feeSell: overview.feeSell || 0,
+                  defaultPrice: overview.closePrice || overview.fairValue || 0,
+                },
+              });
+            }}
+            paddingVertical={12}
+          />
+          <Gap height={12} />
+          <Button
+            title="Periksa Transaksi"
+            type="secondary"
+            paddingVertical={12}
+            onPress={() => {
+              setShowAttention(false);
+              navigation.navigate('MainTab', {
+                screen: 'Transaction',
+                params: {
+                  screen: 'TransactionScreen',
+                  params: {paymentCode: ''},
+                },
+              });
+            }}
+          />
+          <Gap height={12} />
         </BottomSheet>
       )}
 
