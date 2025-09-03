@@ -162,6 +162,22 @@ export const useNotificationAPI = () => {
     }
   };
 
+  const setContactAndPromotionAgreement = async (value: boolean) => {
+    try {
+      const res = await apiRequest({
+        method: 'put',
+        endpoint: '/user/can-call/update',
+        authorization: true,
+        body: {
+          can_call: value,
+        },
+      });
+      return res;
+    } catch (error) {
+      console.log('set contact & promotion agreement error', error);
+    }
+  };
+
   return {
     registerFCMToken,
     topics,
@@ -177,5 +193,6 @@ export const useNotificationAPI = () => {
     setPage,
     moreNotificationsLoading,
     isFetching,
+    setContactAndPromotionAgreement,
   };
 };

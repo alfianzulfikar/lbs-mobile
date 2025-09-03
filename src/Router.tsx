@@ -114,6 +114,11 @@ function Auth() {
         name="AccountVerificationExpired"
         component={AccountVerificationExpired}
       />
+      <AuthStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <AuthStack.Screen
+        name="TermsAndConditions"
+        component={TermsAndConditions}
+      />
     </AuthStack.Navigator>
   );
 }

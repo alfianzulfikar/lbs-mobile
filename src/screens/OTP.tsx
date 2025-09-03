@@ -33,6 +33,7 @@ type Props = {
           password: string;
           confirmPassword: string;
           otp_methods: string;
+          can_call: boolean;
         };
         // request_id: string;
         token: string;

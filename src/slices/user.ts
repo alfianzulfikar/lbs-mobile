@@ -8,6 +8,7 @@ export interface UserType {
   phone: string;
   kycStatus: boolean | null;
   image: string;
+  canBeCalled: boolean;
 }
 
 const initialState: UserType = {
@@ -17,6 +18,7 @@ const initialState: UserType = {
   phone: '',
   kycStatus: false,
   image: '',
+  canBeCalled: false,
 };
 
 export const userSlice = createSlice({
@@ -30,11 +32,15 @@ export const userSlice = createSlice({
       state.phone = action.payload.phone;
       state.image = action.payload.image;
       state.kycStatus = action.payload.kycStatus;
+      state.canBeCalled = action.payload.canBeCalled;
+    },
+    setCanBeCall: (state, action: PayloadAction<true | false>) => {
+      state.canBeCalled = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {setUser} = userSlice.actions;
+export const {setUser, setCanBeCall} = userSlice.actions;
 
 export default userSlice.reducer;

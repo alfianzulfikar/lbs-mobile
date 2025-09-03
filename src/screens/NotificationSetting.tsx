@@ -10,6 +10,9 @@ import {useNotificationAPI} from '../api/notification';
 import {TopicType} from '../constants/Types';
 import CustomBottomSheet from '../components/BottomSheet';
 import ContactAndPromotionExplanation from '../components/ContactAndPromotionExplanation';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../store';
+import {setCanBeCall} from '../slices/user';
 
 const TopicItem = ({
   index,
@@ -22,13 +25,15 @@ const TopicItem = ({
 }: {
   index?: number;
   topicsLength?: number;
-  updateSettings: () => void;
+  updateSettings: () => Promise<void>;
   label: string;
   descriptionText?: string;
   descriptionComponent?: React.JSX.Element;
   isSubscribed: boolean;
 }) => {
   const textColor2 = useThemeColor({}, 'text2');
+
+  const [toggleLoading, setToggleLoading] = useState(false);
 
   return (
     <View
@@ -53,7 +58,15 @@ const TopicItem = ({
       </View>
       <Gap width={32} />
       <View style={{transform: [{translateY: 6}]}}>
-        <Toggle toggleState={isSubscribed} onPress={updateSettings} />
+        <Toggle
+          toggleState={isSubscribed}
+          onPress={async () => {
+            setToggleLoading(true);
+            await updateSettings();
+            setToggleLoading(false);
+          }}
+          disabled={toggleLoading}
+        />
       </View>
     </View>
   );
@@ -63,6 +76,7 @@ const NotificationSetting = () => {
   const tint = useThemeColor({}, 'tint');
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
+  const dispatch = useDispatch();
 
   const {
     getTopics,
@@ -71,7 +85,9 @@ const NotificationSetting = () => {
     topicsLoading,
     subscribeTopic,
     unsubscribeTopic,
+    setContactAndPromotionAgreement,
   } = useNotificationAPI();
+  const {canBeCalled} = useSelector((item: RootState) => item.user);
 
   const [showContactAndPromotion, setShowContactAndPromotion] = useState(false);
 
@@ -101,6 +117,13 @@ const NotificationSetting = () => {
     }
   };
 
+  const updateContacAndPromotionAgreement = async () => {
+    const status = await setContactAndPromotionAgreement(!canBeCalled);
+    if (status && status?.msg === 'Success') {
+      dispatch(setCanBeCall(!canBeCalled));
+    }
+  };
+
   useEffect(() => {
     getTopics();
   }, []);
@@ -126,18 +149,18 @@ const NotificationSetting = () => {
                   label={item.label || ''}
                   descriptionText={item.description || ''}
                   isSubscribed={item.isSubscribed}
-                  updateSettings={() =>
-                    updateSettings(
+                  updateSettings={async () => {
+                    await updateSettings(
                       item.id,
                       item.isSubscribed ? 'unsubscribe' : 'subscribe',
-                    )
-                  }
+                    );
+                  }}
                 />
               ))}
             </View>
 
             {/* Setting WhatsApp, Email dan Telepon */}
-            <View style={{display: 'none'}}>
+            <View>
               <Gap height={40} />
               <Text style={[styles.category, {color: tint}]}>
                 WhatsApp, Email dan Telepon
@@ -161,8 +184,10 @@ const NotificationSetting = () => {
                       yang berlaku melalui WhatsApp, email, atau telepon.
                     </Text>
                   }
-                  isSubscribed={true}
-                  updateSettings={() => {}}
+                  isSubscribed={canBeCalled}
+                  updateSettings={async () => {
+                    await updateContacAndPromotionAgreement();
+                  }}
                 />
               </View>
             </View>

@@ -16,6 +16,7 @@ export const useUser = () => {
     phone: string;
     kycStatus: boolean | null;
     image: string;
+    canBeCalled: boolean;
   }>({
     firstname: '',
     lastname: '',
@@ -23,6 +24,7 @@ export const useUser = () => {
     phone: '',
     kycStatus: false,
     image: '',
+    canBeCalled: false,
   });
   const [profile2, setProfile2] = useState({
     bankName: '',
@@ -54,6 +56,7 @@ export const useUser = () => {
         phone: res.user.phone,
         kycStatus: res.user.is_kyc,
         image: res.user.image_file,
+        canBeCalled: res.user.can_call,
       };
       setProfile1(newProfile1);
       dispatch(setUser(newProfile1));

@@ -36,6 +36,7 @@ export const useRegister = () => {
       password: string;
       confirmPassword: string;
       otp_methods: string;
+      can_call: boolean;
     },
   ) => {
     setVerificationLoading(true);
@@ -147,6 +148,7 @@ export const useRegister = () => {
       password: string;
       confirmPassword: string;
       otp_methods: string;
+      can_call: boolean;
     },
   ) => {
     setOtpLoading(true);

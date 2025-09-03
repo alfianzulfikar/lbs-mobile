@@ -36,7 +36,7 @@ const Splash = () => {
           let updateOptions: StartUpdateOptions = {};
           if (Platform.OS === 'android') {
             updateOptions = {
-              updateType: IAUUpdateKind.IMMEDIATE,
+              updateType: IAUUpdateKind.FLEXIBLE,
             };
           }
           inAppUpdates.startUpdate(updateOptions);

@@ -54,6 +54,8 @@ export type AuthStackParamList = {
   ForgotPassword: undefined;
   ResetPassword: {token: string};
   AccountVerificationExpired: undefined;
+  PrivacyPolicy: undefined;
+  TermsAndConditions: undefined;
 };
 
 export type AccountStackParamList = {
@@ -93,6 +95,7 @@ export type PortfolioStackParamList = {
   PortfolioDetail: {
     slug: string;
     openDisclosure?: boolean;
+    id: number;
   };
 };
 
@@ -151,6 +154,7 @@ export type RootStackParamList = {
         password: string;
         confirmPassword: string;
         otp_methods: string;
+        can_call: boolean;
       };
       // request_id: string;
       token: string;

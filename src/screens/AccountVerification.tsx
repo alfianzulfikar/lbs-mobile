@@ -12,6 +12,8 @@ import {jwtDecode} from 'jwt-decode';
 import {useCallingCode} from '../api/callingCode';
 import {useRegister} from '../api/register';
 import ErrorText from '../components/ErrorText';
+import CheckBox from '../components/CheckBox';
+import ContactAndPromotionExplanation from '../components/ContactAndPromotionExplanation';
 
 type Props = {
   route: {
@@ -46,6 +48,9 @@ const AccountVerification = ({route}: Props) => {
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [method, setMethod] = useState('whatsapp');
+  const [termsAgreement, setTermsAgreement] = useState(false);
+  const [canBeContactedAgreement, setCanBeContactedAgreement] = useState(false);
+  const [showContactAndPromotion, setShowContactAndPromotion] = useState(false);
 
   const radioOption = [
     {name: 'WhatsApp', value: 'whatsapp'},
@@ -68,6 +73,7 @@ const AccountVerification = ({route}: Props) => {
       password,
       confirmPassword: cpassword,
       otp_methods: method,
+      can_call: canBeContactedAgreement,
     };
     submitVerification(token, body);
   };
@@ -159,14 +165,88 @@ const AccountVerification = ({route}: Props) => {
         ))}
         <Gap height={4} />
         <ErrorText error={verificationError.otp_methods} />
+        <Gap height={16} />
+        <CheckBox
+          customLabel={
+            <Text style={{fontSize: 16, color: textColor2, marginLeft: 8}}>
+              Dengan mendaftar anda telah menyetujui{' '}
+              <Text
+                style={{
+                  color: tint,
+                  textDecorationLine: 'underline',
+                  fontWeight: '700',
+                  lineHeight: 24,
+                }}
+                onPress={() =>
+                  navigation.navigate('Auth', {screen: 'TermsAndConditions'})
+                }>
+                Syarat & Ketentuan
+              </Text>{' '}
+              serta{' '}
+              <Text
+                style={{
+                  color: tint,
+                  textDecorationLine: 'underline',
+                  fontWeight: '700',
+                }}
+                onPress={() =>
+                  navigation.navigate('Auth', {screen: 'PrivacyPolicy'})
+                }>
+                Kebijakan Privasi
+              </Text>{' '}
+              LBS Urun Dana.
+            </Text>
+          }
+          value={termsAgreement}
+          onChange={() => setTermsAgreement(prev => !prev)}
+          color={textColor}
+          onlyPressOnBox
+        />
+        <Gap height={16} />
+        <CheckBox
+          customLabel={
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor2,
+                marginLeft: 8,
+                lineHeight: 24,
+              }}>
+              Saya telah membaca dan menyetujui bahwa PT LBS Urun Dana dapat
+              menghubungi saya melalui WhatsApp, email, atau telepon untuk
+              memberikan informasi, promosi, dan peluang investasi sesuai dengan{' '}
+              <Text
+                style={{
+                  color: tint,
+                  textDecorationLine: 'underline',
+                  fontWeight: '700',
+                }}
+                onPress={() => setShowContactAndPromotion(true)}>
+                Kebijakan Kontak & Promosi
+              </Text>{' '}
+              yang berlaku.
+            </Text>
+          }
+          value={canBeContactedAgreement}
+          onChange={() => setCanBeContactedAgreement(prev => !prev)}
+          color={textColor}
+          onlyPressOnBox
+        />
         <Gap flex={1} minHeight={40} />
         <Button
           title="Selanjutnya"
           onPress={handleSubmit}
           loading={verificationLoading}
+          disabled={!termsAgreement}
         />
         <Gap height={64} />
       </View>
+
+      {showContactAndPromotion && (
+        <ContactAndPromotionExplanation
+          onDismiss={() => setShowContactAndPromotion(false)}
+        />
+      )}
     </ScreenWrapper>
   );
 };
