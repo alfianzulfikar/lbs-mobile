@@ -30,8 +30,7 @@ export const useFAQ = () => {
         });
         setFAQList(newArray);
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
     } finally {
       setFAQLoading(false);
     }

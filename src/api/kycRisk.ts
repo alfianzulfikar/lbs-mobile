@@ -92,7 +92,6 @@ export const useKYCRisk = () => {
           status: number;
           data?: any;
         };
-        console.log('risk error', error);
         if (error?.status === 422) {
           setIdError(
             error?.data?.errors?.id ? ['Harap isi minimal 1 pertanyaan'] : [],

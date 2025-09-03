@@ -84,7 +84,6 @@ export const useKYCOccupation = () => {
       });
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCTax'}));
     } catch (error: any) {
-      console.log('occupation error', error);
       if (error?.status === 422) {
         setOccupationError({
           titlePekerjaan: error?.data?.errors?.title_pekerjaan || null,

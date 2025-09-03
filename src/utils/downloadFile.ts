@@ -28,7 +28,6 @@ export const useDownload = () => {
       });
       return res;
     } catch (error) {
-      console.log('getBlobData', error);
       return null;
     }
   }

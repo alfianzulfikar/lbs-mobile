@@ -72,8 +72,7 @@ export const useKYCAddress = () => {
         alamat: res?.sekarang?.alamat_sekarang,
         kodePos: res?.sekarang?.kodepos,
       });
-    } catch (error) {
-      console.log('getAddress error', error);
+    } catch {
     } finally {
       setAddressLoading(false);
     }
@@ -122,7 +121,6 @@ export const useKYCAddress = () => {
         };
 
         if (error.status === 422) {
-          console.log(error);
           if (error?.status === 422) {
             setAddressKTPError(prev => ({
               ...prev,

@@ -66,22 +66,6 @@ const CustomAlert = ({onClose}: {onClose: () => void}) => {
 
   const picture = usePicture();
 
-  // const unsubscribeTimeout = useRef(
-  //   setTimeout(() => {
-  //     if (onClose) {
-  //       onClose();
-  //     }
-  //   }, 5000),
-  // );
-
-  // useEffect(() => {
-  //   console.log('mount', unsubscribeTimeout.current);
-  //   return () => {
-  //     console.log('unmount', unsubscribeTimeout.current);
-  //     clearTimeout(unsubscribeTimeout.current);
-  //   };
-  // }, []);
-
   return (
     <View
       style={{

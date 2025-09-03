@@ -50,7 +50,6 @@ const Register = () => {
           email: error?.data?.errors?.email || [],
         });
       }
-      console.log('submit error', error);
     } finally {
       setLoading(false);
     }

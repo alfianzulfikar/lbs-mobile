@@ -27,7 +27,6 @@ export const useKYCTerms = () => {
           status: number;
           data?: any;
         };
-        console.log('submitTerms error', error);
         if (error.status === 422) {
           setCheckError(error?.data?.errors?.check || []);
         }

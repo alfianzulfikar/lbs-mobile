@@ -39,7 +39,6 @@ const App = () => {
 
     const unsubscribeOnMessage = messaging().onMessage(async message => {
       try {
-        console.log('FOREGROUND', message);
         handleForgroundNotification(message);
       } catch (error) {
         console.error('Error displaying notification:', error);
@@ -48,10 +47,6 @@ const App = () => {
 
     const unsubscribeNotificationOpened = messaging().onNotificationOpenedApp(
       remoteMessage => {
-        console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage,
-        );
         if (remoteMessage) {
           handleBackgroundNotification(remoteMessage);
         }

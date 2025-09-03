@@ -66,12 +66,8 @@ const PortfolioDetail = ({route}: Props) => {
   const dispatch = useDispatch();
 
   const {portfolio, getPortfolio} = usePortfolio();
-  const {
-    businessStatus,
-    getBusinessStatus,
-    getBusinessDetail,
-    business,
-  } = useBusiness();
+  const {businessStatus, getBusinessStatus, getBusinessDetail, business} =
+    useBusiness();
   const {
     transactionDetail,
     getTransactionDetail,
@@ -577,8 +573,7 @@ const PortfolioDetail = ({route}: Props) => {
                           type: 'write-file',
                           fileUrl: item.file,
                         });
-                      } catch (error) {
-                        console.log(error);
+                      } catch {
                       } finally {
                         setDownloadLoading(false);
                       }

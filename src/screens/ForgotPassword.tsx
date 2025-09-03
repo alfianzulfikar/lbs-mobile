@@ -42,7 +42,6 @@ const ForgotPassword = () => {
       if (error?.status === 422) {
         setError(error?.data?.errors?.email || []);
       }
-      console.log(error);
     } finally {
       setLoading(false);
     }

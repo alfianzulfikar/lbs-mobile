@@ -44,7 +44,6 @@ const Splash = () => {
       });
     } catch (error) {
       Sentry.captureException(error);
-      console.log('check update error', error);
     }
   };
 

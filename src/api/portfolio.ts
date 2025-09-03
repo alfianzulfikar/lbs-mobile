@@ -118,7 +118,6 @@ export const usePortfolio = () => {
       if (error?.status === 404) {
         isLastPage.current = true;
       }
-      console.log('getPortfolioList error', error);
     } finally {
       isFetchingPortfolio.current = false;
       if (page && page > 1) {

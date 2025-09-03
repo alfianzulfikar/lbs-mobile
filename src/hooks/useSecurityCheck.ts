@@ -8,11 +8,7 @@ import {setShowRootError} from '../slices/globalError';
 const useSecurityCheck = () => {
   const dispatch = useDispatch();
 
-  const {
-    JailbreakDetector,
-    RootCheckModule,
-    FileCheckModule,
-  } = NativeModules;
+  const {JailbreakDetector, RootCheckModule, FileCheckModule} = NativeModules;
 
   const ROOT_DETECTION_PATH = [
     // Magisk and Zygisk-related paths
@@ -124,7 +120,6 @@ const useSecurityCheck = () => {
       const deviceCompromised = isJailBroken || zygiskDetected || emulatorCheck;
       const message = `Device Compromised: ${deviceCompromised}\nIs JailBroken: ${isJailBroken}\nZygisk Detected: ${zygiskDetected}\nIs Debugged Mode: ${isDebuggedMode}\nCan Mock Location: ${JailMonkey.canMockLocation()}\nTrust Fall: ${JailMonkey.trustFall()}\nIs JailBroken (JailMonkey): ${JailMonkey.isJailBroken()}\nIs On External Storage: ${JailMonkey.isOnExternalStorage()}\nNative Module Jailbreak: ${isCustomJailBroken}\nIs Emulator: ${emulatorCheck}`;
       // alert(message);
-      // console.log(message, __DEV__)
 
       if (!__DEV__ && deviceCompromised) {
         dispatch(setShowRootError({showRootError: true}));

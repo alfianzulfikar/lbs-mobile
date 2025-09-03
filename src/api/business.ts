@@ -151,7 +151,6 @@ export const useBusiness = () => {
       } else {
         setError(e);
       }
-      console.log(e);
     } finally {
       if (page && page > 1) {
         setBusinessesMoreLoading(false);
@@ -275,8 +274,7 @@ export const useBusiness = () => {
         body: {},
       });
       setIsLiked(type === 'delete' ? false : true);
-    } catch (error) {
-      console.log('like business error', error);
+    } catch {
     } finally {
       setLikeLoading(false);
     }

@@ -181,8 +181,7 @@ const Account = () => {
           handleImageRes(image);
         });
       }
-    } catch (error) {
-      console.log('take picture error', error);
+    } catch {
     } finally {
       setShowChangePhoto(false);
     }

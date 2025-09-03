@@ -61,8 +61,7 @@ export const useUser = () => {
       setProfile1(newProfile1);
       dispatch(setUser(newProfile1));
       return res;
-    } catch (error) {
-      console.log('getUser error', error);
+    } catch {
     } finally {
       setUserLoading(false);
     }

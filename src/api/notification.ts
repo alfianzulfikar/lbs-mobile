@@ -32,7 +32,6 @@ export const useNotificationAPI = () => {
     fcmToken: string;
     platform: string;
   }) => {
-    console.log('registerFCMToken', name);
     try {
       const res = await apiRequest({
         method: 'post',
@@ -45,11 +44,8 @@ export const useNotificationAPI = () => {
           platform: platform,
         },
       });
-      console.log('registerFCMToken success', res);
       await createChannel();
-    } catch {
-      console.log('registerFCMToken error');
-    }
+    } catch {}
   };
 
   const getTopics = async () => {
@@ -60,7 +56,6 @@ export const useNotificationAPI = () => {
         endpoint: '/notification/topics',
         authorization: true,
       });
-      console.log('get Topics', res);
       const newArray: TopicType[] = [];
       if (res.status) {
         res.data.map((item: any) => {
@@ -74,8 +69,7 @@ export const useNotificationAPI = () => {
         });
       }
       setTopics(newArray);
-    } catch (error) {
-      console.log('get topics error', error);
+    } catch {
     } finally {
       setTopicsLoading(false);
       isFetching.current = false;
@@ -92,11 +86,8 @@ export const useNotificationAPI = () => {
           topic_id: topicId,
         },
       });
-      console.log('subscribe topic', res);
       return res.status;
-    } catch (error) {
-      console.log('subscribe topic error', error);
-    }
+    } catch {}
   };
 
   const unsubscribeTopic = async (topicId: string | number) => {
@@ -109,11 +100,8 @@ export const useNotificationAPI = () => {
           topic_id: topicId,
         },
       });
-      console.log('unsubscribe topic', res);
       return res.status;
-    } catch (error) {
-      console.log('unsubscribe topic error', error);
-    }
+    } catch {}
   };
 
   const getNotifications = async (nextPage?: number) => {
@@ -128,7 +116,6 @@ export const useNotificationAPI = () => {
           endpoint: `/notification/${nextPage ? '?page=' + nextPage : ''}`,
           authorization: true,
         });
-        console.log('getNotifications', res);
         let newArray: NotificationType[] = [];
         if (nextPage) {
           newArray = [...notifications];
@@ -173,9 +160,7 @@ export const useNotificationAPI = () => {
         },
       });
       return res;
-    } catch (error) {
-      console.log('set contact & promotion agreement error', error);
-    }
+    } catch {}
   };
 
   return {

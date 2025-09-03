@@ -46,8 +46,7 @@ const ImagePreview = ({route}: Props) => {
         },
       });
       navigation.goBack();
-    } catch (error) {
-      console.log('submit error', error);
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -75,8 +74,7 @@ const ImagePreview = ({route}: Props) => {
           handleImageRes(image);
         });
       }
-    } catch (error) {
-      console.log('take picture error', error);
+    } catch {
     } finally {
       setShowChangePhoto(false);
     }

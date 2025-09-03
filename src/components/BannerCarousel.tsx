@@ -126,11 +126,6 @@ const BannerCarousel = ({
     autoScroll.current = null;
   };
 
-  // useEffect(() => {
-  //   console.log('visible slide changed', visibleSlide.current);
-  //   startAutoScroll();
-  // }, [visibleSlide, banners]);
-
   useEffect(() => {
     if (banners.length > 1) {
       startAutoScroll();

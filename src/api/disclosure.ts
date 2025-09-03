@@ -79,8 +79,7 @@ export const useDisclosure = () => {
         setDisclosureList(newDisclosureList);
         setGroupedDisclosureList(newGroupedDisclosureList);
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
     } finally {
       if (page && page > 1) {
         setMoreDisclosureListLoading(false);

@@ -148,9 +148,7 @@ const Input = ({
         }
       }
       setShowPictureOption(false);
-    } catch (error) {
-      console.log('take picture error', error);
-    }
+    } catch {}
   };
 
   return (

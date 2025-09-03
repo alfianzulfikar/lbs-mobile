@@ -25,9 +25,7 @@ const CustomBottomSheet = ({
   const backgroundColor = useThemeColor({}, 'background');
   const textColor2 = useThemeColor({}, 'text2');
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const handleSheetChanges = useCallback((index: number) => {
-    // console.log('handleSheetChanges', index);
-  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
   const {height} = useWindowDimensions();
 
   // const snapPointsMemo = useMemo(() => ['75%'], []);
@@ -74,7 +72,7 @@ const CustomBottomSheet = ({
       //     Number(snapPointsMemo[snapPointsMemo.length - 1].replace('%', ''))) /
       //   100
       // }
-      >
+    >
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
         style={[

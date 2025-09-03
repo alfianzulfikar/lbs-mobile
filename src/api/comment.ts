@@ -87,8 +87,7 @@ export const useComment = () => {
           isLastPage.current = true;
         }
       }
-    } catch (error) {
-      console.log('get comment error', error);
+    } catch {
     } finally {
       if (page && page > 1) {
         setCommentMoreLoading(false);
@@ -167,7 +166,6 @@ export const useComment = () => {
         newError = error?.data?.errors?.msg ? [error?.data?.errors?.msg] : [];
       }
       setError(newError);
-      console.log('submit error', error);
     } finally {
       setSubmitLoading(false);
     }

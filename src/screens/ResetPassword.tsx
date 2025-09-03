@@ -67,7 +67,6 @@ const ResetPassword = ({route}: Props) => {
           confirmPassword: error?.data?.errors?.confirmPassword || [],
         });
       }
-      console.log('submit error', error);
     } finally {
       setLoading(false);
     }

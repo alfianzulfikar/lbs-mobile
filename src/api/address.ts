@@ -4,7 +4,7 @@ import {InputDropdownOption} from '../constants/Types';
 
 type AddressType = 'current' | 'ktp' | null;
 export const useAddress = () => {
-  const {apiRequest} = useAPI()
+  const {apiRequest} = useAPI();
   const [provinceKTPList, setProvinceKTPList] = useState<InputDropdownOption[]>(
     [],
   );
@@ -48,8 +48,7 @@ export const useAddress = () => {
       } else {
         setProvinceList(newArray);
       }
-    } catch (error) {
-      console.log('getProvinceList error', error);
+    } catch {
     } finally {
       if (type === 'ktp') {
         setProvinceKTPListLoading(false);
@@ -82,8 +81,7 @@ export const useAddress = () => {
       } else {
         setCityList(newArray);
       }
-    } catch (error) {
-      console.log('getCityList error', error);
+    } catch {
     } finally {
       if (type === 'ktp') {
         setCityKTPListLoading(false);
@@ -120,8 +118,7 @@ export const useAddress = () => {
       } else {
         setRegionList(newArray);
       }
-    } catch (error) {
-      console.log('getRegionList error', error);
+    } catch {
     } finally {
       if (type === 'ktp') {
         setRegionKTPListLoading(false);

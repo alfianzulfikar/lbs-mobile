@@ -59,7 +59,6 @@ const ChangePassword = () => {
         }),
       );
     } catch (error: any) {
-      console.log('submit error', error);
       if (error.status === 422) {
         if (error.data.errors) {
           const newError = error.data.errors;

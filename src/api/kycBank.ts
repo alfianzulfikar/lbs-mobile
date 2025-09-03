@@ -64,7 +64,6 @@ export const useKYCBank = () => {
           status: number;
           data?: any;
         };
-        console.log('bank error', error);
         if (error?.status === 422) {
           setBankError({
             bankId: error?.data?.errors?.bank_id || [],

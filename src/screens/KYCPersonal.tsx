@@ -241,8 +241,7 @@ const KYCPersonal = () => {
         agama: res.agama_id,
         pendidikan: res.pendidikan_id,
       });
-    } catch (error) {
-      console.log('getData error', error);
+    } catch {
     } finally {
       setPageLoading(false);
     }
@@ -329,7 +328,6 @@ const KYCPersonal = () => {
           data?: any;
         };
         if (error?.status === 422) {
-          console.log('submit error', error);
           setIDFormError(prev => ({
             ...prev,
             nik: error?.data?.errors?.ktp?.nik || [],

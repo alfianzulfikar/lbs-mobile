@@ -103,9 +103,7 @@ export const useRegister = () => {
         ],
       );
     } catch (error: any) {
-      console.log(error);
       if (error?.status === 422) {
-        console.log('resend otp', error?.data?.errors);
         dispatch(
           setAlert({
             title: 'Maaf, terjadi kesalahan',
@@ -160,7 +158,6 @@ export const useRegister = () => {
       });
     } catch (error: any) {
       if (error?.status === 422) {
-        console.log('resend otp', error?.data?.errors);
         dispatch(
           setAlert({
             title: 'Maaf, terjadi kesalahan',
