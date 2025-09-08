@@ -34,7 +34,7 @@ const Home = () => {
     businessesLoading,
     prelistingLoading,
   } = useBusiness();
-  const {user, getUser, getKycProgress} = useUser();
+  const {user, getUser, getKycProgress, userLoading} = useUser();
   const {articles, getArticles, articlesLoading} = useArticle();
   const {disclosureList, getDisclosureList, disclosureListLoading} =
     useDisclosure();
@@ -127,7 +127,7 @@ const Home = () => {
               <ICBell color={Colors[colorScheme].text} />
             </IconWrapper>
           </View>
-          {user.kycStatus === null && (
+          {!userLoading && user.kycStatus === null && (
             <View style={{paddingHorizontal: 24, marginTop: 24}}>
               <HomeKycStatus status={user.kycStatus} screen={user.kycScreen} />
             </View>

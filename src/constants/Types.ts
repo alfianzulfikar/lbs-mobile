@@ -95,7 +95,6 @@ export type PortfolioStackParamList = {
   PortfolioDetail: {
     slug: string;
     openDisclosure?: boolean;
-    id: number;
   };
 };
 

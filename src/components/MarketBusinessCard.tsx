@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     aspectRatio: 240 / 326,
     maxWidth: 240,
+    maxHeight: 326,
   },
   contentContainer: {
     borderTopLeftRadius: 16,

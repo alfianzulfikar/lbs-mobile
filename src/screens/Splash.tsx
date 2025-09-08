@@ -3,6 +3,7 @@ import {
   StatusBar,
   StyleSheet,
   useColorScheme,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useRef} from 'react';
@@ -16,14 +17,19 @@ import SpInAppUpdates, {
 import * as Sentry from '@sentry/react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useNotification} from '../services/notification';
+import {maxScreenWidth} from '../constants/Screen';
 
 const Splash = () => {
   const colorScheme = useColorScheme() ?? 'light';
   const videoRef = useRef<VideoRef>(null);
-  const background = require('../assets/videos/splash.mp4');
   const {checkDeviceSecurity} = useSecurityCheck();
   const {handleInitRoute} = useDeepLinks();
   const {handleBackgroundNotification} = useNotification();
+  const {width} = useWindowDimensions();
+  const background =
+    width >= maxScreenWidth
+      ? require('../assets/videos/splash-tablet.mp4')
+      : require('../assets/videos/splash.mp4');
 
   const handleUpdate = async () => {
     try {

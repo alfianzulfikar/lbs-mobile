@@ -88,6 +88,12 @@ const BannerCarousel = ({
                 screen: 'BusinessDetail',
                 params: {slug},
               });
+            } else if (item.link.includes('market')) {
+              const parts = item.link.split('/');
+              const isGuide = parts.length >= 5 && parts[4] === 'panduan';
+              navigation.navigate('Market', {
+                screen: isGuide ? 'MarketGuide' : 'MarketScreen',
+              });
             } else {
               Linking.openURL(item.link);
             }

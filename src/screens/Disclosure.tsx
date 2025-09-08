@@ -4,6 +4,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -14,6 +15,7 @@ import {useDisclosure} from '../api/disclosure';
 import DisclosureItem from '../components/DisclosureItem';
 import {useThemeColor} from '../hooks/useThemeColor';
 import SearchBar from '../components/SearchBar';
+import {maxScreenWidth} from '../constants/Screen';
 
 const Disclosure = () => {
   const {
@@ -24,6 +26,7 @@ const Disclosure = () => {
     hasNext,
   } = useDisclosure();
   const tint = useThemeColor({}, 'tint');
+  const {width} = useWindowDimensions();
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const buttonAnim = useRef(new Animated.Value(-24)).current;
@@ -36,9 +39,11 @@ const Disclosure = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
 
+  const numberOfContent = width > maxScreenWidth ? 20 : 15;
+
   const handlePagination = (nextPage: number) => {
     if (hasNext && !disclosureListLoading && !moreDisclosureListLoading) {
-      getDisclosureList(nextPage, 15);
+      getDisclosureList(nextPage, numberOfContent);
       setPage(nextPage);
     }
   };
@@ -48,7 +53,7 @@ const Disclosure = () => {
       <SearchBar
         keyword={keyword}
         setKeyword={value => setKeyword(value)}
-        onSubmit={() => getDisclosureList(1, 15, keyword)}
+        onSubmit={() => getDisclosureList(1, numberOfContent, keyword)}
         placeholder="Cari keterbukaan informasi"
       />
       {disclosureListLoading ? <ActivityIndicator color={tint} /> : null}
@@ -64,13 +69,13 @@ const Disclosure = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await getDisclosureList(1, 15, keyword);
+    await getDisclosureList(1, numberOfContent, keyword);
     setPage(1);
     setRefreshing(false);
   };
 
   useEffect(() => {
-    getDisclosureList(1, 15);
+    getDisclosureList(1, numberOfContent);
   }, []);
 
   return (
@@ -86,7 +91,7 @@ const Disclosure = () => {
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
             useNativeDriver: false,
-            listener: event => {
+            listener: (event: any) => {
               const currentY = event.nativeEvent?.contentOffset.y;
 
               if (

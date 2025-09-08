@@ -104,7 +104,7 @@ export const useNotificationAPI = () => {
     } catch {}
   };
 
-  const getNotifications = async (nextPage?: number) => {
+  const getNotifications = async (nextPage?: number, perPage?: number) => {
     if (nextPage) {
       setMoreNotificationsLoading(true);
     } else {
@@ -113,7 +113,9 @@ export const useNotificationAPI = () => {
     try {
       if (!isLastPage.current) {
         const res = await apiRequest({
-          endpoint: `/notification/${nextPage ? '?page=' + nextPage : ''}`,
+          endpoint: `/notification/?per_page=${perPage || 15}${
+            nextPage ? '&page=' + nextPage : ''
+          }`,
           authorization: true,
         });
         let newArray: NotificationType[] = [];

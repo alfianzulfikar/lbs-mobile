@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   ImageBackground,
   PermissionsAndroid,
@@ -55,6 +56,7 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import {setAlert} from '../slices/globalError';
+import Skeleton from '../components/Skeleton';
 
 const MenuItem = ({
   title,
@@ -299,100 +301,105 @@ const Account = () => {
           />
         )}
         <BlurOverlay blurAmount={60} />
-        <View
-          style={{
-            paddingTop: 16,
-            paddingHorizontal: 24,
-            paddingBottom: 40,
-            zIndex: 2,
-          }}>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Button
-              title="Ubah Foto Profil"
-              type="secondary"
-              paddingVertical={8}
-              paddingHorizontal={12}
-              icon={() => <ICTakePicture color={textColor} />}
-              fontSize={14}
-              onPress={() => setShowChangePhoto(true)}
-            />
+        {loading ? (
+          <View style={{zIndex: 20, paddingTop: 80}}>
+            <ActivityIndicator color={tint} />
           </View>
-          <Text style={styles.name}>
-            {user.firstname + ' ' + user.lastname}
-          </Text>
-          {!kycProgressLoading && !userLoading ? (
-            <View style={{flexDirection: 'row', marginTop: 8}}>
-              {user.kycStatus ? (
-                <ICCheckedShield color={tint} />
-              ) : user.kycStatus === null ? (
-                <ICWarning />
-              ) : null}
-              <Text
-                style={[
-                  styles.kycStatus,
-                  {
-                    color: user.kycStatus ? tint : textWarning,
-                    marginLeft: user.kycStatus === false ? 0 : 4,
-                  },
-                ]}
-                onPress={() =>
-                  user.kycStatus === null
-                    ? navigation.navigate('KYC', {
-                        screen:
-                          user.kycScreen === 'KYCPersonal'
-                            ? 'KYCScreen'
-                            : user.kycScreen,
-                      })
-                    : null
-                }>
-                {user.kycStatus
-                  ? 'Kyc Terverifikasi'
-                  : user.kycStatus === null
-                  ? 'Lengkapi data KYC Anda '
-                  : 'Data KYC Anda sedang diproses.'}
-                {user.kycStatus === null && (
-                  <Text
-                    style={[
-                      styles.kycStatus,
-                      {textDecorationLine: 'underline', color: textWarning},
-                    ]}>
-                    di sini.
-                  </Text>
-                )}
-              </Text>
+        ) : (
+          <View
+            style={{
+              paddingTop: 16,
+              paddingHorizontal: 24,
+              paddingBottom: 40,
+              zIndex: 2,
+            }}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Button
+                title="Ubah Foto Profil"
+                type="secondary"
+                paddingVertical={8}
+                paddingHorizontal={12}
+                icon={() => <ICTakePicture color={textColor} />}
+                fontSize={14}
+                onPress={() => setShowChangePhoto(true)}
+              />
             </View>
-          ) : null}
-          <Text style={styles.menuCategory}>Akun</Text>
-          <MenuItem
-            title="Data Pribadi"
-            icon={<ICRoundedUser color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'PersonalData',
-              })
-            }
-          />
-          <Text style={styles.menuCategory}>Pengaturan</Text>
-          <MenuItem
-            title="Notifikasi"
-            icon={<ICBell2 color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'NotificationSetting',
-              })
-            }
-          />
-          <Gap height={48} />
-          <MenuItem
-            title="Ubah Kata Sandi"
-            icon={<ICLock color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'ChangePassword',
-              })
-            }
-          />
-          {/* <Gap height={48} />
+            <Text style={styles.name}>
+              {user.firstname + ' ' + user.lastname}
+            </Text>
+            {!kycProgressLoading && !userLoading ? (
+              <View style={{flexDirection: 'row', marginTop: 8}}>
+                {user.kycStatus ? (
+                  <ICCheckedShield color={tint} />
+                ) : user.kycStatus === null ? (
+                  <ICWarning />
+                ) : null}
+                <Text
+                  style={[
+                    styles.kycStatus,
+                    {
+                      color: user.kycStatus ? tint : textWarning,
+                      marginLeft: user.kycStatus === false ? 0 : 4,
+                    },
+                  ]}
+                  onPress={() =>
+                    user.kycStatus === null
+                      ? navigation.navigate('KYC', {
+                          screen:
+                            user.kycScreen === 'KYCPersonal'
+                              ? 'KYCScreen'
+                              : user.kycScreen,
+                        })
+                      : null
+                  }>
+                  {user.kycStatus
+                    ? 'Kyc Terverifikasi'
+                    : user.kycStatus === null
+                    ? 'Lengkapi data KYC Anda '
+                    : 'Data KYC Anda sedang diproses.'}
+                  {user.kycStatus === null && (
+                    <Text
+                      style={[
+                        styles.kycStatus,
+                        {textDecorationLine: 'underline', color: textWarning},
+                      ]}>
+                      di sini.
+                    </Text>
+                  )}
+                </Text>
+              </View>
+            ) : null}
+            <Text style={styles.menuCategory}>Akun</Text>
+            <MenuItem
+              title="Data Pribadi"
+              icon={<ICRoundedUser color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'PersonalData',
+                })
+              }
+            />
+            <Text style={styles.menuCategory}>Pengaturan</Text>
+            <MenuItem
+              title="Notifikasi"
+              icon={<ICBell2 color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'NotificationSetting',
+                })
+              }
+            />
+            <Gap height={48} />
+            <MenuItem
+              title="Ubah Kata Sandi"
+              icon={<ICLock color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'ChangePassword',
+                })
+              }
+            />
+            {/* <Gap height={48} />
           <MenuItem
             title="Biometrik"
             icon={<ICBiometric color={textColor2} />}
@@ -400,76 +407,77 @@ const Account = () => {
             toggleState={biometric}
             onPress={() => setBiometric(prev => !prev)}
           /> */}
-          <Gap height={48} />
-          <MenuItem
-            title="Mode Gelap"
-            icon={<ICMoon color={textColor2} />}
-            toggle
-            toggleState={dark}
-            onPress={() => handleTheme()}
-          />
-          <Text style={styles.menuCategory}>Informasi</Text>
-          <MenuItem
-            title="Tentang LBS Urun Dana"
-            icon={<ICBuilding color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'AboutUs',
-              })
-            }
-          />
-          <Gap height={48} />
-          <MenuItem
-            title="Kebijakan Privasi"
-            icon={<ICPrivacy color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'PrivacyPolicy',
-              })
-            }
-          />
-          <Gap height={48} />
-          <MenuItem
-            title="Disclaimer"
-            icon={<ICPrivacy color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'Disclaimer',
-              })
-            }
-          />
-          <Gap height={48} />
-          <MenuItem
-            title="Syarat & Ketentuan"
-            icon={<ICFile2 color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'TermsAndConditions',
-              })
-            }
-          />
-          <Gap height={48} />
-          <MenuItem
-            title="Prosedur Pengaduan"
-            icon={<ICFile3 color={textColor2} />}
-            onPress={() =>
-              navigation.navigate('Account', {
-                screen: 'ComplaintProcedure',
-              })
-            }
-          />
-          <Gap height={48} />
-          <MenuItem
-            title="Keluar Akun"
-            color={textDanger}
-            icon={<ICLogout color={textDanger} />}
-            onPress={logout}
-          />
-          <Gap height={80} />
-        </View>
+            <Gap height={48} />
+            <MenuItem
+              title="Mode Gelap"
+              icon={<ICMoon color={textColor2} />}
+              toggle
+              toggleState={dark}
+              onPress={() => handleTheme()}
+            />
+            <Text style={styles.menuCategory}>Informasi</Text>
+            <MenuItem
+              title="Tentang LBS Urun Dana"
+              icon={<ICBuilding color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'AboutUs',
+                })
+              }
+            />
+            <Gap height={48} />
+            <MenuItem
+              title="Kebijakan Privasi"
+              icon={<ICPrivacy color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'PrivacyPolicy',
+                })
+              }
+            />
+            <Gap height={48} />
+            <MenuItem
+              title="Disclaimer"
+              icon={<ICPrivacy color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'Disclaimer',
+                })
+              }
+            />
+            <Gap height={48} />
+            <MenuItem
+              title="Syarat & Ketentuan"
+              icon={<ICFile2 color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'TermsAndConditions',
+                })
+              }
+            />
+            <Gap height={48} />
+            <MenuItem
+              title="Prosedur Pengaduan"
+              icon={<ICFile3 color={textColor2} />}
+              onPress={() =>
+                navigation.navigate('Account', {
+                  screen: 'ComplaintProcedure',
+                })
+              }
+            />
+            <Gap height={48} />
+            <MenuItem
+              title="Keluar Akun"
+              color={textDanger}
+              icon={<ICLogout color={textDanger} />}
+              onPress={logout}
+            />
+            <Gap height={80} />
+          </View>
+        )}
       </View>
 
-      {loading && <LoadingModal />}
+      {/* {loading && <LoadingModal />} */}
 
       {showChangePhoto && (
         <BottomSheet

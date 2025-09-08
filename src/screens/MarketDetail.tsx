@@ -107,23 +107,7 @@ const MarketDetail = ({route}: Props) => {
     },
     {
       title: 'Fair Value',
-      desc: 'Harga atau nilai wajar untuk sebuah saham.',
-    },
-    {
-      title: 'Close Price',
-      desc: 'Harga saham pada transaksi terakhir sebelum perdagangan saham ditutup pada hari tersebut.',
-    },
-    {
-      title: 'Lowest Price',
-      desc: 'Harga saham paling rendah yang tercapai dalam satu hari perdagangan.',
-    },
-    {
-      title: 'Highest Price',
-      desc: 'Harga saham paling tinggi yang tercapai dalam satu hari perdagangan.',
-    },
-    {
-      title: 'Fair Value',
-      desc: 'Harga atau nilai wajar untuk sebuah saham.',
+      desc: 'Fair Value adalah perkiraan harga wajar suatu saham berdasarkan kondisi nyata perusahaan, seperti kinerja keuangan, aset, prospek bisnis, dan risiko.',
     },
   ];
 

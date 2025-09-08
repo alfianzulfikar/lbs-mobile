@@ -18,6 +18,7 @@ import {useArticle} from '../api/article';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
+import {maxScreenWidth} from '../constants/Screen';
 
 const Article = () => {
   const colorScheme = useColorScheme();
@@ -33,7 +34,7 @@ const Article = () => {
     isFetchingArticles,
   } = useArticle();
   const navigation = useNavigation();
-  const {height} = useWindowDimensions();
+  const {height, width} = useWindowDimensions();
 
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
@@ -43,6 +44,8 @@ const Article = () => {
   const onEndReachedCalledDuringMomentum = useRef(false);
   const scrollY = useRef(new Animated.Value(0)).current;
 
+  const numberOfContent = width > maxScreenWidth ? 15 : 10;
+
   const categoryOptions = [
     {id: '', label: 'Semua'},
     {id: 'berita', label: 'Berita'},
@@ -50,26 +53,26 @@ const Article = () => {
   ];
 
   const handleGetArticles = async () => {
-    await getArticles();
+    await getArticles(1, numberOfContent);
   };
 
   const handleFilter = async (category: string) => {
     setKeyword('');
-    await getArticles(1, 10, category, '');
+    await getArticles(1, numberOfContent, category, '');
     setPage(1);
     isLastPage.current = false;
   };
 
   const handlePagination = async (page: number) => {
     if (!isFetchingArticles.current && !isLastPage.current) {
-      await getArticles(page, 10, category, keyword);
+      await getArticles(page, numberOfContent, category, keyword);
       setPage(page);
     }
   };
 
   const search = async () => {
     setCategory('');
-    await getArticles(1, 10, '', keyword);
+    await getArticles(1, numberOfContent, '', keyword);
     setPage(1);
   };
 

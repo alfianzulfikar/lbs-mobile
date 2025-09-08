@@ -220,10 +220,10 @@ export default Market;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    aspectRatio: 354 / 192,
     width: '100%',
     borderRadius: 24,
     overflow: 'hidden',
+    maxHeight: 192,
   },
   cardContentContainer: {
     padding: 16,

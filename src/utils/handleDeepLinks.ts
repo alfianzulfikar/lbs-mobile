@@ -93,6 +93,24 @@ export const useDeepLinks = () => {
         },
         accessToken,
       );
+    } else if (splitUrl[3] == 'detail') {
+      handleProtectedRoute(
+        {
+          mainRoute: 'Order',
+          options: {screen: 'BusinessDetail', params: {slug: splitUrl[4]}},
+        },
+        accessToken,
+      );
+    } else if (splitUrl[3] == 'market') {
+      handleProtectedRoute(
+        {
+          mainRoute: 'Market',
+          options: {
+            screen: 'MarketScreen',
+          },
+        },
+        accessToken,
+      );
     } else if (
       baseURL === (envMode === 'dev' ? 'dev.lbs.id' : 'www.lbs.id') &&
       splitUrl[3] == 'digital-signature-verification'

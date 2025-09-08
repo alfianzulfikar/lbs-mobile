@@ -11,7 +11,7 @@ import {useDeepLinks} from './utils/handleDeepLinks';
 import {Linking} from 'react-native';
 
 Sentry.init({
-  dsn: 'https://ade466671fc7475582ade181ffa91d3c@o1258244.ingest.us.sentry.io/6432180',
+  dsn: 'https://909c1bc0ffb4473b8fd7379f828a0d03@o1258337.ingest.us.sentry.io/6432390',
 
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/

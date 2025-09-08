@@ -46,13 +46,12 @@ type Props = {
     params: {
       slug: string;
       openDisclosure?: boolean;
-      id: number;
     };
   };
 };
 
 const PortfolioDetail = ({route}: Props) => {
-  const {slug, openDisclosure, id} = route.params;
+  const {slug, openDisclosure} = route.params;
   let colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColorSuccess = useThemeColor({}, 'textSuccess');
@@ -141,23 +140,25 @@ const PortfolioDetail = ({route}: Props) => {
         }),
       );
     } else {
-      const hasTransaction = await getTransactionStatus(type, id);
-      if (hasTransaction) {
-        setShowAttention(true);
-      } else {
-        if (business.id) {
-          navigation.navigate('Market', {
-            screen: 'MarketOrder',
-            params: {
-              merkDagang: business.merkDagang,
-              id: business.id,
-              code: business.kode,
-              type,
-              feeBuy: overview.feeBuy || 0,
-              feeSell: overview.feeSell || 0,
-              defaultPrice: overview.closePrice || overview.fairValue || 0,
-            },
-          });
+      if (marketInfo.id || marketInfo.id === 0) {
+        const hasTransaction = await getTransactionStatus(type, marketInfo.id);
+        if (hasTransaction) {
+          setShowAttention(true);
+        } else {
+          if (marketInfo.id || marketInfo.id === 0) {
+            navigation.navigate('Market', {
+              screen: 'MarketOrder',
+              params: {
+                merkDagang: business.merkDagang,
+                id: marketInfo.id,
+                code: business.kode,
+                type,
+                feeBuy: overview.feeBuy || 0,
+                feeSell: overview.feeSell || 0,
+                defaultPrice: overview.closePrice || overview.fairValue || 0,
+              },
+            });
+          }
         }
       }
     }
@@ -643,18 +644,21 @@ const PortfolioDetail = ({route}: Props) => {
             title="Lanjutkan"
             onPress={() => {
               setShowAttention(false);
-              navigation.navigate('Market', {
-                screen: 'MarketOrder',
-                params: {
-                  merkDagang: business.merkDagang,
-                  id,
-                  code: business.kode,
-                  type: transactionType,
-                  feeBuy: overview.feeBuy || 0,
-                  feeSell: overview.feeSell || 0,
-                  defaultPrice: overview.closePrice || overview.fairValue || 0,
-                },
-              });
+              if (marketInfo.id || marketInfo.id === 0) {
+                navigation.navigate('Market', {
+                  screen: 'MarketOrder',
+                  params: {
+                    merkDagang: business.merkDagang,
+                    id: marketInfo.id,
+                    code: business.kode,
+                    type: transactionType,
+                    feeBuy: overview.feeBuy || 0,
+                    feeSell: overview.feeSell || 0,
+                    defaultPrice:
+                      overview.closePrice || overview.fairValue || 0,
+                  },
+                });
+              }
             }}
             paddingVertical={12}
           />

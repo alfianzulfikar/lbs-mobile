@@ -94,7 +94,7 @@ const MarketGuide = () => {
       title: 'Bagaimana Ketentuan Pelaksanaan Pasar Sekunder di LBS Urun Dana?',
       pharagraph: '',
       list: [
-        'Pasar Sekunder dibuka setiap 2 kali periode dalam 1 tahun',
+        'Pasar Sekunder dibuka setiap 4 kali periode dalam 1 tahun, yaitu pada bulan Maret, Juni, September dan Desember',
         'Pasar Sekunder dibuka selama 10 hari kerja dalam 1 kali periode',
         'Perdagangan saham di Pasar Sekunder dilaksanakan pada pukul 09.00 - 16.00',
         'Pasar Sekunder tidak dibuka pada hari Sabtu, Ahad, dan Libur Nasional',
@@ -299,6 +299,48 @@ const MarketGuide = () => {
           pharagraph: 'Transaksi pembelian atau penjualan saham telah gagal',
         },
       ],
+      type: 'dot',
+    },
+    {
+      title: 'Apa itu Fair Value (Harga Wajar)',
+      pharagraph:
+        'Fair Value adalah perkiraan harga wajar suatu saham berdasarkan kondisi nyata perusahaan, seperti kinerja keuangan, aset, prospek bisnis, dan risiko.',
+      list: [],
+      type: 'dot',
+    },
+    {
+      title: 'Kenapa harga saham bisa berbeda dari Fair Value?',
+      pharagraph:
+        'Karena harga pasar dipengaruhi sentimen, tren, dan faktor jangka pendek, sementara Fair Value dihitung dengan analisis fundamental.',
+      list: [],
+      type: 'dot',
+    },
+    {
+      title: 'Bagaimana cara menghitung Fair Value?',
+      pharagraph:
+        'Umumnya menggunakan beberapa metode, misalnya Price to Earnings (P/E ratio), Discounted Cash Flow (DCF), atau membandingkan dengan perusahaan sejenis.',
+      list: [],
+      type: 'dot',
+    },
+    {
+      title: 'Siapa yang biasanya menghitung Fair Value?',
+      pharagraph:
+        'Analis keuangan, perusahaan sekuritas, atau investor yang melakukan analisis fundamental',
+      list: [],
+      type: 'dot',
+    },
+    {
+      title: 'Apakah Fair Value selalu tepat?',
+      pharagraph:
+        'Tidak. Fair Value adalah estimasi, hasilnya bisa berbeda tergantung asumsi dan metode yang digunakan.',
+      list: [],
+      type: 'dot',
+    },
+    {
+      title: 'Apakah investor pemula perlu tahu Fair Value?',
+      pharagraph:
+        'Ya, karena Fair Value bisa membantu menilai apakah harga saham masuk akal, meski tidak perlu menghitung sendiri secara rumit.',
+      list: [],
       type: 'dot',
     },
     {

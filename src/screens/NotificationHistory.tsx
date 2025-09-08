@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -18,6 +19,7 @@ import {useThemeColor} from '../hooks/useThemeColor';
 import {useNavigation} from '@react-navigation/native';
 import {useColorScheme} from '../hooks/useColorScheme';
 import {replace} from '../services/navigation';
+import {maxScreenWidth} from '../constants/Screen';
 
 const NotificationHistory = () => {
   const {
@@ -29,6 +31,7 @@ const NotificationHistory = () => {
     isFetching,
   } = useNotificationAPI();
   const navigation = useNavigation();
+  const {width} = useWindowDimensions();
 
   const onEndReachedCalledDuringMomentum = useRef(false);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -39,9 +42,11 @@ const NotificationHistory = () => {
   const textColor = useThemeColor({}, 'text');
   const textColor2 = useThemeColor({}, 'text2');
 
+  const numberOfContent = width > maxScreenWidth ? 20 : 15;
+
   const handlePagination = (nextPage: number) => {
     if (!isFetching.current) {
-      getNotifications(nextPage);
+      getNotifications(nextPage, numberOfContent);
     }
   };
 
@@ -55,7 +60,7 @@ const NotificationHistory = () => {
 
   useEffect(() => {
     const asyncFunc = async () => {
-      await getNotifications();
+      await getNotifications(1, numberOfContent);
       setScrollEnabled(true);
     };
     asyncFunc();

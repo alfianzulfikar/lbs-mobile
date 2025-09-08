@@ -280,7 +280,7 @@ const Portfolio = () => {
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
             useNativeDriver: false,
-            listener: event => {
+            listener: (event: any) => {
               const currentY = event.nativeEvent?.contentOffset.y;
 
               if (
