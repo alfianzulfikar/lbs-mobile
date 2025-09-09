@@ -1,10 +1,9 @@
-import {Keyboard, ScrollView, StyleSheet, View} from 'react-native';
+import {Keyboard, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenWrapper from '../components/ScreenWrapper';
 import {useColorScheme} from '../hooks/useColorScheme';
 import Text from '../components/Text';
 import Gap from '../components/Gap';
-import Header from '../components/Header';
 import BlurOverlay from '../components/BlurOverlay';
 import {RGBAColors} from '../constants/Colors';
 import {useThemeColor} from '../hooks/useThemeColor';
@@ -187,7 +186,7 @@ const MarketOrder = ({route}: Props) => {
               Total Pembayaran
             </Text>
             <Text style={[styles.total, {color: textColor}]}>
-              Rp{numberFormat(nominal)}
+              Rp{numberFormat(total)}
             </Text>
             <Gap height={24} />
             <Text style={[styles.paymentTitle, {color: textColor2}]}>
@@ -239,7 +238,7 @@ const MarketOrder = ({route}: Props) => {
                       styles.overviewValue,
                       {flex: 1, textAlign: 'right'},
                     ]}>
-                    Rp{numberFormat(total)}
+                    Rp{numberFormat(nominal)}
                   </Text>
                 </View>
                 <Gap height={16} />

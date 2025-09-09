@@ -29,6 +29,7 @@ import {setAlert} from '../slices/globalError';
 import HelpButton from '../components/HelpButton';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainTabParamList, TransactionStackParamList} from '../constants/Types';
+import {useTransaction} from '../api/transaction';
 
 const MenuItem = ({
   name,
@@ -80,7 +81,13 @@ const Transaction = ({route}: Props) => {
   let colorScheme = useColorScheme() ?? 'light';
   const onEndReachedCalledDuringMomentum = useRef(false);
   const {height} = useWindowDimensions();
-  const dispatch = useDispatch();
+
+  const {
+    transactionDetail,
+    getTransactionDetail,
+    transactionDetailLoading,
+    setTransactionDetail,
+  } = useTransaction();
 
   const [activeMenu, setActiveMenu] = useState<'dividen' | 'transaksi'>(
     paymentCode && paymentCode.includes('DV') ? 'dividen' : 'transaksi',
@@ -91,28 +98,11 @@ const Transaction = ({route}: Props) => {
   const [showDetail, setShowDetail] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loadingTransaction, setLoadingTransaction] = useState(false);
-  const [loadingMore, setloadingMore] = useState(false);
-  const [loadingDetail, setLoadingDetail] = useState(false);
+  const [loadingMore, setloadingMore] = useState(false); 
   const [filter, setFilter] = useState({
     type: '',
     status: '',
     order: '',
-  });
-  const [detail, setDetail] = useState({
-    kodeEfek: '',
-    kodePembayaran: '',
-    merkDagang: '',
-    totalTransaksi: 0,
-    jenisBisnis: '',
-    hargaPerLembar: 0,
-    jumlahLembar: 0,
-    nominal: 0,
-    biayaAdminBank: 0,
-    biayaPlatform: 0,
-    jenisTransaksi: '',
-    statusTransaksi: '',
-    periodePembayaran: '',
-    tanggalPembayaran: '',
   });
   const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);
@@ -187,93 +177,6 @@ const Transaction = ({route}: Props) => {
       } else {
         setLoadingTransaction(false);
       }
-    }
-  };
-
-  const getTransactionDetail = async ({
-    paymentCode2,
-    type,
-  }: {
-    paymentCode2: string;
-    type: string;
-  }) => {
-    setDetail(prev => {
-      return {
-        ...prev,
-        kodeEfek: '',
-        kodePembayaran: '',
-        merkDagang: '',
-        totalTransaksi: 0,
-        jenisBisnis: '',
-        hargaPerLembar: 0,
-        jumlahLembar: 0,
-        nominal: 0,
-        biayaAdminBank: 0,
-        biayaPlatform: 0,
-        jenisTransaksi: '',
-        statusTransaksi: '',
-      };
-    });
-    setLoadingDetail(true);
-    try {
-      const res = await apiRequest({
-        endpoint: `/waiting-payment/${paymentCode2}`,
-        authorization: true,
-      });
-      const jenisTransaksi = type;
-      const fee = res.total_nominal - res.nominal;
-      let feeObject = {};
-      if (
-        (jenisTransaksi == 'Penjualan' || jenisTransaksi == 'Pembelian') &&
-        fee &&
-        res.percentage >= 0
-      ) {
-        feeObject = {
-          biayaPlatform: Math.round((res.nominal * res.percentage) / 100),
-          biayaAdminBank:
-            fee - Math.round((res.nominal * res.percentage) / 100),
-        };
-      }
-      setDetail(prev => {
-        return {
-          ...prev,
-          kodeEfek:
-            res.bisnis_transaksi.length > 0
-              ? res.bisnis_transaksi[0].kode_saham
-              : '',
-          kodePembayaran: res.kode || '',
-          merkDagang:
-            res.bisnis_transaksi.length > 0
-              ? res.bisnis_transaksi[0].merk_dagang
-              : '',
-          totalTransaksi:
-            jenisTransaksi === 'Penjualan' ? res.nominal - fee : res.nominal,
-          jenisBisnis:
-            res.bisnis_transaksi.length > 0
-              ? res.bisnis_transaksi[0].type_bisnis
-              : '',
-          hargaPerLembar: Number(
-            Number(res.nominal / res.jumlah_lembar).toFixed(),
-          ),
-          jumlahLembar: res.jumlah_lembar || 0,
-          nominal: res.nominal || 0,
-          ...feeObject,
-          jenisTransaksi: jenisTransaksi,
-          statusTransaksi: res.status_transaksi.name || '',
-        };
-      });
-    } catch {
-      setShowDetail(false);
-      dispatch(
-        setAlert({
-          title: 'Terjadi Kesalahan',
-          desc: '',
-          type: 'danger',
-          showAlert: true,
-        }),
-      );
-    } finally {
-      setLoadingDetail(false);
     }
   };
 
@@ -533,7 +436,7 @@ const Transaction = ({route}: Props) => {
                   }}
                   onPress={() => {
                     if (activeMenu === 'dividen') {
-                      setDetail({
+                      setTransactionDetail({
                         kodeEfek: item.kode_bisnis || '',
                         kodePembayaran: '',
                         merkDagang: item.nama_bisnis || '',
@@ -551,12 +454,13 @@ const Transaction = ({route}: Props) => {
                         statusTransaksi: item.status || '',
                         periodePembayaran: item.periode_pembayaran || '',
                         tanggalPembayaran: item.tanggal_pembagian_deviden || '',
+                        isIPO: true,
                       });
                       setShowDetail(true);
                     } else {
                       setShowDetail(true);
                       getTransactionDetail({
-                        paymentCode2: item.kode,
+                        paymentCode: item.kode,
                         type: item.tipe_transaksi,
                       });
                     }
@@ -600,8 +504,8 @@ const Transaction = ({route}: Props) => {
       {showDetail && (
         <TransactionDetail
           setShow={setShowDetail}
-          loading={loadingDetail}
-          data={detail}
+          loading={transactionDetailLoading}
+          data={transactionDetail}
           clearPaymentCode={() => {
             if (paymentCode) {
               navigation.reset({

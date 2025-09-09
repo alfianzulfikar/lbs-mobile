@@ -150,11 +150,16 @@ const OrderBusiness = ({route}: Props) => {
       },
       {
         label: 'Minimal Pemesanan',
-        value: 'Rp' + numberFormat(business.minimalPemesanan),
+        value: `${
+          business.minimalPemesanan / business.hargaPerLembar
+        } lembar / Rp${numberFormat(business.minimalPemesanan)}`,
       },
       {
         label: capitalize(business.tipeBisnis) + ' Tersisa',
-        value: numberFormat(business.lembarTersisa) + ' Lembar',
+        value: `${numberFormat(business.lembarTersisa)} lembar / ${(
+          (business.lembarTersisa * 100) /
+            (Number(business.target) / business.hargaPerLembar) || 0
+        ).toFixed(2)}%`,
       },
     ]);
   }, [business.merkDagang]);

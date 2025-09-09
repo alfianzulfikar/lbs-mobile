@@ -6,9 +6,7 @@ import {RGBAColors} from '../../constants/Colors';
 import {useThemeColor} from '../../hooks/useThemeColor';
 import numberFormat from '../../utils/numberFormat';
 import {useMarket} from '../../api/market';
-import dateTimeFormat from '../../utils/dateTimeFormat';
 import ICDoubleArrow from '../icons/ICDoubleArrow';
-import PriceArrow from '../PriceArrow';
 
 const Daily = ({id}: {id: number}) => {
   const colorScheme = useColorScheme();
@@ -77,7 +75,29 @@ const Daily = ({id}: {id: number}) => {
                   {item.close ? numberFormat(item.close) : ''}
                 </Text>
               </View>
-              <View style={styles.cell}>
+              <View
+                style={[
+                  styles.cell,
+                  {flexDirection: 'row', alignItems: 'center'},
+                ]}>
+                {item.change !== 0 && (
+                  <View
+                    style={{
+                      transform: [
+                        {rotate: item.change < 0 ? '180deg' : '0deg'},
+                      ],
+                    }}>
+                    <ICDoubleArrow
+                      color={
+                        item.change < 0
+                          ? textColorDanger
+                          : item.change > 0
+                          ? textColorSuccess
+                          : textColor2
+                      }
+                    />
+                  </View>
+                )}
                 <Text
                   style={[
                     styles.bodyText,

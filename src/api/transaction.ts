@@ -1,8 +1,12 @@
 import {useState} from 'react';
 import {useAPI} from '../services/api';
+import {useDispatch} from 'react-redux';
+import {setAlert} from '../slices/globalError';
 
 export const useTransaction = () => {
   const {apiRequest} = useAPI();
+  const dispatch = useDispatch();
+
   const [transactionDetail, setTransactionDetail] = useState({
     kodeEfek: '',
     kodePembayaran: '',
@@ -114,6 +118,14 @@ export const useTransaction = () => {
         };
       });
     } catch {
+      dispatch(
+        setAlert({
+          title: 'Tidak dapat memuat data',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
     } finally {
       setTransactionDetailLoading(false);
     }
