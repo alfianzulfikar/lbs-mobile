@@ -21,29 +21,33 @@ const Disclaimer = () => {
         />
 
         <Paragraph
-          text="Sesuai Peraturan Otoritas Jasa Keuangan (POJK) No.57/POJK.04/2020 tentang “Penawaran Efek Melalui Layanan Urun Dana Berbasis Teknologi Informasi” Pasal 27, kami menyatakan bahwa :"
+          text="Sesuai Peraturan Otoritas Jasa Keuangan (POJK) Nomor 17 tahun 2025 tentang “Penawaran Efek Melalui Layanan Urun Dana Berbasis Teknologi Informasi” Pasal 75, kami menyatakan bahwa :"
           marginTop={24}
           textAlign={pharagraphTextAlign}
+          fontWeight="700"
         />
 
         <>
           <Item
-            number="1"
-            text="OTORITAS JASA KEUANGAN TIDAK MEMBERIKAN PERNYATAAN MENYETUJUI ATAU TIDAK MENYETUJUI EFEK INI, TIDAK JUGA MENYATAKAN KEBENARAN ATAU KECUKUPAN INFORMASI DALAM LAYANAN URUN DANA INI. SETIAP PERNYATAAN YANG BERTENTANGAN DENGAN HAL TERSEBUT ADALAH PERBUATAN MELANGGAR HUKUM."
+            number="a"
+            text='"OTORITAS JASA KEUANGAN TIDAK MEMBERIKAN PERNYATAAN MENYETUJUI ATAU TIDAK MENYETUJUI EFEK INI, TIDAK JUGA MENYATAKAN KEBENARAN ATAU KECUKUPAN INFORMASI DALAM LAYANAN URUN DANA INI. SETIAP PERNYATAAN YANG BERTENTANGAN DENGAN HAL TERSEBUT ADALAH PERBUATAN MELANGGAR HUKUM."'
             textAlign={pharagraphTextAlign}
             marginTop={4}
+            fontWeight="700"
           />
           <Item
-            number="2"
-            text="INFORMASI DALAM LAYANAN URUN DANA INI PENTING DAN PERLU MENDAPAT PERHATIAN SEGERA. APABILA TERDAPAT KERAGUAN PADA TINDAKAN YANG AKAN DIAMBIL, SEBAIKNYA BERKONSULTASI DENGAN PENYELENGGARA."
+            number="b"
+            text='"INFORMASI DALAM LAYANAN URUN DANA INI PENTING DAN PERLU MENDAPAT PERHATIAN SEGERA. APABILA TERDAPAT KERAGUAN PADA TINDAKAN YANG AKAN DIAMBIL, SEBAIKNYA BERKONSULTASI DENGAN PENYELENGGARA."; dan'
             textAlign={pharagraphTextAlign}
             marginTop={4}
+            fontWeight="700"
           />
           <Item
-            number="3"
-            text="PENERBIT DAN PENYELENGGARA, BAIK SENDIRI SENDIRI MAUPUN BERSAMA-SAMA, BERTANGGUNG JAWAB SEPENUHNYA ATAS KEBENARAN SEMUA INFORMASI YANG TERCANTUM DALAM LAYANAN URUN DANA INI."
+            number="c"
+            text='"PENERBIT DAN PENYELENGGARA, BAIK SENDIRI SENDIRI MAUPUN BERSAMA-SAMA, BERTANGGUNG JAWAB SEPENUHNYA ATAS KEBENARAN SEMUA INFORMASI YANG TERCANTUM DALAM LAYANAN URUN DANA INI.".'
             textAlign={pharagraphTextAlign}
             marginTop={4}
+            fontWeight="700"
           />
         </>
 

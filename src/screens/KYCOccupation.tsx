@@ -14,6 +14,8 @@ import {
   tujuanInvestasiOption,
 } from '../constants/KYC';
 import {useKYCOccupation} from '../api/kycOccupation';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
 
 const KYCOccupation = () => {
   const tint = useThemeColor({}, 'tint');
@@ -26,6 +28,7 @@ const KYCOccupation = () => {
     setOccupation,
     submitOccupation,
   } = useKYCOccupation();
+  const {kycStep} = useSelector((item: RootState) => item.user);
 
   const OccupationForm: KYCFormFieldType[] = [
     {
@@ -84,6 +87,12 @@ const KYCOccupation = () => {
           instruction="Harap melengkapi data pekerjaan, sumber penghasilan, tujuan investasi, dan penghasilan per tahun."
           percentage={40}
           backScreen="KYCFamily"
+          nextScreen={
+            ['KYCTax', 'KYCBank', 'KYCRisk'].includes(kycStep || '')
+              ? 'KYCTax'
+              : undefined
+          }
+          currentScreen="KYCOccupation"
         />
         <Gap height={40} />
         {occupationLoading ? (
@@ -99,7 +108,7 @@ const KYCOccupation = () => {
             <Gap height={40} />
             <Button
               title="Simpan & Lanjutkan"
-              onPress={submitOccupation}
+              onPress={() => submitOccupation(kycStep)}
               loading={occupationSubmitLoading}
             />
             <Gap height={40} />

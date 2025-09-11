@@ -29,11 +29,14 @@ import InputWrapper from '../components/InputWrapper';
 import {RGBAColors} from '../constants/Colors';
 import {useColorScheme} from '../hooks/useColorScheme';
 import BlurOverlay from '../components/BlurOverlay';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
 
 const KYCTax = () => {
   const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
+  const {kycStep} = useSelector((item: RootState) => item.user);
 
   const {
     getTax,
@@ -137,6 +140,12 @@ const KYCTax = () => {
           instruction="Kami membutuhkan informasi pajak untuk memastikan kepatuhan. Jangan khawatir, kami menjaga privasi Anda."
           percentage={50}
           backScreen="KYCOccupation"
+          nextScreen={
+            ['KYCBank', 'KYCRisk'].includes(kycStep || '')
+              ? 'KYCBank'
+              : undefined
+          }
+          currentScreen="KYCTax"
         />
         <Gap height={40} />
         {taxLoading ? (
@@ -231,7 +240,7 @@ const KYCTax = () => {
             <Gap height={40} />
             <Button
               title="Simpan & Lanjutkan"
-              onPress={submitTax}
+              onPress={() => submitTax(kycStep)}
               loading={taxSubmitLoading}
             />
             <Gap height={40} />

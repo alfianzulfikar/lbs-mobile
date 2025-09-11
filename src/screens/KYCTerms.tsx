@@ -43,6 +43,7 @@ const KYCTerms = () => {
             instruction="Anda telah mencapai bagian akhir dari proses pengisian data KYC. Harap membaca dan menyetujui syarat dan ketentuan berikut."
             percentage={90}
             backScreen="KYCRisk"
+            dropdownDisabled
           />
           <Gap height={40} />
           <>

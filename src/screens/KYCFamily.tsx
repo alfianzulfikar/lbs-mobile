@@ -11,6 +11,8 @@ import Button from '../components/Button';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useKYCFamily} from '../api/kycFamily';
 import {useCallingCode} from '../api/callingCode';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
 
 const KYCFamily = () => {
   const tint = useThemeColor({}, 'tint');
@@ -26,6 +28,7 @@ const KYCFamily = () => {
 
   const {callingCodeLoading, getCallingCodes, callingCodeList} =
     useCallingCode();
+  const {kycStep} = useSelector((item: RootState) => item.user);
 
   const statusOption = [
     {id: 1, label: 'Single'},
@@ -98,6 +101,14 @@ const KYCFamily = () => {
           instruction="Selanjutnya harap melengkapi data keluarga dan informasi mengenai ahli waris. Kami akan menjaga kerahasiaan informasi ini."
           percentage={30}
           backScreen="KYCAddress"
+          nextScreen={
+            ['KYCOccupation', 'KYCTax', 'KYCBank', 'KYCRisk'].includes(
+              kycStep || '',
+            )
+              ? 'KYCOccupation'
+              : undefined
+          }
+          currentScreen="KYCFamily"
         />
         <Gap height={40} />
         {familyLoading ? (
@@ -115,7 +126,7 @@ const KYCFamily = () => {
             <Gap height={40} />
             <Button
               title="Simpan & Lanjutkan"
-              onPress={submitFamily}
+              onPress={() => submitFamily(kycStep)}
               loading={familySubmitLoading}
             />
             <Gap height={40} />

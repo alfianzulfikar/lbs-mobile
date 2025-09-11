@@ -529,7 +529,7 @@ export type KYCFormFieldType<
   pictureType?: 'camera' | 'galery' | 'option';
 };
 
-export type KYCBackScreen =
+export type KYCStep =
   | 'KYCPersonal'
   | 'KYCAddress'
   | 'KYCFamily'

@@ -38,6 +38,7 @@ const KYCRisk = () => {
           instruction="Sedikit lagi Anda akan menyelesaikan pengisian data KYC. Silakan jawab pertanyaan-pertanyaan ini terlebih dahulu."
           percentage={70}
           backScreen="KYCBank"
+          currentScreen="KYCRisk"
         />
         <Gap height={40} />
         {riskLoading ? (

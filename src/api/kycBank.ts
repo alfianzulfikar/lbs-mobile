@@ -1,11 +1,12 @@
 import {useState} from 'react';
-import {KYCBankErrorType, KYCBankType} from '../constants/Types';
+import {KYCBankErrorType, KYCBankType, KYCStep} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {setKYCStep} from '../slices/user';
 
 export const useKYCBank = () => {
   const {apiRequest} = useAPI();
@@ -42,7 +43,7 @@ export const useKYCBank = () => {
     }
   };
 
-  const submitBank = async () => {
+  const submitBank = async (kycStep?: KYCStep) => {
     Keyboard.dismiss();
     setBankSubmitLoading(true);
     try {
@@ -57,6 +58,7 @@ export const useKYCBank = () => {
         authorization: true,
         body,
       });
+      if (kycStep === 'KYCBank') dispatch(setKYCStep('KYCRisk'));
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCRisk'}));
     } catch (err: any) {
       if (typeof err === 'object' && err !== null && 'status' in err) {

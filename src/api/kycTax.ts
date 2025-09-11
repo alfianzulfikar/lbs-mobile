@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {
+  KYCStep,
   KYCTax2ErrorType,
   KYCTax2Type,
   KYCTaxErrorType,
@@ -11,6 +12,7 @@ import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {setKYCStep} from '../slices/user';
 
 export const useKYCTax = () => {
   const {apiRequest} = useAPI();
@@ -69,7 +71,7 @@ export const useKYCTax = () => {
     }
   };
 
-  const submitTax = async () => {
+  const submitTax = async (kycStep?: KYCStep) => {
     Keyboard.dismiss();
     setTaxSubmitLoading(true);
     try {
@@ -141,6 +143,7 @@ export const useKYCTax = () => {
         authorization: true,
         body,
       });
+      if (kycStep === 'KYCTax') dispatch(setKYCStep('KYCBank'));
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCBank'}));
     } catch (err: any) {
       if (typeof err === 'object' && err !== null && 'status' in err) {

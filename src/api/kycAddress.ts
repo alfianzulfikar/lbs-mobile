@@ -4,6 +4,7 @@ import {
   KYCAddressKTPErrorType,
   KYCAddressKTPType,
   KYCAddressType,
+  KYCStep,
 } from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
@@ -11,6 +12,7 @@ import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {setKYCStep} from '../slices/user';
 
 export const useKYCAddress = () => {
   const {apiRequest} = useAPI();
@@ -78,7 +80,7 @@ export const useKYCAddress = () => {
     }
   };
 
-  const submitAddress = async () => {
+  const submitAddress = async (kycStep?: KYCStep) => {
     Keyboard.dismiss();
     setAddressSubmitLoading(true);
     try {
@@ -111,6 +113,7 @@ export const useKYCAddress = () => {
           authorization: true,
           body,
         });
+        if (kycStep === 'KYCAddress') dispatch(setKYCStep('KYCFamily'));
         navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCFamily'}));
       }
     } catch (err: any) {

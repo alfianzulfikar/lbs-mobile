@@ -1,11 +1,16 @@
 import {useState} from 'react';
-import {KYCOccupationErrorType, KYCOccupationType} from '../constants/Types';
+import {
+  KYCOccupationErrorType,
+  KYCOccupationType,
+  KYCStep,
+} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {setKYCStep} from '../slices/user';
 
 export const useKYCOccupation = () => {
   const {apiRequest} = useAPI();
@@ -64,7 +69,7 @@ export const useKYCOccupation = () => {
     }
   };
 
-  const submitOccupation = async () => {
+  const submitOccupation = async (kycStep?: KYCStep) => {
     Keyboard.dismiss();
     setOccupationSubmitLoading(true);
     try {
@@ -82,6 +87,7 @@ export const useKYCOccupation = () => {
         authorization: true,
         body,
       });
+      if (kycStep === 'KYCOccupation') dispatch(setKYCStep('KYCTax'));
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCTax'}));
     } catch (error: any) {
       if (error?.status === 422) {

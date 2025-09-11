@@ -45,6 +45,7 @@ import ICPicture from './icons/ICPicture';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
 import usePicture from '../hooks/usePicture';
+import * as Sentry from '@sentry/react-native';
 
 const Input = ({
   label,
@@ -148,7 +149,17 @@ const Input = ({
         }
       }
       setShowPictureOption(false);
-    } catch {}
+    } catch (error) {
+      Sentry.captureException(error);
+      dispatch(
+        setAlert({
+          title: 'Gagal mengambil gambar.',
+          desc: '',
+          type: 'danger',
+          showAlert: true,
+        }),
+      );
+    }
   };
 
   return (

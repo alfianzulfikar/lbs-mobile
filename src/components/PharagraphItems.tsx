@@ -9,6 +9,7 @@ type ComponentType = {
   marginTop?: number;
   textAlign?: 'justify' | 'left' | 'right' | 'center';
   fontSize?: number;
+  fontWeight?: '400' | '500' | '600' | '700';
 };
 
 export const Title = ({
@@ -41,17 +42,31 @@ export const Title = ({
   );
 };
 
-export const Item = ({number, text, textAlign, marginTop}: ComponentType) => {
+export const Item = ({
+  number,
+  text,
+  textAlign,
+  marginTop,
+  fontWeight,
+}: ComponentType) => {
   const textColor2 = useThemeColor({}, 'text2');
   return (
     <View style={{flexDirection: 'row', marginTop: marginTop || 8}}>
-      <Text style={[styles.itemNumber, {color: textColor2}]}>
+      <Text
+        style={[
+          styles.itemNumber,
+          {color: textColor2, fontWeight: fontWeight || '400'},
+        ]}>
         {number ? number + '.' : ''}
       </Text>
       <Text
         style={[
           styles.itemText,
-          {color: textColor2, textAlign: textAlign || 'left'},
+          {
+            color: textColor2,
+            textAlign: textAlign || 'left',
+            fontWeight: fontWeight || '400',
+          },
         ]}>
         {text}
       </Text>
@@ -77,7 +92,12 @@ export const Item2 = ({number, text, textAlign}: ComponentType) => {
   );
 };
 
-export const Paragraph = ({text, marginTop, textAlign}: ComponentType) => {
+export const Paragraph = ({
+  text,
+  marginTop,
+  textAlign,
+  fontWeight,
+}: ComponentType) => {
   const textColor2 = useThemeColor({}, 'text2');
   return (
     <Text
@@ -87,6 +107,7 @@ export const Paragraph = ({text, marginTop, textAlign}: ComponentType) => {
           color: textColor2,
           marginTop: marginTop || 8,
           textAlign: textAlign || 'left',
+          fontWeight: fontWeight || '400',
         },
       ]}>
       {text}

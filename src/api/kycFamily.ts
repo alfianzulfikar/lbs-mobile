@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {KYCFamilyErrorType, KYCFamilyType} from '../constants/Types';
+import {KYCFamilyErrorType, KYCFamilyType, KYCStep} from '../constants/Types';
 import {useAPI} from '../services/api';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {heirRelationshipOption} from '../constants/KYC';
@@ -7,6 +7,7 @@ import trimStringInObject from '../utils/trimStringInObject';
 import {Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {setKYCStep} from '../slices/user';
 
 export const useKYCFamily = () => {
   const {apiRequest} = useAPI();
@@ -64,7 +65,7 @@ export const useKYCFamily = () => {
     }
   };
 
-  const submitFamily = async () => {
+  const submitFamily = async (kycStep?: KYCStep) => {
     Keyboard.dismiss();
     setFamilySubmitLoading(true);
     try {
@@ -92,6 +93,7 @@ export const useKYCFamily = () => {
         authorization: true,
         body,
       });
+      if (kycStep === 'KYCFamily') dispatch(setKYCStep('KYCOccupation'));
       navigation.dispatch(
         StackActions.replace('KYC', {screen: 'KYCOccupation'}),
       );

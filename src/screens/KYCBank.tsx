@@ -14,11 +14,14 @@ import BlurOverlay from '../components/BlurOverlay';
 import {useKYCBank} from '../api/kycBank';
 import {useBank} from '../api/bank';
 import ICWarning from '../components/icons/ICWarning';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
 
 const KYCBank = () => {
   const colorScheme = useColorScheme();
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
+  const {kycStep} = useSelector((item: RootState) => item.user);
 
   const {
     bank,
@@ -71,6 +74,8 @@ const KYCBank = () => {
           instruction="Selanjutnya, silakan lengkapi data akun bank agar kami dapat memudahkan proses pengiriman dana."
           percentage={60}
           backScreen="KYCTax"
+          nextScreen={kycStep === 'KYCRisk' ? 'KYCRisk' : undefined}
+          currentScreen="KYCBank"
         />
         <Gap height={24} />
         <View
@@ -120,7 +125,7 @@ const KYCBank = () => {
             <Gap height={40} />
             <Button
               title="Simpan & Lanjutkan"
-              onPress={submitBank}
+              onPress={() => submitBank(kycStep)}
               loading={bankSubmitLoading}
             />
             <Gap height={40} />

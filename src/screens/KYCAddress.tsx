@@ -10,6 +10,8 @@ import Button from '../components/Button';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {useKYCAddress} from '../api/kycAddress';
 import {useAddress} from '../api/address';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
 
 const KYCAddress = () => {
   const tint = useThemeColor({}, 'tint');
@@ -42,6 +44,7 @@ const KYCAddress = () => {
     cityListLoading,
     regionListLoading,
   } = useAddress();
+  const {kycStep} = useSelector((item: RootState) => item.user);
 
   const isSameAddressOption = [
     {id: true, label: 'Ya'},
@@ -179,6 +182,18 @@ const KYCAddress = () => {
           instruction="Selanjutnya harap melengkapi data alamat. Kami akan menjaga kerahasiaan informasi ini."
           percentage={20}
           backScreen="KYCPersonal"
+          nextScreen={
+            [
+              'KYCFamily',
+              'KYCOccupation',
+              'KYCTax',
+              'KYCBank',
+              'KYCRisk',
+            ].includes(kycStep || '')
+              ? 'KYCFamily'
+              : undefined
+          }
+          currentScreen="KYCAddress"
         />
         <Gap height={40} />
         {addressLoading ? (
@@ -211,7 +226,7 @@ const KYCAddress = () => {
             <Gap height={40} />
             <Button
               title="Simpan & Lanjutkan"
-              onPress={submitAddress}
+              onPress={() => submitAddress(kycStep)}
               loading={addressSubmitLoading}
             />
             <Gap height={40} />

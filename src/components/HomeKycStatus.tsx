@@ -53,33 +53,44 @@ const HomeKycStatus = ({
         locations={[0, 0.4]}>
         <View style={styles.contentContainer}>
           <View style={{flex: 1}}>
-            <Text style={styles.title}>KYC Belum Terverifikasi</Text>
+            <Text style={styles.title}>
+              {status === false
+                ? 'KYC sedang diproses'
+                : 'KYC Belum Terverifikasi'}
+            </Text>
+            {/* {status === null && (
+            )} */}
             <Text style={[styles.desc, {color: textColor2}]}>
-              Harap lengkapi data KYC Anda
+              {/* Harap lengkapi data KYC Anda */}
+              {status === false
+                ? 'Harap menunggu hasil verifikasi'
+                : 'Harap lengkapi data KYC Anda'}
             </Text>
           </View>
-          <TouchableOpacity
-            style={{width: 80, alignItems: 'center'}}
-            onPress={
-              () =>
-                status === null
-                  ? navigation.navigate('KYC', {
-                      screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
-                    })
-                  : null
-              // navigation.navigate('KYC', {
-              //   screen: 'KYCScreen',
-              // })
-            }>
-            <ICUser color={primaryColor} type="outline" />
-            <Text
-              style={[
-                styles.desc,
-                {color: primaryColor, textAlign: 'center', fontWeight: '600'},
-              ]}>
-              Klik Di sini
-            </Text>
-          </TouchableOpacity>
+          {status === null && (
+            <TouchableOpacity
+              style={{width: 80, alignItems: 'center'}}
+              onPress={
+                () =>
+                  status === null
+                    ? navigation.navigate('KYC', {
+                        screen: screen === 'KYCPersonal' ? 'KYCScreen' : screen,
+                      })
+                    : null
+                // navigation.navigate('KYC', {
+                //   screen: 'KYCScreen',
+                // })
+              }>
+              <ICUser color={primaryColor} type="outline" />
+              <Text
+                style={[
+                  styles.desc,
+                  {color: primaryColor, textAlign: 'center', fontWeight: '600'},
+                ]}>
+                Klik Di sini
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </LinearGradient>
       {/* <BlurOverlay /> */}

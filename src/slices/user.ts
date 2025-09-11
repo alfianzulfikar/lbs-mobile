@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+import {KYCStep} from '../constants/Types';
 
 export interface UserType {
   firstname: string;
@@ -9,6 +10,7 @@ export interface UserType {
   kycStatus: boolean | null;
   image: string;
   canBeCalled: boolean;
+  kycStep?: KYCStep;
 }
 
 const initialState: UserType = {
@@ -19,6 +21,7 @@ const initialState: UserType = {
   kycStatus: false,
   image: '',
   canBeCalled: false,
+  kycStep: 'KYCPersonal',
 };
 
 export const userSlice = createSlice({
@@ -37,10 +40,13 @@ export const userSlice = createSlice({
     setCanBeCall: (state, action: PayloadAction<true | false>) => {
       state.canBeCalled = action.payload;
     },
+    setKYCStep: (state, action: PayloadAction<KYCStep>) => {
+      state.kycStep = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {setUser, setCanBeCall} = userSlice.actions;
+export const {setUser, setCanBeCall, setKYCStep} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -353,10 +353,10 @@ const Account = () => {
                       : null
                   }>
                   {user.kycStatus
-                    ? 'Kyc Terverifikasi'
+                    ? 'KYC Terverifikasi'
                     : user.kycStatus === null
                     ? 'Lengkapi data KYC Anda '
-                    : 'Data KYC Anda sedang diproses.'}
+                    : 'Data KYC Anda sedang diproses'}
                   {user.kycStatus === null && (
                     <Text
                       style={[

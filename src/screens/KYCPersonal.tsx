@@ -19,14 +19,17 @@ import {useAPI} from '../services/api';
 import {useThemeColor} from '../hooks/useThemeColor';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import trimStringInObject from '../utils/trimStringInObject';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import {RootState} from '../store';
+import {setKYCStep} from '../slices/user';
 
 const KYCPersonal = () => {
   const dispatch = useDispatch();
   const {apiRequest} = useAPI();
   const tint = useThemeColor({}, 'tint');
   const textColor2 = useThemeColor({}, 'text2');
+  const {kycStep} = useSelector((item: RootState) => item.user);
 
   const navigation = useNavigation();
 
@@ -320,6 +323,7 @@ const KYCPersonal = () => {
         authorization: true,
         body,
       });
+      if (kycStep === 'KYCPersonal') dispatch(setKYCStep('KYCAddress'));
       navigation.dispatch(StackActions.replace('KYC', {screen: 'KYCAddress'}));
     } catch (err: any) {
       if (typeof err === 'object' && err !== null && 'status' in err) {
@@ -378,6 +382,8 @@ const KYCPersonal = () => {
           title="Biodata Pribadi"
           instruction="Silakan lengkapi informasi pribadi yang dibutuhkan. Jangan khawatir, kami menjaga kerahasiaan data Anda"
           percentage={0}
+          nextScreen={kycStep !== 'KYCPersonal' ? 'KYCAddress' : undefined}
+          currentScreen="KYCPersonal"
         />
         <Gap height={40} />
         {pageLoading ? (

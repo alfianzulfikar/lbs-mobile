@@ -127,7 +127,7 @@ const Home = () => {
               <ICBell color={Colors[colorScheme].text} />
             </IconWrapper>
           </View>
-          {!userLoading && user.kycStatus === null && (
+          {!userLoading && !user.kycStatus && (
             <View style={{paddingHorizontal: 24, marginTop: 24}}>
               <HomeKycStatus status={user.kycStatus} screen={user.kycScreen} />
             </View>

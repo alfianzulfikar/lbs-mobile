@@ -4,6 +4,7 @@ import getFileNameFromUrl from './getFileNameFromUrl';
 import {useAPI} from '../services/api';
 import {useDispatch} from 'react-redux';
 import {setAlert} from '../slices/globalError';
+import * as Sentry from '@sentry/react-native';
 
 export const useDownload = () => {
   const {apiRequest} = useAPI();
@@ -132,21 +133,21 @@ export const useDownload = () => {
     }/${fileName}`;
     const fileExist = await findPath(path);
 
-    if (Platform.OS === 'android' && fileExist) {
-      // if (Platform.OS === 'ios') {
-      //   RNFetchBlob.ios.previewDocument(path);
-      // } else {
-      // }
-      RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
-    } else {
-      if (Platform.OS === 'ios') {
-        if (type === 'write-file') {
-          await writeBlobFile({fileUrl, path});
-        } else {
-          await downloadDirectly({fileUrl, path});
-        }
+    try {
+      if (Platform.OS === 'android' && fileExist) {
+        // if (Platform.OS === 'ios') {
+        //   RNFetchBlob.ios.previewDocument(path);
+        // } else {
+        // }
+        RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
       } else {
-        try {
+        if (Platform.OS === 'ios') {
+          if (type === 'write-file') {
+            await writeBlobFile({fileUrl, path});
+          } else {
+            await downloadDirectly({fileUrl, path});
+          }
+        } else {
           if (Number(Platform.Version) < 30) {
             const granted = await PermissionsAndroid.request(
               PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -174,8 +175,10 @@ export const useDownload = () => {
               await downloadDirectly({fileUrl, path});
             }
           }
-        } catch {}
+        }
       }
+    } catch (error) {
+      Sentry.captureException(error);
     }
   };
   return {downloadFile};

@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useState} from 'react';
 import {useAPI} from '../services/api';
-import {KYCBackScreen} from '../constants/Types';
+import {KYCStep} from '../constants/Types';
 import {useDispatch} from 'react-redux';
-import {setUser} from '../slices/user';
+import {setKYCStep, setUser} from '../slices/user';
 
 export const useUser = () => {
   const {apiRequest} = useAPI();
@@ -37,7 +37,7 @@ export const useUser = () => {
     sisaLimit: 0,
     totalLimit: 0,
   });
-  const [kycScreen, setKycScreen] = useState<KYCBackScreen>('KYCPersonal');
+  const [kycScreen, setKycScreen] = useState<KYCStep>('KYCPersonal');
   const [kycProgressLoading, setKycProgressLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
 
@@ -96,21 +96,21 @@ export const useUser = () => {
         endpoint: '/user/check-kyc',
         authorization: true,
       });
-      setKycScreen(
-        res?.is_bank
-          ? 'KYCRisk'
-          : res?.is_pajak
-          ? 'KYCBank'
-          : res?.is_pekerjaan
-          ? 'KYCTax'
-          : res?.is_biodata_keluarga
-          ? 'KYCOccupation'
-          : res?.is_alamat
-          ? 'KYCFamily'
-          : res?.is_biodata_pribadi
-          ? 'KYCAddress'
-          : 'KYCPersonal',
-      );
+      const currentScreen = res?.is_bank
+        ? 'KYCRisk'
+        : res?.is_pajak
+        ? 'KYCBank'
+        : res?.is_pekerjaan
+        ? 'KYCTax'
+        : res?.is_biodata_keluarga
+        ? 'KYCOccupation'
+        : res?.is_alamat
+        ? 'KYCFamily'
+        : res?.is_biodata_pribadi
+        ? 'KYCAddress'
+        : 'KYCPersonal';
+      setKycScreen(currentScreen);
+      dispatch(setKYCStep(currentScreen));
     } catch (error) {
     } finally {
       setKycProgressLoading(false);
